@@ -10,9 +10,12 @@ npm install --global expo-cli
 
 Install Expo Go app for iOS and Android
 
+- Android
 ```
-Android - https://play.google.com/store/apps/details?id=host.exp.exponent
+https://play.google.com/store/apps/details?id=host.exp.exponent
 ```
+
+- iOS
 ```
 iOS - https://itunes.com/apps/exponent
 ```
