@@ -17,10 +17,10 @@ https://play.google.com/store/apps/details?id=host.exp.exponent
 
 - iOS
 ```
-iOS - https://itunes.com/apps/exponent
+https://itunes.com/apps/exponent
 ```
 
-Clone this project directory.
+Clone this project directory
 
 ```
 git clone https://github.com/SEP-G11/Covid-Patient-tracker--App.git
