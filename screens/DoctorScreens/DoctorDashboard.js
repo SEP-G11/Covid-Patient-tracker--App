@@ -8,20 +8,19 @@ import {
   TouchableOpacity,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-function Homepage({ navigation }) {
+function DoctorDashboard({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
-      <View style={StyleSheet.header}>
-        <Image style={styles.logo} source={require("../assets/logo.png")} />
-      </View>
-      <Animatable.View style={styles.footer} animation="fadeInUpBig">
-        <Text style={styles.title}>Stay Safe!</Text>
+      <View style={styles.header}>
+        <Text>Doctor Dashboard</Text>
         <AppButton
-          onPress={() => navigation.navigate("Signin")}
-          title={"Get Started"}
+          onPress={() => navigation.navigate("Homepage")}
+          title={"Log out"}
         />
-      </Animatable.View>
+      </View>
     </SafeAreaView>
   );
 }
@@ -42,33 +41,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  logo: {
-    width: 350,
-    height: 150,
-    marginTop: 150,
-    marginBottom: 120,
-  },
-  footer: {
-    flex: 1,
-    backgroundColor: "#009387",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingVertical: 70,
-    paddingHorizontal: 40,
-  },
-  title: {
-    color: "#fff",
-    fontSize: 35,
-    fontWeight: "bold",
-    paddingBottom: 65,
-  },
   button: {
     paddingVertical: 10,
     paddingHorizontal: 50,
-    backgroundColor: "#fff",
+    backgroundColor: "#009387",
     borderRadius: 50,
     alignItems: "center",
-    alignSelf: "flex-end",
   },
   buttonText: {
     color: "#000",
@@ -77,4 +55,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Homepage;
+export default DoctorDashboard;
