@@ -38,7 +38,7 @@ function Signin({ navigation }) {
   };
 
   const signIn = async () => {
-    const URL = "http://192.168.8.102:8001/auth/login";
+    const URL = "http://192.168.8.102:8000/auth/login";
 
     try {
       const res = await fetch(URL, {
