@@ -1,33 +1,145 @@
-import { StatusBar } from "expo-status-bar";
+import 'react-native-gesture-handler';
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ScrollView, Image } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
 import Homepage from "./screens/Homepage";
 import Signin from "./screens/Signin";
 import DoctorDashboard from "./screens/DoctorScreens/DoctorDashboard";
+import DoctorAdmit from "./screens/DoctorScreens/DoctorAdmit";
+
 import HospitalAdminDashboard from "./screens/HospitalAdminScreens/HospitalAdminDashboard";
+import HospitalAdminAdmit from "./screens/HospitalAdminScreens/HospitalAdminAdmit";
+
+import {
+  DrawerItemList
+} from '@react-navigation/drawer';
+import { AuthContext } from './components/context';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { DOCDrawerContent } from './components/DOCDrawerContent';
+import { HADrawerContent } from './components/HADrawerContent';
+const Drawer = createDrawerNavigator();
+
 const Stack = createNativeStackNavigator();
 
-function App() {
+
+
+
+const App = () => {
+
+  const initialLoginState = {
+    isLoading: true,
+    token: null,
+    accType: null
+
+  };
+
+  const loginReducer = (prevState, action) => {
+    switch (action.type) {
+      case 'RETRIEVE_TOKEN':
+        return {
+          ...prevState,
+          token: action.token,
+          accType: action.accType,
+          isLoading: false,
+        };
+      case 'LOGIN':
+        return {
+          ...prevState,
+          token: action.token,
+          accType: action.accType,
+          isLoading: false,
+        };
+      case 'LOGOUT':
+        return {
+          ...prevState,
+          token: action.token,
+          accType: action.accType,
+          isLoading: false,
+        };
+
+    }
+  };
+
+  const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
+
+
+  const authContext = React.useMemo(() => ({
+    signInFunction: async (userInfo) => {
+
+      console.log(userInfo["accType"])
+      try {
+        await AsyncStorage.setItem('token', userInfo["token"]);
+        await AsyncStorage.setItem('accType', userInfo["accType"]);
+
+
+      } catch (e) {
+        console.log(e);
+      }
+
+      dispatch({ type: 'LOGIN', token: userInfo["token"], accType: userInfo["accType"] });
+    },
+
+    signOutFunction: async () => {
+
+      try {
+        await AsyncStorage.removeItem('token');
+        await AsyncStorage.removeItem('accType');
+
+      } catch (e) {
+        console.log(e);
+      }
+      dispatch({ type: 'LOGOUT' });
+    }
+
+  }), []);
+
+
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{ headerShown: false }}
-        initialRouteName="Homepage"
-      >
-        <Stack.Screen name="Homepage" component={Homepage} />
-        <Stack.Screen name="Signin" component={Signin} />
-        <Stack.Screen name="DoctorDashboard" component={DoctorDashboard} />
-        <Stack.Screen
-          name="HospitalAdminDashboard"
-          component={HospitalAdminDashboard}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+
+    <AuthContext.Provider value={authContext}>
+      <NavigationContainer>
+        {loginState.token !== null ? (
+
+          <Stack.Navigator
+            screenOptions={{ headerShown: false }}
+            initialRouteName="Homepage"
+          >
+            <Stack.Screen name="Homepage" component={Homepage} />
+            <Stack.Screen name="Signin" component={Signin} />
+            <Stack.Screen name="DoctorDashboard" component={DoctorDashboard} />
+            <Stack.Screen
+              name="HospitalAdminDashboard"
+              component={HospitalAdminDashboard}
+            />
+          </Stack.Navigator>
+
+        ) : (
+
+          loginState.accType == "DOC" ? (<Drawer.Navigator screenOptions={{ title: false, drawerIcon: false, headerStyle: { backgroundColor: '#fff', elevation: 0 }, }}
+            initialRouteName="DoctorDashboard" drawerContent={props =>
+              <DOCDrawerContent {...props} />}>
+            <Drawer.Screen name="DoctorDashboard" component={DoctorDashboard} />
+            <Drawer.Screen name="DoctorAdmit" component={DoctorAdmit} />
+          </Drawer.Navigator>) :
+
+            (<Drawer.Navigator screenOptions={{ title: false, drawerIcon: false, headerStyle: { backgroundColor: '#fff', elevation: 0 }, }}
+              initialRouteName="HospitalAdminDashboard" drawerContent={props =>
+                <HADrawerContent {...props} />}>
+              <Drawer.Screen name="HospitalAdminDashboard" component={HospitalAdminDashboard} />
+              <Drawer.Screen name="HospitalAdminAdmit" component={HospitalAdminAdmit} />
+            </Drawer.Navigator>)
+
+        )}
+      </NavigationContainer>
+    </AuthContext.Provider>
+
   );
 }
+
+export default App;
 
 const styles = StyleSheet.create({
   container: {
@@ -36,6 +148,32 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+
+  drawerImage: {
+
+    width: 250,
+    height: 80,
+    marginTop: 50,
+    marginBottom: 10,
+
+  },
+  footer: {
+    flex: 3,
+    backgroundColor: "#fff",
+    borderColor: "#007c7a",
+    borderTopWidth: 1,
+    borderLeftWidth: 0.3,
+    borderRightWidth: 0.3,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    paddingHorizontal: 20,
+    paddingVertical: 50,
+    paddingBottom: '100%'
+  },
+  bottomDrawerSection: {
+    marginBottom: 15,
+    borderTopColor: '#f4f4f4',
+    borderTopWidth: 1
+  },
 });
 
-export default App;

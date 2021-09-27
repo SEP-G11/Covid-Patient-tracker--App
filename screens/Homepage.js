@@ -16,7 +16,7 @@ function Homepage({ navigation }) {
         <Image style={styles.logo} source={require("../assets/logo.png")} />
       </View>
       <Animatable.View style={styles.footer} animation="fadeInUpBig">
-        <Text style={styles.title}>Stay Safe!</Text>
+        <Text style={styles.title}>Stay Safe  SriLanka !</Text>
         <AppButton
           onPress={() => navigation.navigate("Signin")}
           title={"Get Started"}
@@ -69,9 +69,16 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     alignItems: "center",
     alignSelf: "flex-end",
+    shadowColor: "#fff",
+    shadowOpacity: 80,
+    shadowRadius: 2,
+    elevation:12,   
+    borderRadius: 10,  
+    borderColor: "#20d1ce",
+    borderWidth: 3,
   },
   buttonText: {
-    color: "#000",
+    color:"#009387",
     fontWeight: "bold",
     fontSize: 20,
   },

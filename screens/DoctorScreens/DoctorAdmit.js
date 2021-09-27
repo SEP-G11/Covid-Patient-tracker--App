@@ -11,17 +11,16 @@ import * as Animatable from "react-native-animatable";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-function HospitalAdminDashboard({ navigation }) {
+function DoctorAdmit({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text>Hospital Admin Dashboard</Text>
+        <Text>Doctor Admit Patient </Text>
         <AppButton
           onPress={() => navigation.navigate("Homepage")}
           title={"Log out"}
         />
       </View>
-    
     </SafeAreaView>
   );
 }
@@ -56,4 +55,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HospitalAdminDashboard;
+export default DoctorAdmit;
