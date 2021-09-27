@@ -6,17 +6,27 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Homepage from './screens/Homepage';
 import Signin from './screens/Signin';
-import Dashboard from './screens/Dashboard';
+import DoctorSideNavScreen from './screens/DoctorScreens/DoctorSideNavScreen';
+import HASideNavScreen from './screens/HospitalAdminScreens/HASideNavScreen';
 
 const Stack = createNativeStackNavigator();
 
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="Homepage">
+      <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="SideNavScreen">
         <Stack.Screen name="Homepage" component={Homepage} />
         <Stack.Screen name="Signin" component={Signin} />
-        <Stack.Screen name="Dashboard" component={Dashboard} />
+        <Stack.Screen
+            name="DoctorSideNavScreen"
+            component={DoctorSideNavScreen}
+            options={{ headerShown: false }}
+        />
+        <Stack.Screen
+            name="HASideNavScreen"
+            component={HASideNavScreen}
+            options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
