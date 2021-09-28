@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import {BASE_URL} from "../../dev.config";
 import {
   StyleSheet,
   Text,
@@ -8,6 +9,8 @@ import {
   ScrollView,
   Platform,
   Picker,
+  Button,
+  StatusBar,
   TextInput,
 } from "react-native";
 import { Drawer } from 'react-native-paper';
@@ -27,8 +30,8 @@ function HospitalAdminAdmit({ navigation }) {
 
 
   const [name, setName] = useState("");
-  const [bday, setBday] = useState("");
-
+  const [bday1, setBday1] = useState("");
+  const [bday2, setBday2] = useState("");
   const [gender, setGender] = useState("Male");
   const [address, setAddress] = useState("");
   const [contactnumber, setContactnumber] = useState("");
@@ -39,7 +42,7 @@ function HospitalAdminAdmit({ navigation }) {
   const medicalHistory = "";
   const [bedId, setBedId] = useState("");
 
-
+  const [bedInfo, setBedInfo] = useState({});
   const getAge = bday => {
     if (Math.floor((new Date() - new Date(bday).getTime()) / 3.15576e+10)) {
       return (Math.floor((new Date() - new Date(bday).getTime()) / 3.15576e+10));
@@ -52,16 +55,48 @@ function HospitalAdminAdmit({ navigation }) {
 
   var today = new Date();
   var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-  var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-  const admitDateTime = date + ' ' + time;
+  var time = today.getHours() + ":" + today.getMinutes();
+  const admitDateTime = date + 'T' + time;
 
-  const id = contactnumber.toString() + Date.parse(bday);
-  const allocationId = id + Date.parse(admitDateTime) + "A";
-  const reportId = id + Date.parse(admitDateTime) + "R";
-  const testId = id + Date.parse(admitDateTime) + "T";
+
+
+  const id = contactnumber.toString() + Date.parse(bday1);
+  const allocationId = id + Date.parse(new Date()) + "A";
+  const reportId = id + Date.parse(new Date()) + "R";
+  const testId = id + Date.parse(new Date()) + "T";
   const phonenumber = "+94" + contactnumber.toString();
 
-  const age = getAge(bday)
+
+
+  const age = getAge(bday1)
+  // const bday =bday1.toISOString().slice(0, 10),
+
+  const [isPickerShow, setIsPickerShow] = useState(false);
+
+
+
+  const showPicker = () => {
+    setIsPickerShow(true);
+  };
+
+  const onChange = (event, value) => {
+    try {
+      if (value) {
+        const day = value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate();
+        setBday2(day);
+        setBday1(value.toISOString().slice(0, 10));
+      }
+
+    }
+    catch (e) {
+      alert("Selected BirthDay is Erroried !")
+
+    }
+
+    if (Platform.OS === 'android') {
+      setIsPickerShow(false);
+    }
+  };
 
 
   var radio_props_gender = [
@@ -70,19 +105,50 @@ function HospitalAdminAdmit({ navigation }) {
   ];
 
   const AppButton = ({ onPress, title }) => (
-    <TouchableOpacity onPress={onPress} style={styles.button}>
+    <TouchableOpacity onPress={onPress} style={styles.button}>      
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
 
   );
 
 
+  const loadbeds = async () => {       
+    const bedInfoObject =JSON.parse(await AsyncStorage.getItem("bedInfo"));              
+    // console.log(bedInfoObject)
+   
+    setBedInfo({...bedInfo,deatils: bedInfoObject})
+
+    // console.log(bedInfo)
+  //  console.log( bedInfo["CovidBed"].length)
+     }
+
+
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {        
+    
+      loadbeds(); 
+      setName("");
+      setBday1("");
+      setAddress("");
+      setContactnumber("");
+      setBloodtype(" ");
+      setDistrict("");
+      setRATresult(" ");
+      setBedId("");
+      setBday2("");
+      setGender("");
+   
+     
+    });
+  }, [navigation,]);
+
+
 
   const admit = async () => {
     const token = await AsyncStorage.getItem('token');
-
-    const URL = "http://192.168.8.102:8000/patient/admit";
-
+    const URL = `${BASE_URL}/patient/admit`;
+  
     try {
       const res = await fetch(URL, {
         method: "POST",
@@ -108,30 +174,30 @@ function HospitalAdminAdmit({ navigation }) {
           bedId: bedId,
           allocationId: allocationId,
           admitDateTime: admitDateTime,
-          bday: bday,
+          bday: bday1
         }),
       });
 
       const response = await res.json();
       const message = response["message"]
 
-      if (res.status != 200) {
+      if (res.status !== 200 && res.status !== 201 && res.status !== 202) {
 
         throw new Error(message);
       } else {
 
         setName("");
-        setBday("");        
+        setBday1("");
         setAddress("");
         setContactnumber("");
         setBloodtype(" ");
         setDistrict("");
         setRATresult(" ");
         setBedId("");
-        setAdmitDateTime("");
-        setBday("");
+        setBday2("");
         setGender("");
-        setIsvaccinated("");
+
+
         if (response) {
           alert((message), [
             { text: "Okay" },
@@ -150,11 +216,12 @@ function HospitalAdminAdmit({ navigation }) {
 
   const handleSubmitPress = () => {
 
+
     if (!name) {
       alert("Name can't be empty !");
       return;
     }
-    if (!bday) {
+    if (!bday2) {
       alert("Date of Birthday can't be empty !");
       return;
     }
@@ -162,7 +229,7 @@ function HospitalAdminAdmit({ navigation }) {
       alert("Please select gender !");
       return;
     }
-    if (!district) {
+    if (!district || district == 'disabled') {
       alert("District can't be empty !");
       return;
     }
@@ -170,15 +237,15 @@ function HospitalAdminAdmit({ navigation }) {
       alert("Contactnumber can't be empty !");
       return;
     }
-    if (!bloodtype) {
+    if (!bloodtype || bloodtype == 'disabled') {
       alert(" Please select BloodType  !");
       return;
     }
-    if (!bedId) {
+    if (!bedId || bedId == 'disabled') {
       alert("Please  select BedID !");
       return;
     }
-    if (!RATresult) {
+    if (!RATresult || RATresult == 'disabled') {
       alert("Please select RATresult !");
       return;
     }
@@ -204,6 +271,7 @@ function HospitalAdminAdmit({ navigation }) {
         <View style={styles.action}>
           <TextInput
             placeholder="Enter name"
+            value={name}
             placeholderTextColor="#666666"
             style={styles.textInput}
             autoCapitalize="none"
@@ -211,6 +279,18 @@ function HospitalAdminAdmit({ navigation }) {
           />
         </View>
 
+        {isPickerShow && (
+          <DateTimePicker
+            value={new Date()}
+            mode={'date'}
+            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+            is24Hour={true}
+            // format="YYYY-MM-DD"
+            maximumDate={new Date()}
+            onChange={onChange}
+            style={styles.datePicker}
+          />
+        )}
 
         <View style={{ flexDirection: 'row', marginTop: 15 }}>
           <Text style={styles.textFooter}>Date of Birth</Text>
@@ -218,41 +298,19 @@ function HospitalAdminAdmit({ navigation }) {
         </View>
 
         <View style={{ flexDirection: 'row', }}>
-          <View style={styles.action1}>
-            <DatePicker
-              style={{ width: 130, outerHeight: 5 }}
-              date={bday}
-              mode="date"
-              placeholder="Select Date"
-              format="YYYY-MM-DD"
-              maxDate={new Date()}
-              confirmBtnText="Confirm"
-              cancelBtnText="Cancel"
-              customStyles={{
-                dateInput: {
-                  borderWidth: 5,
-                  alignItems: "flex-start"
-                },
-                placeholderText: {
-                  fontSize: 14,
-                  color: "#666666"
-                },
-                dateIcon: {
-                  width: 18,
-                  height: 18,
-                  position: 'absolute',
-                  left: 0,
-                  top: 10,
-                  marginLeft: 10,
-                  tintColor: "#007c7a",
-                },
-                dateInput: {
-                  marginLeft: 36
-                }
+          <View style={styles.action1} onPress={showPicker}>
+            <FontAwesome name="calendar" size={15} onPress={showPicker} {...styles.icons} />
+            <Text style={styles.pickedDate}>{bday2}</Text>
+            <TextInput
+              placeholder={bday2 ? "" : "Select Date"}
+              placeholderTextColor="#666666"
+              style={styles.textInput}
+              autoCapitalize="none"
+              editable={false}
 
-              }}
-              onDateChange={(bday) => setBday(bday)}
+
             />
+
           </View>
           <View style={[{ marginLeft: 5 }, styles.action1]}>
 
@@ -284,26 +342,73 @@ function HospitalAdminAdmit({ navigation }) {
 
 
         <Text style={[{ marginTop: 15 }, styles.textFooter]}>Contact Number</Text>
-        <PhoneInput
-          defaultCode="LK"
-          defaultValue={contactnumber}
-          layout="first"
-          containerStyle={{
-            width: 300,
-            height: 50,
-            marginTop: 10,
-            marginLeft: 20,
-            marginRight: 20,
-            borderColor: "#007c7a",
-            borderWidth: 1,
-            paddingRight: 10,
-            borderRadius: 10,
-            alignSelf: 'center'
-          }}
-          onChangeText={(text) => {
-            setContactnumber(text);
-          }}
-        />
+        {/* <TextInput keyboardType={'phone-pad'} /> */}
+
+        <View style={styles.action3}>
+          {/* <FontAwesome name="phone" size={15} onPress={showPicker} {...styles.icons} /> */}
+          <PhoneInput
+            defaultCode="LK"
+            containerStyle={{
+              width: 133,
+              height: 30,
+              marginTop: 1,
+              // marginLeft: 20,
+              // marginRight: 10,
+              alignSelf: 'center'
+            }}
+          />
+          <TextInput
+            placeholder="Enter Contact Number "
+            value={contactnumber}
+            keyboardType={'numeric'}
+            placeholderTextColor="#666666"
+            style={styles.textInput1}
+            // autoCapitalize="none"
+            onChangeText={(contactnumber) => setContactnumber(contactnumber)}
+            autoCorrect={false}
+          />
+        </View>
+
+
+
+        {/* 
+<StatusBar barStyle="dark-content" />
+      <View style={styles.container}>
+        <SafeAreaView style={styles.wrapper}>
+          {showMessage && (
+            <View style={styles.message}>
+              <Text>Value : {value}</Text>
+              <Text>Formatted Value : {formattedValue}</Text>
+              <Text>Valid : {valid ? "true" : "false"}</Text>
+            </View>
+          )}
+          <PhoneInput
+            ref={phoneInput}
+            defaultValue={value}
+            defaultCode="DM"
+            onChangeText={(text) => {
+              setValue(text);
+            }}
+            onChangeFormattedText={(text) => {
+              setFormattedValue(text);
+            }}
+            withDarkTheme
+            withShadow
+            autoFocus
+          />
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              const checkValid = phoneInput?.isValidNumber();
+              setShowMessage(true);
+              setValid(checkValid ? checkValid : false);
+            }}
+          >
+            <Text>Check</Text>
+          </TouchableOpacity>
+        </SafeAreaView>
+      </View> */}
+
 
 
         <Text style={[styles.textFooter, { marginTop: 15 }]}>Address</Text>
@@ -311,6 +416,7 @@ function HospitalAdminAdmit({ navigation }) {
           <TextInput
             placeholder="Enter  Address"
             placeholderTextColor="#666666"
+            value={address}
             multiline={true}
             numberOfLines={4}
             style={styles.textInput}
@@ -326,7 +432,6 @@ function HospitalAdminAdmit({ navigation }) {
           <Text style={styles.textFooter}>Blood Type</Text>
           <Text style={{ color: "#007c7a", fontSize: 16, paddingLeft: 100 }}>Bed Id</Text>
         </View>
-
         <View style={{ flexDirection: 'row' }}>
           <View style={[{ flex: 0.5, }, styles.BloodDrop]}>
             <Picker
@@ -340,6 +445,8 @@ function HospitalAdminAdmit({ navigation }) {
               <Picker.Item label="AB" value="AB" />
             </Picker>
           </View>
+
+
           <View style={[{ flex: .5, }, styles.BloodDrop]}>
             <Picker
               style={styles.action}
@@ -348,11 +455,45 @@ function HospitalAdminAdmit({ navigation }) {
 
             >
               <Picker.Item label="Select" value="disabled" color="#aaa" />
-              <Picker.Item label="11" value="11" />
-              <Picker.Item label="44" value="44" />
+              <Picker.Item label="46" value="46" />
+              <Picker.Item label="47" value="47" />
+              <Picker.Item label="21" value="21" />
             </Picker>
           </View>
+
         </View>
+        
+
+        {/* {bedInfo ? (
+          <View style={[{ flex: .5, }, styles.BloodDrop]}>
+          <Picker
+            style={styles.action}
+            onValueChange={setBedId}
+            selectedValue={bedId}
+
+          > <Picker.Item label="Select" value="disabled" color="#aaa" />
+
+            <> {Array.from({ length: bedInfo["CovidBed"].length }).map(
+              (_, i) => (
+
+                <>  {bedInfo["CovidBed"][`${i}`]["IsOccupied"] != 1 ? (<Picker.Item style={{ color: "#007c7a" }} value={bedInfo["CovidBed"][`${i}`]["BedID"]} label={bedInfo["CovidBed"][`${i}`]["BedID"]} />) : (null)}</>
+
+              )
+            )}
+            </>
+
+          </Picker>
+        </View>
+
+        ):(null)}  */}
+
+
+        
+
+        
+
+
+
 
         <Text style={[{ marginTop: 15 }, styles.textFooter]}>RAT results</Text>
         <View style={[{ flex: .5, }, styles.BloodDrop]}>
@@ -367,6 +508,7 @@ function HospitalAdminAdmit({ navigation }) {
             <Picker.Item label="NAGEATIVE" value="0" />
           </Picker>
         </View>
+
         <AppButton onPress={handleSubmitPress} title={"Admit"} />
 
       </ScrollView>
@@ -454,9 +596,20 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderColor: "#007c7a",
     padding: 5,
+    paddingLeft: 10,
     alignItems: "center",
   },
   action2: {
+
+    flexDirection: "row",
+    marginTop: 10,
+    borderWidth: 1,
+    borderRadius: 15,
+    borderColor: "#007c7a",
+    padding: 5,
+    alignItems: "center",
+  },
+  action3: {
 
     flexDirection: "row",
     marginTop: 10,
@@ -477,10 +630,22 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 20,
     color: "#000",
+    fontSize: 15,
+
+  },
+  textInput1: {
+    flex: 1,
+    marginTop: 1,
+    paddingLeft: 1,
+
+    color: "#000",
+    fontSize: 15,
 
   },
   icons: {
-    color: "#007c7a"
+    color: "#007c7a",
+
+
   },
   errorMsg: {
     color: "#FF0000",
@@ -504,6 +669,26 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 20,
 
+  },
+  pickedDateContainer: {
+    padding: 20,
+    backgroundColor: '#fff',
+    borderRadius: 30,
+  },
+  pickedDate: {
+    paddingLeft: 5,
+    fontSize: 15,
+    color: 'black',
+  },
+  btnContainer: {
+    padding: 30,
+  },
+  datePicker: {
+    width: 320,
+    height: 260,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
   },
 
 

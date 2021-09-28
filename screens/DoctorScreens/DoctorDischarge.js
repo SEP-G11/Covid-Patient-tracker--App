@@ -26,57 +26,21 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
 
-function DoctorAdmit({ navigation }) {
+function DoctorDischarge({ navigation }) {
 
 
-  const [name, setName] = useState("");
-  const [bday1, setBday1] = useState("");
-  const [bday2, setBday2] = useState("");
-  const gender="";
-  const address="";
-  const [contactnumber, setContactnumber] = useState("");
-  const bloodtype="";
-  const district="";
-  const isvaccinated = "1";
-  const [RATresult, setRATresult] = useState("");
+  const [id, setId] = useState(""); 
+  const [status, setStatus] = useState("");
   const [medicalHistory, setMedicalHistory] = useState("");
-  const [bedId, setBedId] = useState("");
-  const [bedInfo, setBedInfo] = useState({});
-
-  const getAge = bday => {
-    if (Math.floor((new Date() - new Date(bday).getTime()) / 3.15576e+10)) {
-      return (Math.floor((new Date() - new Date(bday).getTime()) / 3.15576e+10));
-    }
-    else {
-      return Math.round(((new Date() - new Date(bday).getTime()) / 3.15576e+10 + Number.EPSILON) * 1000) / 1000;
-    }
-  };
 
 
-  var today = new Date();
+
+
+ var today = new Date();
   var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
   var time = today.getHours() + ":" + today.getMinutes();
-  const admitDateTime = date + 'T' + time;
+  const DateTime = date + 'T' + time;
 
-
-  const id = contactnumber.toString() + Date.parse(bday1);
-  const allocationId = id + Date.parse(new Date()) + "A";
-  const reportId = id + Date.parse(new Date()) + "R";
-  const testId = id + Date.parse(new Date()) + "T";
-  const phonenumber = "+94" + contactnumber.toString();
-
-
-
-  const age = getAge(bday1)
-  // const bday =bday1.toISOString().slice(0, 10),
-
-  const [isPickerShow, setIsPickerShow] = useState(false);
-
-
-
-  const showPicker = () => {
-    setIsPickerShow(true);
-  };
 
   const onChange = (event, value) => {
     try {
@@ -98,10 +62,7 @@ function DoctorAdmit({ navigation }) {
   };
 
 
-  var radio_props_gender = [
-    { label: 'Male', value: "Male" },
-    { label: 'Female', value: "Female" }
-  ];
+ 
 
   const AppButton = ({ onPress, title }) => (
     <TouchableOpacity onPress={onPress} style={styles.button}>
@@ -111,29 +72,15 @@ function DoctorAdmit({ navigation }) {
   );
 
 
-  const loadbeds = async () => {
-    const bedInfoObject = JSON.parse(await AsyncStorage.getItem("bedInfo"));
-    // console.log(bedInfoObject)
-
-    setBedInfo({ ...bedInfo, deatils: bedInfoObject })
-
-    // console.log(bedInfo)
-    //  console.log( bedInfo["CovidBed"].length)
-  }
-
-
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
 
-      loadbeds();
-      setName("");
-      setBday1("");
-      setMedicalHistory("");
-      setContactnumber("");     
-      setRATresult(" ");
-      setBedId("");
-      setBday2("");
+     
+      setId("");  
+      setMedicalHistory("");       
+      setStatus("");
+     
      
 
 
@@ -142,10 +89,10 @@ function DoctorAdmit({ navigation }) {
 
 
 
-  const admit = async () => {
+  const discharge = async () => {
     const token = await AsyncStorage.getItem('token');
-
-    const URL = `${BASE_URL}/patient/admit`;
+    const URL = `${BASE_URL}/patient/discharge`;
+   
 
     try {
       const res = await fetch(URL, {
@@ -156,23 +103,11 @@ function DoctorAdmit({ navigation }) {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          name: name,
-          id: id,
-          age: age,
-          gender: gender,
-          address: address,
-          contactnumber: phonenumber,
-          bloodtype: bloodtype,
-          district: district,
-          testId: testId,
-          isvaccinated: isvaccinated,
-          RATresult: RATresult,
-          medicalHistory: medicalHistory,
-          reportId: reportId,
-          bedId: bedId,
-          allocationId: allocationId,
-          admitDateTime: admitDateTime,
-          bday: bday1
+       
+          patient_id:id,
+           discharged_at :DateTime,
+            description:medicalHistory,
+             status:status
         }),
       });
 
@@ -184,16 +119,13 @@ function DoctorAdmit({ navigation }) {
         throw new Error(message);
       } else {
 
-        setName("");
-        setBday1("");
-        setAddress("");
-        setContactnumber("");
-        setBloodtype(" ");
-        setDistrict("");
-        setRATresult(" ");
-        setBedId("");
-        setBday2("");
-        setGender("");
+        
+      setId("");  
+      setMedicalHistory("");       
+      setStatus("");
+     
+     
+
 
 
         if (response) {
@@ -215,35 +147,23 @@ function DoctorAdmit({ navigation }) {
   const handleSubmitPress = () => {
 
 
-    if (!name) {
-      alert("Name can't be empty !");
+    if (!id) {
+      alert("Id can't be empty !");
       return;
     }
-    if (!bday2) {
-      alert("Date of Birthday can't be empty !");
-      return;
-    }
-
-    if (!contactnumber) {
-      alert("Contactnumber can't be empty !");
+    if (!status) {
+      alert("Status can't be empty !");
       return;
     }
 
-    if (!bedId || bedId == 'disabled') {
-      alert("Please  select BedID !");
-      return;
-    }
-    if (!RATresult || RATresult == 'disabled') {
-      alert("Please select RATresult !");
-      return;
-    }
-    admit();
+    
+    discharge();
   };
 
   return (
     <SafeAreaView style={styles.footer}>
       <View style={styles.header}>
-        <Text style={styles.textHeader}>ADMIT NEW PATIENT </Text>
+        <Text style={styles.textHeader}>DISCHARGE   PATIENT </Text>
         <View
           style={{
             borderBottomColor: "#009387",
@@ -255,81 +175,20 @@ function DoctorAdmit({ navigation }) {
 
       <ScrollView style={{ paddingRight: 20 }}>
 
-        <Text style={styles.textFooter}>Patient Name</Text>
+        <Text style={styles.textFooter}>Patient ID</Text>
         <View style={styles.action}>
           <TextInput
-            placeholder="Enter name"
-            value={name}
+            placeholder="Enter Id"
+            value={id}
             placeholderTextColor="#666666"
             style={styles.textInput}
             autoCapitalize="none"
-            onChangeText={(name) => setName(name)}
+            onChangeText={(id) => setId(id)}
           />
         </View>
 
-        {isPickerShow && (
-          <DateTimePicker
-            value={new Date()}
-            mode={'date'}
-            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-            is24Hour={true}
-            // format="YYYY-MM-DD"
-            maximumDate={new Date()}
-            onChange={onChange}
-            style={styles.datePicker}
-          />
-        )}
+       
 
-        <View style={{ flexDirection: 'row', marginTop: 15 }}>
-          <Text style={styles.textFooter}>Date of Birth</Text>
-          {/* <Text style={{ color: "#007c7a", fontSize: 16, paddingLeft: 100 }}>Gender</Text> */}
-        </View>
-
-
-        <View style={styles.action1} onPress={showPicker}>
-          <FontAwesome name="calendar" size={15} onPress={showPicker} {...styles.icons} />
-          <Text style={styles.pickedDate}>{bday2}</Text>
-          <TextInput
-            placeholder={bday2 ? "" : "Select Date"}
-            placeholderTextColor="#666666"
-            style={styles.textInput}
-            autoCapitalize="none"
-            editable={false}
-
-
-          />
-
-        </View>
-
-
-
-        <Text style={[{ marginTop: 15 }, styles.textFooter]}>Contact Number</Text>
-        {/* <TextInput keyboardType={'phone-pad'} /> */}
-
-        <View style={styles.action3}>
-          {/* <FontAwesome name="phone" size={15} onPress={showPicker} {...styles.icons} /> */}
-          <PhoneInput
-            defaultCode="LK"
-            containerStyle={{
-              width: 133,
-              height: 30,
-              marginTop: 1,
-              // marginLeft: 20,
-              // marginRight: 10,
-              alignSelf: 'center'
-            }}
-          />
-          <TextInput
-            placeholder="Enter Contact Number "
-            value={contactnumber}
-            keyboardType={'numeric'}
-            placeholderTextColor="#666666"
-            style={styles.textInput1}
-            // autoCapitalize="none"
-            onChangeText={(contactnumber) => setContactnumber(contactnumber)}
-            autoCorrect={false}
-          />
-        </View>
 
 
 
@@ -352,43 +211,30 @@ function DoctorAdmit({ navigation }) {
 
 
         <View style={{ flexDirection: 'row', marginTop: 15 }}>
-          <Text style={styles.textFooter}>RAT results</Text>
-          <Text style={{ color: "#007c7a", fontSize: 16, paddingLeft: 100 }}>Bed Id</Text>
+          <Text style={styles.textFooter}>Status</Text>
+    
         </View>
         <View style={{ flexDirection: 'row' }}>
           <View style={[{ flex: .5, }, styles.BloodDrop]}>
             <Picker
               style={styles.action}
-              onValueChange={setRATresult}
-              selectedValue={RATresult}
+              onValueChange={setStatus}
+              selectedValue={status}
 
             >
               <Picker.Item label="Select" value="disabled" color="#aaa" />
-              <Picker.Item label="POSITIVE" value="1" />
-              <Picker.Item label="NAGEATIVE" value="0" />
+              <Picker.Item label="Dead" value="Dead" />
+              <Picker.Item label="Recovered" value="Recovered" />
             </Picker>
           </View>
-
-          <View style={[{ flex: .5, }, styles.BloodDrop]}>
-            <Picker
-              style={styles.action}
-              onValueChange={setBedId}
-              selectedValue={bedId}
-
-            >
-              <Picker.Item label="Select" value="disabled" color="#aaa" />
-              <Picker.Item label="46" value="46" />
-              <Picker.Item label="47" value="47" />
-              <Picker.Item label="21" value="21" />
-            </Picker>
-          </View>
+         
 
         </View>
 
 
 
 
-        <AppButton onPress={handleSubmitPress} title={"Admit"} />
+        <AppButton onPress={handleSubmitPress} title={"Discharge"} />
 
       </ScrollView>
 
@@ -576,4 +422,4 @@ const styles = StyleSheet.create({
 
 
 
-export default DoctorAdmit;
+export default DoctorDischarge;

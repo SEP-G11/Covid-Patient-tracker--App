@@ -8,19 +8,37 @@ import {
   TouchableOpacity,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 function Homepage({ navigation }) {
+
+
+
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={StyleSheet.header}>
+
+
+      <View style={styles.header}>
+
         <Image style={styles.logo} source={require("../assets/logo.png")} />
+
       </View>
+
       <Animatable.View style={styles.footer} animation="fadeInUpBig">
         <Text style={styles.title}>Stay Safe  SriLanka !</Text>
-        <AppButton
-          onPress={() => navigation.navigate("Signin")}
-          title={"Get Started"}
-        />
+
+        <Animatable.View
+          animation='pulse'
+          iterationCount='infinite'
+        >
+          <AppButton
+            onPress={() => navigation.navigate("Signin")}
+            title={"Get Started"}
+          />
+
+        </Animatable.View>
+
       </Animatable.View>
     </SafeAreaView>
   );
@@ -28,7 +46,14 @@ function Homepage({ navigation }) {
 
 const AppButton = ({ onPress, title }) => (
   <TouchableOpacity onPress={onPress} style={styles.button}>
-    <Text style={styles.buttonText}>{title}</Text>
+    <View style={styles.action}>
+      <Text style={styles.buttonText}>{title}</Text>
+      <View>
+
+      </View>
+
+
+    </View>
   </TouchableOpacity>
 );
 
@@ -43,7 +68,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logo: {
-    width: 350,
+    width: 300,
     height: 150,
     marginTop: 150,
     marginBottom: 120,
@@ -56,6 +81,12 @@ const styles = StyleSheet.create({
     paddingVertical: 70,
     paddingHorizontal: 40,
   },
+  action: {
+    flexDirection: "row",
+    padding: 5,
+    alignItems: "center",
+  },
+
   title: {
     color: "#fff",
     fontSize: 35,
@@ -63,8 +94,8 @@ const styles = StyleSheet.create({
     paddingBottom: 65,
   },
   button: {
-    paddingVertical: 10,
-    paddingHorizontal: 50,
+    paddingVertical: 5,
+    paddingHorizontal: 20,
     backgroundColor: "#fff",
     borderRadius: 50,
     alignItems: "center",
@@ -72,13 +103,13 @@ const styles = StyleSheet.create({
     shadowColor: "#fff",
     shadowOpacity: 80,
     shadowRadius: 2,
-    elevation:12,   
-    borderRadius: 10,  
+    elevation: 12,
+    borderRadius: 10,
     borderColor: "#20d1ce",
     borderWidth: 3,
   },
   buttonText: {
-    color:"#009387",
+    color: "#009387",
     fontWeight: "bold",
     fontSize: 20,
   },

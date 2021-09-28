@@ -1,25 +1,63 @@
-import React ,{useEffect} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {BASE_URL} from "../../dev.config";
 import {
   StyleSheet,
   Text,
   View,
   SafeAreaView,
-  Image,
   TouchableOpacity,
+  ScrollView,
+  Platform,
+  Picker,
+  Button,
+  StatusBar,
+  TextInput,
 } from "react-native";
+import { Drawer } from 'react-native-paper';
 import * as Animatable from "react-native-animatable";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import Feather from "react-native-vector-icons/Feather";
+import { AuthContext } from '../../components/context';
+import DatePicker from 'react-native-datepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+// import Picker from 'react-native-select-dropdown';
+import PhoneInput from "react-native-phone-number-input";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
-function HospitalAdminDashboard({ navigation }) {
 
-  const loadbeds = async () => {
+function DoctorSearchBeds({ navigation }) {
+
+
+  const [facilityId, setFacility] = useState(""); 
+
+
+  const AppButton = ({ onPress, title }) => (
+    <TouchableOpacity onPress={onPress} style={styles.button}>
+      <Text style={styles.buttonText}>{title}</Text>
+    </TouchableOpacity>
+
+  );
+
+
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+
+     
+        setFacility("");       
+     
+
+
+    });
+  }, [navigation,]);
+
+
+
+  const search = async () => {
     const token = await AsyncStorage.getItem('token');
-    
-    const URL = `${BASE_URL}/bed/search/*`;
-   
+
+    const URL = `${BASE_URL}/bed/search/${facilityId}`;
 
     try {
       const res = await fetch(URL, {
@@ -28,49 +66,53 @@ function HospitalAdminDashboard({ navigation }) {
           Accept: "application/json",
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-        },      
+        },
        
       });
 
       const response = await res.json();
       const message = response["message"]
 
-      //  console.log(response.results);
-
       if (res.status !== 200 && res.status !== 201 && res.status !== 202) {
+
         throw new Error(message);
       } else {
-        if (response) {
 
-          try {
-            await AsyncStorage.setItem("bedInfo", JSON.stringify(response.results));
-            //  const bedInfoObject =JSON.parse(await AsyncStorage.getItem("bedInfo"));                  
-            //  console.log(bedInfoObject.FacilityName)
-          } catch (error) { }
-        
-         
+        setFacility("");  
+       
+
+        if (response) {
+          alert((message), [
+            { text: "Okay" },
+          ]);
+
+
         }
       }
     } catch (error) {
-      alert(" Can't  Load beds details", [
+
+      alert((error.message.toString()), [
         { text: "Okay" },
       ]);
     }
   };
-  
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      loadbeds()
+
+  const handleSubmitPress = () => {
+
+
+   
+      if (!facilityId || facilityId == 'disabled') {
+        alert("Please select Facility !");
+        return;
+      }
     
-    });
-  }, [navigation]);
-
-
+    search();
+  };
 
   return (
     <SafeAreaView style={styles.footer}>
       <View style={styles.header}>
-        <Text style={styles.textHeader}>HOSPITAL ADMIN DASHBOARD</Text>
+        <Text style={styles.textHeader}>SEARCH  BEDS</Text>
         <View
           style={{
             borderBottomColor: "#009387",
@@ -80,6 +122,31 @@ function HospitalAdminDashboard({ navigation }) {
       </View>
 
 
+      <ScrollView style={{ paddingRight: 20 ,marginTop:50}}>
+
+        <Text style={styles.textFooter}>Facility Name</Text>
+        <View style={[{ flex: .5, }, styles.BloodDrop]}>
+            <Picker
+              style={styles.action}
+              onValueChange={setFacility}
+              selectedValue={facilityId}
+
+            >
+              <Picker.Item label="Select" value="disabled" color="#aaa" />
+              <Picker.Item label="Trablice National Hospital" value="6" />
+              <Picker.Item label="Ararat National Hospital" value="7" />
+            
+            
+            </Picker>
+          
+        </View>
+   
+
+
+
+        <AppButton onPress={handleSubmitPress} title={"Search"} />
+
+      </ScrollView>
 
     </SafeAreaView >
   );
@@ -134,7 +201,7 @@ const styles = StyleSheet.create({
   textHeader: {
     color: "#009387",
     fontWeight: "bold",
-    fontSize: 25,
+    fontSize: 30,
     textAlign: "center"
   },
   textFooter: {
@@ -263,4 +330,6 @@ const styles = StyleSheet.create({
 });
 
 
-export default HospitalAdminDashboard;
+
+
+export default DoctorSearchBeds;

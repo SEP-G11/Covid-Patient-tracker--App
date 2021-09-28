@@ -5,15 +5,25 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Homepage from "./screens/Homepage";
 import Signin from "./screens/Signin";
+
 import DoctorDashboard from "./screens/DoctorScreens/DoctorDashboard";
 import DoctorAdmit from "./screens/DoctorScreens/DoctorAdmit";
+import DoctorCreateReport from "./screens/DoctorScreens/DoctorCreateReport";
+import DoctorDischarge from "./screens/DoctorScreens/DoctorDischarge";
+import DoctorTransfer from "./screens/DoctorScreens/DoctorTransfer";
+import DoctorSearchBeds from "./screens/DoctorScreens/DoctorSearchBeds";
+import DoctorEnterResults from "./screens/DoctorScreens/DoctorEnterResults";
+
 
 import HospitalAdminDashboard from "./screens/HospitalAdminScreens/HospitalAdminDashboard";
 import HospitalAdminAdmit from "./screens/HospitalAdminScreens/HospitalAdminAdmit";
+import HospitalAdminDischarge from "./screens/HospitalAdminScreens/HospitalAdminDischarge";
+import HospitalAdminTransfer from "./screens/HospitalAdminScreens/HospitalAdminTransfer";
+import HospitalAdminSearchBeds from "./screens/HospitalAdminScreens/HospitalAdminSearchBeds";
+import HospitalAdminEnterResults from "./screens/HospitalAdminScreens/HospitalAdminEnterResults";
 
-import {
-  DrawerItemList
-} from '@react-navigation/drawer';
+
+import { DrawerItemList } from '@react-navigation/drawer';
 import { AuthContext } from './components/context';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -68,7 +78,7 @@ const App = () => {
   const authContext = React.useMemo(() => ({
     signInFunction: async (userInfo) => {
 
-      console.log(userInfo["accType"])
+  
       try {
         await AsyncStorage.setItem('token', userInfo["token"]);
         await AsyncStorage.setItem('accType', userInfo["accType"]);
@@ -101,7 +111,7 @@ const App = () => {
 
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
-        {loginState.token !== null ? (
+        {loginState.token == null ? (
 
           <Stack.Navigator
             screenOptions={{ headerShown: false }}
@@ -109,11 +119,7 @@ const App = () => {
           >
             <Stack.Screen name="Homepage" component={Homepage} />
             <Stack.Screen name="Signin" component={Signin} />
-            <Stack.Screen name="DoctorDashboard" component={DoctorDashboard} />
-            <Stack.Screen
-              name="HospitalAdminDashboard"
-              component={HospitalAdminDashboard}
-            />
+           
           </Stack.Navigator>
 
         ) : (
@@ -123,6 +129,13 @@ const App = () => {
               <DOCDrawerContent {...props} />}>
             <Drawer.Screen name="DoctorDashboard" component={DoctorDashboard} />
             <Drawer.Screen name="DoctorAdmit" component={DoctorAdmit} />
+            <Drawer.Screen name="DoctorCreateReport" component={DoctorCreateReport} />
+            <Drawer.Screen name="DoctorDischarge" component={DoctorDischarge} />
+            <Drawer.Screen name="DoctorTransfer" component={DoctorTransfer} />
+            <Drawer.Screen name="DoctorSearchBeds" component={DoctorSearchBeds} />
+            <Drawer.Screen name="DoctorEnterResults" component={DoctorEnterResults} />
+
+
           </Drawer.Navigator>) :
 
             (<Drawer.Navigator screenOptions={{ title: false, drawerIcon: false, headerStyle: { backgroundColor: '#fff', elevation: 0 }, }}
@@ -130,6 +143,11 @@ const App = () => {
                 <HADrawerContent {...props} />}>
               <Drawer.Screen name="HospitalAdminDashboard" component={HospitalAdminDashboard} />
               <Drawer.Screen name="HospitalAdminAdmit" component={HospitalAdminAdmit} />
+              <Drawer.Screen name="HospitalAdminDischarge" component={HospitalAdminDischarge} />
+              <Drawer.Screen name="HospitalAdminTransfer" component={HospitalAdminTransfer} />
+              <Drawer.Screen name="HospitalAdminSearchBeds" component={HospitalAdminSearchBeds} />
+              <Drawer.Screen name="HospitalAdminEnterResults" component={HospitalAdminEnterResults} />
+
             </Drawer.Navigator>)
 
         )}

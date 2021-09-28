@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {BASE_URL} from "../dev.config";
 import {
   StyleSheet,
   Text,
@@ -44,9 +45,8 @@ const Signin = ({ navigation }) =>{
   };
 
   const signIn = async () => {
-
-    const URL = "http://192.168.8.102:8000/auth/login";
-
+    const URL = `${BASE_URL}/auth/login`;
+  
     try {
       const res = await fetch(URL, {
         method: "POST",
