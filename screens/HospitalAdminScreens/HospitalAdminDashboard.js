@@ -15,6 +15,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { VictoryPie } from 'victory-native';
+
 
 function HospitalAdminDashboard({ navigation }) {
 
@@ -24,6 +26,10 @@ function HospitalAdminDashboard({ navigation }) {
   const [show1, setShow1] = useState(false);
   const [show2, setShow2] = useState(false);
 
+
+
+  // const graphicData = [{ x: bedInfo["results"]["CovidBedFree"] }, { y: bedInfo["results"]["CovidBedUsed"] }];
+  const graphicColor = ['red', '#1e90ff',];
 
   function handleSubmit1() {
     setShow1(!show1);
@@ -139,6 +145,27 @@ function HospitalAdminDashboard({ navigation }) {
         </View>
 
 
+
+        {(bedInfo["NormalBedUsed"]+bedInfo["CovidBedUsed"])/(bedInfo["NormalBedFree"]+bedInfo["CovidBedFree"]+bedInfo["NormalBedUsed"]+bedInfo["CovidBedUsed"])>0.75 ? 
+                
+        (
+
+          <Animatable.View   animation='pulse'    iterationCount='infinite'>
+          <View style={{ flexDirection: 'row', marginTop: 2, alignItems: "center", backgroundColor: "#ffe4e1" }}>
+  
+            <Text style={{ color: "red", }}>      <FontAwesome name="exclamation-triangle" size={15}  {...styles.icons2} /> WARNING: The hospital capacity is about to full !</Text>
+  
+          </View>
+          </Animatable.View>
+
+        ):
+        (null)
+      }
+    
+
+
+        
+
         <ScrollView style={{ paddingRight: 20 }}>
 
           {/* <View style={{ flexDirection: 'row', marginTop: 2 }}>
@@ -153,12 +180,13 @@ function HospitalAdminDashboard({ navigation }) {
           <View
             style={{
 
-              marginLeft:15,
-              marginBottom:10,
+              marginLeft: 15,
+              marginBottom: 10,
               borderBottomColor: "#009387",
               borderBottomWidth: 2,
             }}
           />
+
 
           <View style={{ marginTop: 2 }}>
             <Text style={{ textAlign: "center", color: "#007c7a", fontSize: 30 }}>WELCOME</Text>
@@ -178,6 +206,54 @@ function HospitalAdminDashboard({ navigation }) {
             />
           </View>
 
+
+
+          <View
+            style={{
+
+              marginLeft: 15,
+              marginBottom: 10,
+              borderBottomColor: "#009387",
+              borderBottomWidth: 2,
+            }}
+          />
+
+
+
+          {/* <Text style={styles.textFooter1}>WELCOME</Text> */}
+          <View style={{ flex: 1, alignItems: "center", marginTop: 10 }}>
+            <Title style={{ textAlign: "center", marginTop: 0, fontSize: 15, color: "#007c7a" }}>Covid Beds </Title>
+            <VictoryPie data={[{ x: "Used " + `${(bedInfo["CovidBedUsed"] / (bedInfo["CovidBedUsed"] + bedInfo["CovidBedFree"])) * 100}` + "%", y: bedInfo["CovidBedUsed"] }, { x: "Free " + `${(bedInfo["CovidBedFree"] / (bedInfo["CovidBedUsed"] + bedInfo["CovidBedFree"])) * 100}` + "%", y: bedInfo["CovidBedFree"] },]} width={300} height={150} colorScale={graphicColor} innerRadius={50} />
+
+
+          </View>
+
+          <View style={{ flex: 1, alignItems: "center", marginTop: 10 }}>
+            <Title style={{ textAlign: "center", marginTop: 0, fontSize: 15, color: "#007c7a" }}>Normal Beds </Title>
+            <VictoryPie data={[{ x: "Used " + `${(bedInfo["NormalBedUsed"] / (bedInfo["NormalBedUsed"] + bedInfo["NormalBedFree"])) * 100}` + "%", y: bedInfo["NormalBedUsed"] }, { x: "Free " + `${(bedInfo["NormalBedFree"] / (bedInfo["NormalBedUsed"] + bedInfo["NormalBedFree"])) * 100}` + "%", y: bedInfo["NormalBedFree"] },]} width={300} height={150} colorScale={graphicColor} innerRadius={50} />
+
+
+          </View>
+
+          <View style={{ flex: 1, alignItems: "center", marginTop: 10 }}>
+            <Title style={{ textAlign: "center", marginTop: 0, fontSize: 15, color: "#007c7a", }}>Total Beds </Title>
+
+            <VictoryPie data={[{ x: "Used " + `${((bedInfo["CovidBedUsed"] + bedInfo["NormalBedUsed"]) / (bedInfo["CovidBedUsed"] + bedInfo["CovidBedFree"] + bedInfo["NormalBedUsed"] + bedInfo["NormalBedFree"])) * 100}` + "%", y: (bedInfo["CovidBedUsed"] + bedInfo["NormalBedUsed"]) }, { x: "Free " + `${((bedInfo["CovidBedFree"] + bedInfo["NormalBedFree"]) / ((bedInfo["CovidBedUsed"] + bedInfo["CovidBedFree"] + bedInfo["NormalBedUsed"] + bedInfo["NormalBedFree"]))) * 100}` + "%", y: (bedInfo["CovidBedFree"] + bedInfo["NormalBedFree"]) },]} width={300} height={150} colorScale={graphicColor} innerRadius={50} />
+
+
+
+          </View>
+
+
+          <View
+            style={{
+
+              marginLeft: 5,
+              marginBottom: 20,
+              borderBottomColor: "#009387",
+              borderBottomWidth: 2,
+            }}
+          />
 
 
           <View style={{ flexDirection: 'row', marginTop: 2 }}>
@@ -468,6 +544,12 @@ const styles = StyleSheet.create({
     paddingLeft: 20
 
   },
+
+  icons2: {
+    color: "red",
+
+
+  },
   errorMsg: {
     color: "#FF0000",
     fontSize: 14,
@@ -518,7 +600,7 @@ const styles = StyleSheet.create({
     height: 70,
     marginTop: 10,
     marginRight: 10,
-    marginBottom:10
+    marginBottom: 10
 
   },
   pickedDateContainer: {
