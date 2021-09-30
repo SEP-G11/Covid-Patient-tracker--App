@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {BASE_URL} from "../../dev.config";
+import { BASE_URL } from "../../dev.config";
 import {
   StyleSheet,
   Text,
@@ -24,12 +24,28 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import PhoneInput from "react-native-phone-number-input";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
-
+import { Card, Title, Paragraph } from 'react-native-paper';
 
 function HospitalAdminSearchBeds({ navigation }) {
 
 
-  const [facilityId, setFacility] = useState("");  
+  const [facilityId, setFacility] = useState("");
+  const [bedInfo, setBedInfo] = useState(null);
+  const [facilityInfo, setFacilityInfo] = useState(null);
+  // const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
+  const [show1, setShow1] = useState(false);
+  const [show2, setShow2] = useState(false);
+
+
+  function handleSubmit1() {
+    setShow1(!show1);
+  };
+
+
+  function handleSubmit2() {
+    setShow2(!show2);
+  };
+
 
   const AppButton = ({ onPress, title }) => (
     <TouchableOpacity onPress={onPress} style={styles.button}>
@@ -39,19 +55,77 @@ function HospitalAdminSearchBeds({ navigation }) {
   );
 
 
+  const AppButton1 = ({ onPress, title }) => (
+    <TouchableOpacity onPress={onPress} style={styles.button1}>
+      <View >
+        <Text style={styles.buttonText1}>{title}</Text>
+        <View>
+
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-             setFacility("");  
-         
+      setFacility("");
+      setBedInfo(null);
+
+      try {
+        async function loadFacilitys() {
+
+          const token = await AsyncStorage.getItem('token');
+
+          const URL = `${BASE_URL}/facility/getAllFacility`;
+          try {
+            let res = await fetch(URL, {
+              method: "GET",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+
+            });
+            response = await res.json()
+
+            setFacilityInfo(response.results)
+
+
+            if (res.status !== 200 && res.status !== 201 && res.status !== 202) {
+              throw new Error(message);
+            } else {
+              if (response) {
+                try {
+                } catch (error) { }
+
+              }
+            }
+          } catch (error) {
+            // alert(" Can't  Load beds details", [
+            //   { text: "Okay" },
+            // ]);
+          }
+        }
+        loadFacilitys();
+
+      } catch (error) {
+        alert(" Try again!", [
+          { text: "Okay" },
+        ]);
+      }
+
 
     });
-  }, [navigation,]);
+
+  }, [facilityInfo]);
 
 
   const search = async () => {
     const token = await AsyncStorage.getItem('token');
     const URL = `${BASE_URL}/bed/search/${facilityId}`;
-   
+
 
     try {
       const res = await fetch(URL, {
@@ -61,21 +135,25 @@ function HospitalAdminSearchBeds({ navigation }) {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-       
+
       });
 
-      const response = await res.json();
-      const message = response["message"]
+      const response1 = await res.json()
+
+
+
+
+      const message = response1["message"]
 
       if (res.status !== 200 && res.status !== 201 && res.status !== 202) {
 
         throw new Error(message);
       } else {
+        setBedInfo(response1.results)
+        
 
-        setFacility("");         
-                 
 
-        if (response) {
+        if (response1) {
           alert((message), [
             { text: "Okay" },
           ]);
@@ -84,6 +162,9 @@ function HospitalAdminSearchBeds({ navigation }) {
         }
       }
     } catch (error) {
+
+      setBedInfo(null);
+
 
       alert((error.message.toString()), [
         { text: "Okay" },
@@ -94,12 +175,12 @@ function HospitalAdminSearchBeds({ navigation }) {
   const handleSubmitPress = () => {
 
 
-   
-      if (!facilityId || facilityId == 'disabled') {
-        alert("Please select Facility !");
-        return;
-      }
-    
+
+    if (!facilityId || facilityId == 'disabled') {
+      alert("Please select Facility !");
+      return;
+    }
+
     search();
   };
 
@@ -116,29 +197,205 @@ function HospitalAdminSearchBeds({ navigation }) {
       </View>
 
 
-      <ScrollView style={{ paddingRight: 20 ,marginTop:50}}>
+      <ScrollView style={{ paddingRight: 20, marginTop: 50 }}>
 
         <Text style={styles.textFooter}>Facility Name</Text>
         <View style={[{ flex: .5, }, styles.BloodDrop]}>
-            <Picker
-              style={styles.action}
-              onValueChange={setFacility}
-              selectedValue={facilityId}
+          <Picker
+            style={styles.action}
+            onValueChange={setFacility}
+            selectedValue={facilityId}
 
-            >
-              <Picker.Item label="Select" value="disabled" color="#aaa" />
-              <Picker.Item label="Trablice National Hospital" value="6" />
-              <Picker.Item label="Ararat National Hospital" value="7" />
-            
-            
-            </Picker>
-          
+          >
+            <Picker.Item label="Select" value="disabled" color="#aaa" />
+            {facilityInfo ? (
+
+
+              Array.from({ length: facilityInfo.length }).map(
+                (_, j) => (
+                  <Picker.Item key={j} label={facilityInfo[`${j}`]["name"]} value={facilityInfo[`${j}`]["facility_id"]} />
+
+                )
+              )
+
+            )
+              :
+              (null)}
+
+
+
+
+          </Picker>
+
         </View>
-   
+
 
 
 
         <AppButton onPress={handleSubmitPress} title={"Search"} />
+
+
+
+
+
+
+        {bedInfo ? (
+
+
+          <SafeAreaView style={styles.footer}>
+
+
+
+            <View
+              style={{
+
+                marginLeft: 2,
+                marginBottom: 10,
+                borderBottomColor: "#009387",
+                borderBottomWidth: 2,
+              }}
+            />
+
+
+
+
+
+
+
+            <View style={{ flexDirection: 'row', marginTop: 2 }}>
+
+              {/* <Text style={styles.textFooter1}>WELCOME</Text> */}
+              <View style={{ flex: .5 }}>
+
+
+                <Card style={{ borderColor: "#007c7a", borderWidth: 3, borderRadius: 5, textAlign: "center" }}>
+                  {/* <Card.Title title="Covid Ward" subtitle="Card Subtitle"  /> */}
+                  <Card.Content>
+                    <Title style={{ textAlign: "center", marginTop: 0 }}>Covid Ward </Title>
+
+                    <View
+                      style={{
+                        borderBottomColor: "#009387",
+                        borderBottomWidth: 2,
+                      }}
+                    />
+                    <Title style={{ textAlign: "center", marginTop: 0, fontSize: 15 }}>Total Beds : {bedInfo.CovidWardCapacity}</Title>
+                    <Title style={{ textAlign: "center", marginTop: 0, fontSize: 16, color: "grey" }}>Used  :{bedInfo["CovidBedUsed"]} Free : {bedInfo["CovidBedFree"]}</Title>
+                    <View>
+
+                      <AppButton1
+                        onPress={handleSubmit1}
+                        title={"more"}
+                      />
+
+                    </View>
+
+                    {show1 ? (
+
+
+                      Array.from({ length: bedInfo.CovidBed.length }).map(
+                        (_, i) => (
+
+                          bedInfo["CovidBed"][`${i}`]["IsOccupied"] == 1 ? (
+                            <Paragraph key={i} style={{ color: "red", textAlign: "center" }}>{bedInfo["CovidBed"][`${i}`]["BedID"]}    {bedInfo["CovidBed"][`${i}`]["IsOccupied"] == 1 ? ("Occupied") : ("Free")}</Paragraph>
+                          ) :
+                            (<Paragraph key={i} style={{ color: "green", textAlign: "center" }}>{bedInfo["CovidBed"][`${i}`]["BedID"]} {bedInfo["CovidBed"][`${i}`]["IsOccupied"] == 1 ? ("Occupied") : ("Free")}</Paragraph>)
+
+
+                        )
+                      )
+
+                    )
+                      :
+                      (null)}
+
+
+
+                  </Card.Content>
+
+
+                  {/* <Card.Cover source={{ uri: 'https://picsum.photos/700' }} /> */}
+                  <Card.Actions>
+                    {/* <Button>Cancel</Button>
+<Button>Ok</Button> */}
+                  </Card.Actions>
+                </Card>
+              </View>
+
+
+              <View style={{ flex: .5, marginLeft: 15 }}>
+                <Card style={{ borderColor: "#007c7a", borderWidth: 3, borderRadius: 5, textAlign: "center" }}>
+                  {/* <Card.Title title="Covid Ward" subtitle="Card Subtitle"  /> */}
+                  <Card.Content>
+                    <Title style={{ textAlign: "center", marginTop: 0 }}>Normal Ward </Title>
+
+                    <View
+                      style={{
+                        borderBottomColor: "#009387",
+                        borderBottomWidth: 2,
+                      }}
+                    />
+                    <Title style={{ textAlign: "center", marginTop: 0, fontSize: 15 }}>Total Beds : {bedInfo.NormalWardCapacity}</Title>
+                    <Title style={{ textAlign: "center", marginTop: 0, fontSize: 16, color: "grey" }}>Used  :{bedInfo["NormalBedUsed"]} Free : {bedInfo["NormalBedFree"]}</Title>
+                    <View>
+
+                      <AppButton1
+                        onPress={handleSubmit2}
+                        title={"more"}
+                      />
+
+                    </View>
+
+                    {show2 ? (
+
+
+                      Array.from({ length: bedInfo.NormalBed.length }).map(
+                        (_, i) => (
+
+                          bedInfo["NormalBed"][`${i}`]["IsOccupied"] == 1 ? (
+                            <Paragraph key={i} style={{ color: "red", textAlign: "center" }}>{bedInfo["NormalBed"][`${i}`]["BedID"]}    {bedInfo["NormalBed"][`${i}`]["IsOccupied"] == 1 ? ("Occupied") : ("Free")}</Paragraph>
+                          ) :
+                            (<Paragraph key={i} style={{ color: "green", textAlign: "center" }}>{bedInfo["NormalBed"][`${i}`]["BedID"]} {bedInfo["NormalBed"][`${i}`]["IsOccupied"] == 1 ? ("Occupied") : ("Free")}</Paragraph>)
+
+
+                        )
+                      )
+
+                    )
+                      :
+                      (null)}
+
+
+
+                  </Card.Content>
+
+
+                  {/* <Card.Cover source={{ uri: 'https://picsum.photos/700' }} /> */}
+                  <Card.Actions>
+                    {/* <Button>Cancel</Button>
+<Button>Ok</Button> */}
+                  </Card.Actions>
+                </Card>
+              </View>
+
+            </View>
+
+
+
+          </SafeAreaView >
+
+        ) : (null)
+
+
+
+
+
+
+        }
+
+
+
+
 
       </ScrollView>
 
@@ -281,14 +538,28 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   button: {
-    marginTop: 60,
+    marginTop: 20,
     marginBottom: 20,
-    marginLeft: 40,
-    marginRight: 40,
+    marginLeft: 20,
+    marginRight: 20,
     paddingVertical: 10,
-    paddingHorizontal: 10,
+    paddingHorizontal: 14,
     backgroundColor: "#009387",
     borderRadius: 10,
+    alignItems: "center",
+    borderColor: "#20d1ce",
+    borderWidth: 2,
+
+  },
+  button1: {
+    marginTop: 20,
+    marginBottom: 20,
+    marginLeft: 10,
+    marginRight: 10,
+    paddingVertical: 4,
+    paddingHorizontal: 4,
+    backgroundColor: "#009387",
+    borderRadius: 15,
     alignItems: "center",
     borderColor: "#20d1ce",
     borderWidth: 2,
@@ -299,6 +570,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
 
   },
+  buttonText1: {
+    color: "#fff",
+    fontSize: 14,
+
+  },
+
   pickedDateContainer: {
     padding: 20,
     backgroundColor: '#fff',

@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Homepage from "./screens/Homepage";
 import Signin from "./screens/Signin";
 
+
 import DoctorDashboard from "./screens/DoctorScreens/DoctorDashboard";
 import DoctorAdmit from "./screens/DoctorScreens/DoctorAdmit";
 import DoctorCreateReport from "./screens/DoctorScreens/DoctorCreateReport";
@@ -32,8 +33,6 @@ import { HADrawerContent } from './components/HADrawerContent';
 const Drawer = createDrawerNavigator();
 
 const Stack = createNativeStackNavigator();
-
-
 
 
 const App = () => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {BASE_URL} from "../../dev.config";
+import { BASE_URL } from "../../dev.config";
 import {
   StyleSheet,
   Text,
@@ -42,7 +42,10 @@ function HospitalAdminAdmit({ navigation }) {
   const medicalHistory = "";
   const [bedId, setBedId] = useState("");
 
-  const [bedInfo, setBedInfo] = useState({});
+
+  const [bedInfo, setBedInfo] = useState(null);
+
+
   const getAge = bday => {
     if (Math.floor((new Date() - new Date(bday).getTime()) / 3.15576e+10)) {
       return (Math.floor((new Date() - new Date(bday).getTime()) / 3.15576e+10));
@@ -105,29 +108,19 @@ function HospitalAdminAdmit({ navigation }) {
   ];
 
   const AppButton = ({ onPress, title }) => (
-    <TouchableOpacity onPress={onPress} style={styles.button}>      
+    <TouchableOpacity onPress={onPress} style={styles.button}>
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
 
   );
 
 
-  const loadbeds = async () => {       
-    const bedInfoObject =JSON.parse(await AsyncStorage.getItem("bedInfo"));              
-    // console.log(bedInfoObject)
-   
-    setBedInfo({...bedInfo,deatils: bedInfoObject})
-
-    // console.log(bedInfo)
-  //  console.log( bedInfo["CovidBed"].length)
-     }
-
 
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {        
-    
-      loadbeds(); 
+    const unsubscribe = navigation.addListener('focus', () => {
+
+
       setName("");
       setBday1("");
       setAddress("");
@@ -138,17 +131,67 @@ function HospitalAdminAdmit({ navigation }) {
       setBedId("");
       setBday2("");
       setGender("");
-   
-     
+
+
+      try {
+        async function loadbeds() {
+
+          const token = await AsyncStorage.getItem('token');
+
+          const URL = `${BASE_URL}/bed/search/*`;
+          try {
+            let res = await fetch(URL, {
+              method: "GET",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+
+            });
+           response = await res.json()
+
+            setBedInfo(response.results)
+         
+
+
+
+            if (res.status !== 200 && res.status !== 201 && res.status !== 202) {
+              throw new Error(message);
+            } else {
+              if (response) {
+                try {
+                } catch (error) { }
+
+              }
+            }
+          } catch (error) {
+            // alert(" Can't  Load beds details", [
+            //   { text: "Okay" },
+            // ]);
+          }
+        }
+        loadbeds();
+
+      } catch (error) {
+        alert(" Try again (LOGOUT)!", [
+          { text: "Okay" },
+        ]);
+      }
+
+
     });
-  }, [navigation,]);
+
+
+
+  }, [bedInfo,]);
 
 
 
   const admit = async () => {
     const token = await AsyncStorage.getItem('token');
     const URL = `${BASE_URL}/patient/admit`;
-  
+
     try {
       const res = await fetch(URL, {
         method: "POST",
@@ -335,8 +378,28 @@ function HospitalAdminAdmit({ navigation }) {
 
           >
             <Picker.Item label="Select  District" value="disabled" color="#aaa" />
-            <Picker.Item label="Matara" value="Matara" />
+            <Picker.Item label="Ampara" value="Ampara" />
+            <Picker.Item label="Anuradhapura" value="Anuradhapura" />
+            <Picker.Item label="Batticaloa" value="Batticaloa" />
+            <Picker.Item label="Polonnaruwa" value="Polonnaruwa" />
             <Picker.Item label="Hambantota" value="Hambantota" />
+            <Picker.Item label="Mullaitivu" value="Mullaitivu" />
+            <Picker.Item label="Puttalam" value="Puttalam" />
+            <Picker.Item label="Colombo" value="Colombo" />
+            <Picker.Item label="Galle" value="Galle" />
+            <Picker.Item label="Gampaha" value="Gampaha" />
+            <Picker.Item label="Jaffna" value="Jaffna" />
+            <Picker.Item label="Hambantota" value="Hambantota" />
+            <Picker.Item label="Matara" value="Matara" />
+            <Picker.Item label="Kalutara" value="Kalutara" />
+            <Picker.Item label="Matara" value="Matara" />
+            <Picker.Item label="Kandy" value="Kandy" />
+            <Picker.Item label="Polonnaruwa" value="Polonnaruwa" />
+            <Picker.Item label="Hambantota" value="Hambantota" />
+            <Picker.Item label="Mullaitivu" value="Mullaitivu" />
+            <Picker.Item label="Puttalam" value="Puttalam" />
+            <Picker.Item label="NuwaraEliya" value="NuwaraEliya" />
+            <Picker.Item label="Trincomalee" value="Trincomalee" />
           </Picker>
         </View>
 
@@ -442,7 +505,13 @@ function HospitalAdminAdmit({ navigation }) {
             >
               <Picker.Item label="Select " value="disabled" color="#aaa" />
               <Picker.Item label="A+" value="A+" />
-              <Picker.Item label="AB" value="AB" />
+              <Picker.Item label="O+" value="O+" />
+              <Picker.Item label="B+" value="B+" />
+              <Picker.Item label="AB+" value="AB+" />
+              <Picker.Item label="A-" value="A-" />
+              <Picker.Item label="O-" value="O-" />
+              <Picker.Item label="B-" value="B-" />
+              <Picker.Item label="AB-" value="AB-" />
             </Picker>
           </View>
 
@@ -455,14 +524,35 @@ function HospitalAdminAdmit({ navigation }) {
 
             >
               <Picker.Item label="Select" value="disabled" color="#aaa" />
-              <Picker.Item label="46" value="46" />
-              <Picker.Item label="47" value="47" />
-              <Picker.Item label="21" value="21" />
+              <Picker.Item label="12" value="12"  />
+              <Picker.Item label="32" value="32"  />
+              <Picker.Item label="42" value="42"  />
+              <Picker.Item label="11" value="11"  />
+
+
+              {bedInfo ? (
+
+                Array.from({ length: bedInfo["NormalBed"].length }).map(
+                  (_, i) => (
+
+
+                     <Picker.Item key={i} label={i} value={i}  />
+                      // <Picker.Item key={i} label={ bedInfo["NormalBed"][`${i}`]["BedID"] } value={bedInfo["NormalBed"][`${i}`]["BedID"]} color="#000" />
+
+                  )
+                )
+            
+              )
+                :
+                (null)}
+
+
+
             </Picker>
           </View>
 
         </View>
-        
+
 
         {/* {bedInfo ? (
           <View style={[{ flex: .5, }, styles.BloodDrop]}>
@@ -488,9 +578,9 @@ function HospitalAdminAdmit({ navigation }) {
         ):(null)}  */}
 
 
-        
 
-        
+
+
 
 
 

@@ -1,88 +1,320 @@
-import React ,{useEffect} from "react";
-import {BASE_URL} from "../../dev.config";
+import React, { useEffect, useState } from "react";
+import { BASE_URL } from "../../dev.config";
 import {
   StyleSheet,
   Text,
   View,
   SafeAreaView,
   Image,
+  ScrollView,
   TouchableOpacity,
 } from "react-native";
+import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 import * as Animatable from "react-native-animatable";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 function HospitalAdminDashboard({ navigation }) {
 
-  const loadbeds = async () => {
-    const token = await AsyncStorage.getItem('token');
-    
-    const URL = `${BASE_URL}/bed/search/*`;
-   
 
-    try {
-      const res = await fetch(URL, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },      
-       
-      });
+  const [bedInfo, setBedInfo] = useState(null);
+  // const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
+  const [show1, setShow1] = useState(false);
+  const [show2, setShow2] = useState(false);
 
-      const response = await res.json();
-      const message = response["message"]
 
-      //  console.log(response.results);
-
-      if (res.status !== 200 && res.status !== 201 && res.status !== 202) {
-        throw new Error(message);
-      } else {
-        if (response) {
-
-          try {
-            await AsyncStorage.setItem("bedInfo", JSON.stringify(response.results));
-            //  const bedInfoObject =JSON.parse(await AsyncStorage.getItem("bedInfo"));                  
-            //  console.log(bedInfoObject.FacilityName)
-          } catch (error) { }
-        
-         
-        }
-      }
-    } catch (error) {
-      alert(" Can't  Load beds details", [
-        { text: "Okay" },
-      ]);
-    }
+  function handleSubmit1() {
+    setShow1(!show1);
   };
-  
+
+
+  function handleSubmit2() {
+    setShow2(!show2);
+  };
+
+
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      loadbeds()
-    
+
+      try {
+        async function loadbeds() {
+
+          const token = await AsyncStorage.getItem('token');
+
+          const URL = `${BASE_URL}/bed/search/*`;
+          try {
+            let res = await fetch(URL, {
+              method: "GET",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+
+            });
+            response = await res.json()
+
+            setBedInfo(response.results)
+
+
+            if (res.status !== 200 && res.status !== 201 && res.status !== 202) {
+              throw new Error(message);
+            } else {
+              if (response) {
+                try {
+                } catch (error) { }
+
+              }
+            }
+          } catch (error) {
+            // alert(" Can't  Load beds details", [
+            //   { text: "Okay" },
+            // ]);
+          }
+        }
+        loadbeds();
+
+      } catch (error) {
+        alert(" Try again!", [
+          { text: "Okay" },
+        ]);
+      }
+
+
     });
-  }, [navigation]);
+
+  }, [bedInfo]);
 
 
+  const AppButton = ({ onPress, title }) => (
+    <TouchableOpacity onPress={onPress} style={styles.button}>
+      <View >
+        <Text style={styles.buttonText}>{title}</Text>
+        <View>
+
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+
+
+  const AppButton1 = ({ onPress, title }) => (
+    <TouchableOpacity onPress={onPress} style={styles.button1}>
+      <View >
+        <Text style={styles.buttonText1}>{title}</Text>
+        <View>
+
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
-    <SafeAreaView style={styles.footer}>
-      <View style={styles.header}>
-        <Text style={styles.textHeader}>HOSPITAL ADMIN DASHBOARD</Text>
-        <View
-          style={{
-            borderBottomColor: "#009387",
-            borderBottomWidth: 2,
-          }}
-        />
-      </View>
+
+
+    bedInfo ? (
+
+
+      <SafeAreaView style={styles.footer}>
+        <View style={styles.header}>
+          <Text style={styles.textHeader}> ADMIN  DASHBOARD</Text>
+          <View
+            style={{
+              borderBottomColor: "#009387",
+              borderBottomWidth: 2,
+            }}
+          >
+
+            <View style={{ flexDirection: 'row', marginTop: 2 }}>
+              <FontAwesome name="h-square" size={17}  {...styles.icons} />
+              <Text style={styles.textFooter}>{bedInfo.FacilityName}</Text>
+              <FontAwesome name="phone-square" size={17}  {...styles.icons1} />
+              <Text style={{ color: "#007c7a", fontSize: 13, paddingLeft: 5 }}>{bedInfo.Contactnumber}</Text>
+            </View>
+
+          </View>
+        </View>
+
+
+        <ScrollView style={{ paddingRight: 20 }}>
+
+          {/* <View style={{ flexDirection: 'row', marginTop: 2 }}>
+
+          <Text style={styles.textFooter1}>WELCOME</Text>
+          <View style={{ flexDirection: 'row', marginTop: 2, marginRight: 0 }}>
+            <Image style={styles.logo} source={require("../../assets/logo.png")} />
+          </View>        
+        </View> */}
+          <Image style={styles.logo} source={require("../../assets/logo.png")} />
+
+          <View
+            style={{
+
+              marginLeft:15,
+              marginBottom:10,
+              borderBottomColor: "#009387",
+              borderBottomWidth: 2,
+            }}
+          />
+
+          <View style={{ marginTop: 2 }}>
+            <Text style={{ textAlign: "center", color: "#007c7a", fontSize: 30 }}>WELCOME</Text>
+          </View>
+
+          <View style={{ textAlign: "center", marginTop: 2 }}>
+
+            <Text style={{ textAlign: "center", color: "#000", fontSize: 15 }}>Your are a hospital admin of {bedInfo.FacilityName}.Try to work with your best.</Text>
+
+          </View>
+
+
+          <View style={{ alignItems: "center", marginRight: 0 }}>
+            <AppButton
+              onPress={() => navigation.navigate("HospitalAdminAdmit")}
+              title={"GET START"}
+            />
+          </View>
 
 
 
-    </SafeAreaView >
-  );
+          <View style={{ flexDirection: 'row', marginTop: 2 }}>
+
+            {/* <Text style={styles.textFooter1}>WELCOME</Text> */}
+            <View style={{ flex: .5 }}>
+
+
+              <Card style={{ borderColor: "#007c7a", borderWidth: 3, borderRadius: 5, textAlign: "center" }}>
+                {/* <Card.Title title="Covid Ward" subtitle="Card Subtitle"  /> */}
+                <Card.Content>
+                  <Title style={{ textAlign: "center", marginTop: 0 }}>Covid Ward </Title>
+
+                  <View
+                    style={{
+                      borderBottomColor: "#009387",
+                      borderBottomWidth: 2,
+                    }}
+                  />
+                  <Title style={{ textAlign: "center", marginTop: 0, fontSize: 15 }}>Total Beds : {bedInfo.CovidWardCapacity}</Title>
+                  <Title style={{ textAlign: "center", marginTop: 0, fontSize: 16, color: "grey" }}>Used  :{bedInfo["CovidBedUsed"]} Free : {bedInfo["CovidBedFree"]}</Title>
+                  <View>
+
+                    <AppButton1
+                      onPress={handleSubmit1}
+                      title={"more"}
+                    />
+
+                  </View>
+
+                  {show1 ? (
+
+
+                    Array.from({ length: bedInfo.CovidBed.length }).map(
+                      (_, i) => (
+
+                        bedInfo["CovidBed"][`${i}`]["IsOccupied"] == 1 ? (
+                          <Paragraph key={i} style={{ color: "red", textAlign: "center" }}>{bedInfo["CovidBed"][`${i}`]["BedID"]}    {bedInfo["CovidBed"][`${i}`]["IsOccupied"] == 1 ? ("Occupied") : (" Free")}</Paragraph>
+                        ) :
+                          (<Paragraph key={i} style={{ color: "green", textAlign: "center" }}>{bedInfo["CovidBed"][`${i}`]["BedID"]} {bedInfo["CovidBed"][`${i}`]["IsOccupied"] == 1 ? ("Occupied") : (" Free")}</Paragraph>)
+
+
+                      )
+                    )
+
+                  )
+                    :
+                    (null)}
+
+
+
+                </Card.Content>
+
+
+                {/* <Card.Cover source={{ uri: 'https://picsum.photos/700' }} /> */}
+                <Card.Actions>
+                  {/* <Button>Cancel</Button>
+      <Button>Ok</Button> */}
+                </Card.Actions>
+              </Card>
+            </View>
+
+
+            <View style={{ flex: .5, marginLeft: 15 }}>
+              <Card style={{ borderColor: "#007c7a", borderWidth: 3, borderRadius: 5, textAlign: "center" }}>
+                {/* <Card.Title title="Covid Ward" subtitle="Card Subtitle"  /> */}
+                <Card.Content>
+                  <Title style={{ textAlign: "center", marginTop: 0 }}>Normal Ward </Title>
+
+                  <View
+                    style={{
+                      borderBottomColor: "#009387",
+                      borderBottomWidth: 2,
+                    }}
+                  />
+                  <Title style={{ textAlign: "center", marginTop: 0, fontSize: 15 }}>Total Beds : {bedInfo.NormalWardCapacity}</Title>
+                  <Title style={{ textAlign: "center", marginTop: 0, fontSize: 16, color: "grey" }}>Used  :{bedInfo["NormalBedUsed"]} Free : {bedInfo["NormalBedFree"]}</Title>
+                  <View>
+
+                    <AppButton1
+                      onPress={handleSubmit2}
+                      title={"more"}
+                    />
+
+                  </View>
+
+                  {show2 ? (
+
+
+                    Array.from({ length: bedInfo.NormalBed.length }).map(
+                      (_, i) => (
+
+                        bedInfo["NormalBed"][`${i}`]["IsOccupied"] == 1 ? (
+                          <Paragraph key={i} style={{ color: "red", textAlign: "center" }}>{bedInfo["NormalBed"][`${i}`]["BedID"]}    {bedInfo["NormalBed"][`${i}`]["IsOccupied"] == 1 ? ("Occupied") : (" Free")}</Paragraph>
+                        ) :
+                          (<Paragraph key={i} style={{ color: "green", textAlign: "center" }}>{bedInfo["NormalBed"][`${i}`]["BedID"]} {bedInfo["NormalBed"][`${i}`]["IsOccupied"] == 1 ? ("Occupied") : (" Free")}</Paragraph>)
+
+
+                      )
+                    )
+
+                  )
+                    :
+                    (null)}
+
+
+
+                </Card.Content>
+
+
+                {/* <Card.Cover source={{ uri: 'https://picsum.photos/700' }} /> */}
+                <Card.Actions>
+                  {/* <Button>Cancel</Button>
+      <Button>Ok</Button> */}
+                </Card.Actions>
+              </Card>
+            </View>
+
+          </View>
+
+
+
+
+
+
+
+        </ScrollView>
+      </SafeAreaView >
+
+
+    ) : (null)
+
+
+
+  )
+
+
 }
 
 
@@ -139,7 +371,22 @@ const styles = StyleSheet.create({
   },
   textFooter: {
     color: "#007c7a",
-    fontSize: 16,
+    fontSize: 13,
+    paddingLeft: 5,
+    marginRight: 40
+  },
+  textFooter1: {
+    color: "#007c7a",
+    fontSize: 30,
+
+    paddingLeft: 15,
+    marginTop: 20
+  },
+  textFooter2: {
+    color: "#000",
+    fontSize: 14,
+
+    marginTop: 2
   },
   box: {
     width: "50%",
@@ -212,7 +459,13 @@ const styles = StyleSheet.create({
   },
   icons: {
     color: "#007c7a",
+    paddingRight: 10
 
+  },
+  icons1: {
+    color: "#007c7a",
+    marginLeft: 30,
+    paddingLeft: 20
 
   },
   errorMsg: {
@@ -220,14 +473,28 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   button: {
-    marginTop: 60,
+    marginTop: 20,
     marginBottom: 20,
-    marginLeft: 40,
-    marginRight: 40,
+    marginLeft: 20,
+    marginRight: 20,
     paddingVertical: 10,
-    paddingHorizontal: 10,
+    paddingHorizontal: 14,
     backgroundColor: "#009387",
     borderRadius: 10,
+    alignItems: "center",
+    borderColor: "#20d1ce",
+    borderWidth: 2,
+
+  },
+  button1: {
+    marginTop: 20,
+    marginBottom: 20,
+    marginLeft: 10,
+    marginRight: 10,
+    paddingVertical: 4,
+    paddingHorizontal: 4,
+    backgroundColor: "#009387",
+    borderRadius: 15,
     alignItems: "center",
     borderColor: "#20d1ce",
     borderWidth: 2,
@@ -236,6 +503,22 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontSize: 20,
+
+  },
+  buttonText1: {
+    color: "#fff",
+    fontSize: 14,
+
+  },
+
+
+  logo: {
+    width: 300,
+    alignItems: "center",
+    height: 70,
+    marginTop: 10,
+    marginRight: 10,
+    marginBottom:10
 
   },
   pickedDateContainer: {
