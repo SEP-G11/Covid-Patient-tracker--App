@@ -128,7 +128,7 @@ function HospitalAdminAdmit({ navigation }) {
       setBloodtype(" ");
       setDistrict("");
       setRATresult(" ");
-      setBedId("");
+      setBedId(" ");
       setBday2("");
       setGender("");
 
@@ -149,10 +149,10 @@ function HospitalAdminAdmit({ navigation }) {
               },
 
             });
-           response = await res.json()
+            response = await res.json()
 
             setBedInfo(response.results)
-         
+
 
 
 
@@ -434,43 +434,6 @@ function HospitalAdminAdmit({ navigation }) {
 
 
 
-        {/* 
-<StatusBar barStyle="dark-content" />
-      <View style={styles.container}>
-        <SafeAreaView style={styles.wrapper}>
-          {showMessage && (
-            <View style={styles.message}>
-              <Text>Value : {value}</Text>
-              <Text>Formatted Value : {formattedValue}</Text>
-              <Text>Valid : {valid ? "true" : "false"}</Text>
-            </View>
-          )}
-          <PhoneInput
-            ref={phoneInput}
-            defaultValue={value}
-            defaultCode="DM"
-            onChangeText={(text) => {
-              setValue(text);
-            }}
-            onChangeFormattedText={(text) => {
-              setFormattedValue(text);
-            }}
-            withDarkTheme
-            withShadow
-            autoFocus
-          />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              const checkValid = phoneInput?.isValidNumber();
-              setShowMessage(true);
-              setValid(checkValid ? checkValid : false);
-            }}
-          >
-            <Text>Check</Text>
-          </TouchableOpacity>
-        </SafeAreaView>
-      </View> */}
 
 
 
@@ -524,10 +487,7 @@ function HospitalAdminAdmit({ navigation }) {
 
             >
               <Picker.Item label="Select" value="disabled" color="#aaa" />
-              <Picker.Item label="12" value="12"  />
-              <Picker.Item label="32" value="32"  />
-              <Picker.Item label="42" value="42"  />
-              <Picker.Item label="11" value="11"  />
+
 
 
               {bedInfo ? (
@@ -535,13 +495,35 @@ function HospitalAdminAdmit({ navigation }) {
                 Array.from({ length: bedInfo["NormalBed"].length }).map(
                   (_, i) => (
 
+                    
+                    bedInfo["NormalBed"][`${i}`]["IsOccupied"] != 1 ? (
+                      <Picker.Item key={i} label={(bedInfo["NormalBed"][`${i}`]["BedID"]).toString()} value={(bedInfo["NormalBed"][`${i}`]["BedID"]).toString()} color="#000" />
 
-                     <Picker.Item key={i} label={i} value={i}  />
-                      // <Picker.Item key={i} label={ bedInfo["NormalBed"][`${i}`]["BedID"] } value={bedInfo["NormalBed"][`${i}`]["BedID"]} color="#000" />
+                    ) : (null)
+
 
                   )
                 )
-            
+
+              )
+                :
+                (null)}
+
+              {bedInfo ? (
+
+                Array.from({ length: bedInfo["CovidBed"].length }).map(
+                  (_, j) => (
+
+                  
+                    bedInfo["CovidBed"][`${j}`]["IsOccupied"] != 1 ? (
+                      <Picker.Item key={j} label={(bedInfo["CovidBed"][`${j}`]["BedID"]).toString()} value={(bedInfo["CovidBed"][`${j}`]["BedID"]).toString()} color="#000" />
+
+                    ) : (null)
+
+
+                  )
+                )
+
               )
                 :
                 (null)}

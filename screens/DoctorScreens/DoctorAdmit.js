@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {BASE_URL} from "../../dev.config";
+import { BASE_URL } from "../../dev.config";
 import {
   StyleSheet,
   Text,
@@ -32,16 +32,18 @@ function DoctorAdmit({ navigation }) {
   const [name, setName] = useState("");
   const [bday1, setBday1] = useState("");
   const [bday2, setBday2] = useState("");
-  const gender="";
-  const address="";
+  const gender = "";
+  const address = "";
   const [contactnumber, setContactnumber] = useState("");
-  const bloodtype="";
-  const district="";
+  const bloodtype = "";
+  const [district, setDistrict] = useState("");
   const isvaccinated = "1";
   const [RATresult, setRATresult] = useState("");
   const [medicalHistory, setMedicalHistory] = useState("");
   const [bedId, setBedId] = useState("");
-  const [bedInfo, setBedInfo] = useState({});
+
+  const [bedInfo, setBedInfo] = useState(null);
+
 
   const getAge = bday => {
     if (Math.floor((new Date() - new Date(bday).getTime()) / 3.15576e+10)) {
@@ -111,30 +113,71 @@ function DoctorAdmit({ navigation }) {
   );
 
 
-  const loadbeds = async () => {
-    const bedInfoObject = JSON.parse(await AsyncStorage.getItem("bedInfo"));
-    // console.log(bedInfoObject)
-
-    setBedInfo({ ...bedInfo, deatils: bedInfoObject })
-
-    // console.log(bedInfo)
-    //  console.log( bedInfo["CovidBed"].length)
-  }
 
 
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
 
-      loadbeds();
+
       setName("");
       setBday1("");
+      setDistrict("");
       setMedicalHistory("");
-      setContactnumber("");     
+      setContactnumber("");
       setRATresult(" ");
       setBedId("");
       setBday2("");
-     
+
+
+
+      try {
+        async function loadbeds() {
+
+          const token = await AsyncStorage.getItem('token');
+
+          const URL = `${BASE_URL}/bed/search/*`;
+          try {
+            let res = await fetch(URL, {
+              method: "GET",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+
+            });
+            response = await res.json()
+
+            setBedInfo(response.results)
+
+
+
+
+            if (res.status !== 200 && res.status !== 201 && res.status !== 202) {
+              throw new Error(message);
+            } else {
+              if (response) {
+                try {
+                } catch (error) { }
+
+              }
+            }
+          } catch (error) {
+            // alert(" Can't  Load beds details", [
+            //   { text: "Okay" },
+            // ]);
+          }
+        }
+        loadbeds();
+
+      } catch (error) {
+        alert(" Try again (LOGOUT)!", [
+          { text: "Okay" },
+        ]);
+      }
+
+
 
 
     });
@@ -187,6 +230,7 @@ function DoctorAdmit({ navigation }) {
         setName("");
         setBday1("");
         setAddress("");
+        setDistrict("");
         setContactnumber("");
         setBloodtype(" ");
         setDistrict("");
@@ -226,6 +270,9 @@ function DoctorAdmit({ navigation }) {
 
     if (!contactnumber) {
       alert("Contactnumber can't be empty !");
+      return;
+    } if (!district || district == 'disabled') {
+      alert("District can't be empty !");
       return;
     }
 
@@ -330,6 +377,39 @@ function DoctorAdmit({ navigation }) {
             autoCorrect={false}
           />
         </View>
+        <Text style={[{ marginTop: 15, }, styles.textFooter]}>District</Text>
+        <View style={styles.districtDrop}>
+          <Picker
+            style={styles.action}
+            onValueChange={setDistrict}
+            selectedValue={district}
+
+          >
+            <Picker.Item label="Select  District" value="disabled" color="#aaa" />
+            <Picker.Item label="Ampara" value="Ampara" />
+            <Picker.Item label="Anuradhapura" value="Anuradhapura" />
+            <Picker.Item label="Batticaloa" value="Batticaloa" />
+            <Picker.Item label="Polonnaruwa" value="Polonnaruwa" />
+            <Picker.Item label="Hambantota" value="Hambantota" />
+            <Picker.Item label="Mullaitivu" value="Mullaitivu" />
+            <Picker.Item label="Puttalam" value="Puttalam" />
+            <Picker.Item label="Colombo" value="Colombo" />
+            <Picker.Item label="Galle" value="Galle" />
+            <Picker.Item label="Gampaha" value="Gampaha" />
+            <Picker.Item label="Jaffna" value="Jaffna" />
+            <Picker.Item label="Hambantota" value="Hambantota" />
+            <Picker.Item label="Matara" value="Matara" />
+            <Picker.Item label="Kalutara" value="Kalutara" />
+            <Picker.Item label="Matara" value="Matara" />
+            <Picker.Item label="Kandy" value="Kandy" />
+            <Picker.Item label="Polonnaruwa" value="Polonnaruwa" />
+            <Picker.Item label="Hambantota" value="Hambantota" />
+            <Picker.Item label="Mullaitivu" value="Mullaitivu" />
+            <Picker.Item label="Puttalam" value="Puttalam" />
+            <Picker.Item label="NuwaraEliya" value="NuwaraEliya" />
+            <Picker.Item label="Trincomalee" value="Trincomalee" />
+          </Picker>
+        </View>
 
 
 
@@ -377,9 +457,47 @@ function DoctorAdmit({ navigation }) {
 
             >
               <Picker.Item label="Select" value="disabled" color="#aaa" />
-              <Picker.Item label="46" value="46" />
-              <Picker.Item label="47" value="47" />
-              <Picker.Item label="21" value="21" />
+
+              {bedInfo ? (
+
+                Array.from({ length: bedInfo["NormalBed"].length }).map(
+                  (_, i) => (
+
+
+                    bedInfo["NormalBed"][`${i}`]["IsOccupied"] != 1 ? (
+                      <Picker.Item key={i} label={(bedInfo["NormalBed"][`${i}`]["BedID"]).toString()} value={(bedInfo["NormalBed"][`${i}`]["BedID"]).toString()} color="#000" />
+
+                    ) : (null)
+
+
+                  )
+                )
+
+              )
+                :
+                (null)}
+
+              {bedInfo ? (
+
+                Array.from({ length: bedInfo["CovidBed"].length }).map(
+                  (_, i) => (
+
+
+                    bedInfo["CovidBed"][`${i}`]["IsOccupied"] != 1 ? (
+                      <Picker.Item key={i} label={(bedInfo["CovidBed"][`${i}`]["BedID"]).toString()} value={(bedInfo["CovidBed"][`${i}`]["BedID"]).toString()} color="#000" />
+
+                    ) : (null)
+
+
+                  )
+                )
+
+              )
+                :
+                (null)}
+
+
+
             </Picker>
           </View>
 
