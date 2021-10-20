@@ -1,14 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-function Dashboard ({ navigation }) {
+function DoctorAdmitPatientScreen ({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <AppButton onPress={() => navigation.navigate('Homepage')} title={'Log out'}/>
+        
       </View>
     </SafeAreaView>
   );
@@ -44,4 +42,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Dashboard;
+export default DoctorAdmitPatientScreen;
