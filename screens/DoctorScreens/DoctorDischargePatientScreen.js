@@ -2,11 +2,11 @@ import React from 'react';
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 
-function Admit ({ navigation }) {
+function DoctorDischargePatientScreen ({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        
+      
       </View>
     </SafeAreaView>
   );
@@ -42,4 +42,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Admit;
+export default DoctorDischargePatientScreen;

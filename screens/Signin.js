@@ -1,19 +1,25 @@
 import React, { useState } from "react";
+import {BASE_URL} from "../dev.config";
 import {
   StyleSheet,
   Text,
   View,
   SafeAreaView,
   TouchableOpacity,
-  TextInput,
+  TextInput, ActivityIndicator
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// import { AsyncStorage } from "react-native";
+import { AuthContext } from '../components/context';
 
-function Signin({ navigation }) {
+
+// import { AsyncStorage } from "react-native";
+// const { SignIn } = React.useContext(AuthContext);
+
+
+const Signin = ({ navigation }) =>{
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -24,6 +30,7 @@ function Signin({ navigation }) {
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
   );
+  const { signInFunction } = React.useContext(AuthContext);
 
   const [data, setData] = React.useState({
     secureTextEntry: true,
@@ -38,8 +45,8 @@ function Signin({ navigation }) {
   };
 
   const signIn = async () => {
-    const URL = "http://192.168.115.5:8000/auth/login";
-
+    const URL = `${BASE_URL}/auth/login`;
+  
     try {
       const res = await fetch(URL, {
         method: "POST",
@@ -60,15 +67,19 @@ function Signin({ navigation }) {
         throw new Error();
       } else {
         if (response.results.token) {
-          try {
-            await AsyncStorage.setItem("userInfo", JSON.stringify(response));
-          } catch (error) {}
 
-          if (response.results.accType === "DOC") {
-            navigation.navigate("DoctorSideNavScreen");
-          } else {
-            navigation.navigate("HASideNavScreen");
-          }
+          // try {
+          //   await AsyncStorage.setItem("userInfo", JSON.stringify(response));
+          // } catch (error) { }
+          signInFunction(response.results);
+
+          // if (response.results.accType === "DOC") {
+          //   navigation.navigate("DoctorDashboard");
+          // } else {
+          //   navigation.navigate("HospitalAdminDashboard");
+          // }
+
+
         }
       }
     } catch (error) {
@@ -94,12 +105,14 @@ function Signin({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.textHeader}>Welcome!</Text>
+        <Text style={styles.textHeader}>SIGN IN </Text>
       </View>
+      
+
       <Animatable.View style={styles.footer} animation="fadeInUpBig">
-        <Text style={styles.textFooter}>Email</Text>
+        <Text style={styles.textFooter}>Email Address</Text>
         <View style={styles.action}>
-          <FontAwesome name="envelope-square" size={20} />
+          <FontAwesome name="envelope-square" size={20}  {...styles.icons} />
           <TextInput
             placeholder="Your Email"
             placeholderTextColor="#666666"
@@ -111,7 +124,7 @@ function Signin({ navigation }) {
 
         <Text style={[styles.textFooter, { marginTop: 35 }]}>Password</Text>
         <View style={styles.action}>
-          <FontAwesome name="lock" size={20} />
+          <FontAwesome name="lock" size={20} {...styles.icons} />
           <TextInput
             placeholder="Your Password"
             placeholderTextColor="#666666"
@@ -125,22 +138,27 @@ function Signin({ navigation }) {
             {data.secureTextEntry ? (
               <Feather name="eye-off" color="grey" size={20} />
             ) : (
-              <Feather name="eye" color="grey" size={20} />
+              <Feather name="eye" color="#009387" size={20} />
             )}
           </TouchableOpacity>
         </View>
 
         <TouchableOpacity>
-          <Text style={{ color: "#009387", marginTop: 30 }}>
-            Forgot password?
+          <Text style={{ color: "grey", marginTop: 30 }}>
+            Forgot Your Password?
           </Text>
         </TouchableOpacity>
 
         <AppButton onPress={handleSubmitPress} title={"Sign In"} />
       </Animatable.View>
+
+
     </SafeAreaView>
   );
 }
+
+
+export default Signin;
 
 const styles = StyleSheet.create({
   container: {
@@ -152,6 +170,12 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     paddingHorizontal: 20,
     paddingBottom: 25,
+  },
+  inner: {
+    flex: 1,
+    backgroundColor: "red",
+    alignItems: "center",
+    justifyContent: "center"
   },
   footer: {
     flex: 3,
@@ -165,19 +189,28 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: 30,
+    textAlign: "center"
   },
   textFooter: {
-    color: "#000",
-    fontSize: 20,
+    color: "#007c7a",
+    fontSize: 16,
+  },
+  box: {
+    width: "50%",
+    height: "50%",
+    padding: "5"
   },
   action: {
     flexDirection: "row",
-    marginTop: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "#f2f2f2",
-    paddingBottom: 5,
+    marginTop: 10,
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: "#007c7a",
+
+    padding: 5,
     alignItems: "center",
   },
+
   actionError: {
     flexDirection: "row",
     marginTop: 10,
@@ -189,6 +222,10 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 20,
     color: "#000",
+
+  },
+  icons: {
+    color: "#007c7a"
   },
   errorMsg: {
     color: "#FF0000",
@@ -196,16 +233,24 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 100,
+    marginLeft: 40,
+    marginRight: 40,
     paddingVertical: 10,
-    paddingHorizontal: 50,
+    paddingHorizontal: 10,
     backgroundColor: "#009387",
-    borderRadius: 50,
+    borderRadius: 10,
     alignItems: "center",
+    borderColor: "#20d1ce",
+    borderWidth: 2,
+
   },
   buttonText: {
     color: "#fff",
     fontSize: 20,
+
   },
+
+
 });
 
-export default Signin;
+

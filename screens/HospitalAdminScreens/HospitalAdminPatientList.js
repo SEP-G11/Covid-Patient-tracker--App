@@ -1,22 +1,76 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
+import {BASE_URL} from "../../dev.config";
 import {
   StyleSheet,
   Text,
   View,
   SafeAreaView,
-  Image,
   TouchableOpacity,
+  ScrollView,
+  Platform,
+  Picker,
+  Button,
+  StatusBar,
+  TextInput,
 } from "react-native";
+import { Drawer } from 'react-native-paper';
 import * as Animatable from "react-native-animatable";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import Feather from "react-native-vector-icons/Feather";
+import { AuthContext } from '../../components/context';
+import DatePicker from 'react-native-datepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+// import Picker from 'react-native-select-dropdown';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
+import { DataTable } from 'react-native-paper';
 
-function DoctorDashboard({ navigation }) {
-  
+function HospitalAdminPatientList({ navigation }) {
+
+  const [patients, setPatients] = useState([]);
+
+  const AppButton = ({ onPress, title }) => (
+    <TouchableOpacity onPress={onPress} style={styles.button}>
+      <Text style={styles.buttonText}>{title}</Text>
+    </TouchableOpacity>
+
+  );
+
+  const listPatients = async () => {
+    const token = await AsyncStorage.getItem('token');
+    const URL = `${BASE_URL}/patient/getPatients`;
+    try {
+      const res = await fetch(URL, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const response = await res.json();
+
+      setPatients(response);
+
+    } catch (error) {
+      alert((error.message.toString()), [
+        { text: "Okay" },
+      ]);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      listPatients();
+    });
+}, [navigation,]);
+
+
   return (
     <SafeAreaView style={styles.footer}>
       <View style={styles.header}>
-        <Text style={styles.textHeader}>DOCTOR  DASHBOARD</Text>
+        <Text style={styles.textHeader}>PATIENTS LIST</Text>
         <View
           style={{
             borderBottomColor: "#009387",
@@ -25,6 +79,24 @@ function DoctorDashboard({ navigation }) {
         />
       </View>
 
+      <ScrollView>
+        <ScrollView  horizontal={true}>
+      <DataTable>
+      <DataTable.Header>
+        <DataTable.Title style={styles.tableHeader}><Text style={styles.tableHeading}>Patient Id</Text></DataTable.Title>
+        <DataTable.Title><Text style={styles.tableHeading}>Patient Name</Text></DataTable.Title>
+        <DataTable.Title><Text style={styles.tableHeading}>Patiet Information</Text></DataTable.Title>
+      </DataTable.Header>
+      {patients.map((patient) => (
+        <DataTable.Row key={patient.patient_id}>
+          <DataTable.Cell>{patient.patient_id}</DataTable.Cell>
+          <DataTable.Cell>{patient.name}</DataTable.Cell>
+          <DataTable.Cell><AppButton onPress={() => navigation.navigate('HospitalAdminViewPatientInfo',{ id: `${patient.patient_id}` })} title={'Patient Info'}/></DataTable.Cell>
+        </DataTable.Row>
+       ))}
+      </DataTable>
+      </ScrollView>
+      </ScrollView>
     </SafeAreaView >
   );
 }
@@ -37,11 +109,16 @@ const styles = StyleSheet.create({
     // backgroundColor: "#009387",
   },
   header: {
-
     justifyContent: "flex-end",
     paddingHorizontal: 20,
     paddingBottom: 20
-
+  },
+  tableHeader: {
+    textAlign: 'center',
+  },
+  tableHeading: {
+    fontSize: 15,
+    alignSelf: 'center'
   },
   districtDrop: {
     width: 300,
@@ -164,23 +241,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   button: {
-    marginTop: 60,
-    marginBottom: 20,
-    marginLeft: 40,
-    marginRight: 40,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
     backgroundColor: "#009387",
-    borderRadius: 10,
     alignItems: "center",
     borderColor: "#20d1ce",
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+    borderRadius: 5,
     borderWidth: 2,
-
   },
   buttonText: {
     color: "#fff",
-    fontSize: 20,
-
+    fontSize: 15,
   },
   pickedDateContainer: {
     padding: 20,
@@ -207,4 +278,6 @@ const styles = StyleSheet.create({
 });
 
 
-export default DoctorDashboard;
+
+
+export default HospitalAdminPatientList;

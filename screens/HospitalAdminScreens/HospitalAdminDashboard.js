@@ -1,4 +1,5 @@
-import React from "react";
+import React ,{useEffect} from "react";
+import {BASE_URL} from "../../dev.config";
 import {
   StyleSheet,
   Text,
@@ -10,13 +11,66 @@ import {
 import * as Animatable from "react-native-animatable";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-function DoctorDashboard({ navigation }) {
+function HospitalAdminDashboard({ navigation }) {
+
+  const loadbeds = async () => {
+    const token = await AsyncStorage.getItem('token');
+    
+    const URL = `${BASE_URL}/bed/search/*`;
+   
+
+    try {
+      const res = await fetch(URL, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },      
+       
+      });
+
+      const response = await res.json();
+      const message = response["message"]
+
+      //  console.log(response.results);
+
+      if (res.status !== 200 && res.status !== 201 && res.status !== 202) {
+        throw new Error(message);
+      } else {
+        if (response) {
+
+          try {
+            await AsyncStorage.setItem("bedInfo", JSON.stringify(response.results));
+            //  const bedInfoObject =JSON.parse(await AsyncStorage.getItem("bedInfo"));                  
+            //  console.log(bedInfoObject.FacilityName)
+          } catch (error) { }
+        
+         
+        }
+      }
+    } catch (error) {
+      alert(" Can't  Load beds details", [
+        { text: "Okay" },
+      ]);
+    }
+  };
   
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      loadbeds()
+    
+    });
+  }, [navigation]);
+
+
+
   return (
     <SafeAreaView style={styles.footer}>
       <View style={styles.header}>
-        <Text style={styles.textHeader}>DOCTOR  DASHBOARD</Text>
+        <Text style={styles.textHeader}>HOSPITAL ADMIN DASHBOARD</Text>
         <View
           style={{
             borderBottomColor: "#009387",
@@ -24,6 +78,8 @@ function DoctorDashboard({ navigation }) {
           }}
         />
       </View>
+
+
 
     </SafeAreaView >
   );
@@ -78,7 +134,7 @@ const styles = StyleSheet.create({
   textHeader: {
     color: "#009387",
     fontWeight: "bold",
-    fontSize: 30,
+    fontSize: 25,
     textAlign: "center"
   },
   textFooter: {
@@ -207,4 +263,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default DoctorDashboard;
+export default HospitalAdminDashboard;

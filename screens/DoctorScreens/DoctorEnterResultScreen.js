@@ -2,10 +2,11 @@ import React from 'react';
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 
-function PatientList ({ navigation }) {
+function DoctorEnterResultScreen ({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
+        <AppButton onPress={() => navigation.navigate('Homepage')} title={'Log out'}/>
       </View>
     </SafeAreaView>
   );
@@ -41,4 +42,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default PatientList;
+export default DoctorEnterResultScreen;

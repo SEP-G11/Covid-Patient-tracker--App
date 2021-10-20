@@ -4,13 +4,13 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import DoctorDashboard from './DoctorDashboard';
-import PatientList from './PatientList';
-import Admit from './Admit';
-import CreateMedicalReport from './CreateMedicalReport';
-import Discharge from './Discharge';
-import Transfer from './Transfer';
-import SearchBeds from './SearchBeds';
-import EnterTestResults from './EnterTestResults';
+import DoctorViewPatientList from './DoctorViewPatientList';
+import DoctorAdmitPatientScreen from './DoctorAdmitPatientScreen';
+import DoctorCreateReportScreen from './DoctorCreateReportScreen';
+import DoctorDischargePatientScreen from './DoctorDischargePatientScreen';
+import DoctorTransferPatientScreen from './DoctorTransferPatientScreen';
+import DoctorSearchBedsScreen from './DoctorSearchBedsScreen';
+import DoctorEnterResultScreen from './DoctorEnterResultScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -26,7 +26,7 @@ const DoctorSideNavScreen = () => (
         drawerActiveTintColor: '#000',
         drawerActiveBackgroundColor: '#fff'
       }}>
-      <Drawer.Screen name="DoctorDashboard" component={DoctorDashboard} 
+      <Drawer.Screen name="Dashboard" component={DoctorDashboard} 
         options={{
           title: 'Dashboard',
           drawerIcon: ({color, size}) => (
@@ -37,7 +37,7 @@ const DoctorSideNavScreen = () => (
             />
           ),
       }}/>
-      <Drawer.Screen name="Patients List" component={PatientList}  
+      <Drawer.Screen name="Patients List" component={DoctorViewPatientList}  
         options={{
           title: 'Patients List',
           drawerIcon: ({color, size}) => (
@@ -48,7 +48,7 @@ const DoctorSideNavScreen = () => (
             />
           ),
       }}/>
-      <Drawer.Screen name="Admit" component={Admit}
+      <Drawer.Screen name="Admit" component={DoctorAdmitPatientScreen}
         options={{
           title: 'Admit',
           drawerIcon: ({color, size}) => (
@@ -59,7 +59,7 @@ const DoctorSideNavScreen = () => (
             />
           ),
       }}/>
-      <Drawer.Screen name="Create Medical Report" component={CreateMedicalReport}
+      <Drawer.Screen name="Create Medical Report" component={DoctorCreateReportScreen}
         options={{
           title: 'Create Medical Report',
           drawerIcon: ({color, size}) => (
@@ -70,7 +70,7 @@ const DoctorSideNavScreen = () => (
             />
           ),
       }}/>
-      <Drawer.Screen name="Discharge" component={Discharge}
+      <Drawer.Screen name="Discharge" component={DoctorDischargePatientScreen}
         options={{
           title: 'Discharge',
           drawerIcon: ({color, size}) => (
@@ -81,7 +81,7 @@ const DoctorSideNavScreen = () => (
             />
           ),
       }}/>
-      <Drawer.Screen name="Transfer" component={Transfer}
+      <Drawer.Screen name="Transfer" component={DoctorTransferPatientScreen}
         options={{
           title: 'Transfer',
           drawerIcon: ({color, size}) => (
@@ -92,7 +92,7 @@ const DoctorSideNavScreen = () => (
             />
           ),
       }}/>
-      <Drawer.Screen name="Search Beds" component={SearchBeds} 
+      <Drawer.Screen name="Search Beds" component={DoctorSearchBedsScreen} 
         options={{
           title: 'Search Beds',
           drawerIcon: ({color, size}) => (
@@ -103,7 +103,7 @@ const DoctorSideNavScreen = () => (
             />
           ),
       }}/>
-      <Drawer.Screen name="Enter Test Results" component={EnterTestResults} 
+      <Drawer.Screen name="Enter Test Results" component={DoctorEnterResultScreen} 
         options={{
           title: 'Enter Test Results',
           drawerIcon: ({color, size}) => (
