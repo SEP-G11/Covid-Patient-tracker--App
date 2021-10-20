@@ -158,7 +158,6 @@ function HospitalAdminSearchBeds({ navigation }) {
             { text: "Okay" },
           ]);
 
-
         }
       }
     } catch (error) {

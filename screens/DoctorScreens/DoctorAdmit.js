@@ -43,7 +43,8 @@ function DoctorAdmit({ navigation }) {
   const [bedId, setBedId] = useState("");
 
   const [bedInfo, setBedInfo] = useState(null);
-
+  const [Num_vaccine, setNumvaccinated] = useState("0");
+  const [Type_vaccine, setTypevaccinated] = useState(null);
 
   const getAge = bday => {
     if (Math.floor((new Date() - new Date(bday).getTime()) / 3.15576e+10)) {
@@ -100,10 +101,6 @@ function DoctorAdmit({ navigation }) {
   };
 
 
-  var radio_props_gender = [
-    { label: 'Male', value: "Male" },
-    { label: 'Female', value: "Female" }
-  ];
 
   const AppButton = ({ onPress, title }) => (
     <TouchableOpacity onPress={onPress} style={styles.button}>
@@ -112,7 +109,41 @@ function DoctorAdmit({ navigation }) {
 
   );
 
+  const getBedId = bedInfo => {
 
+   
+    let covidFree = [];
+    let normalFree = [];
+    if (typeof bedInfo !== 'undefined') {
+      if (bedInfo != null) {
+        Array.from({ length: bedInfo["CovidBed"].length }).map(
+          (_, i) => (
+
+            bedInfo["CovidBed"][`${i}`]["IsOccupied"] != 1 ? (covidFree.push(bedInfo["CovidBed"][`${i}`]["BedID"])) : (null)
+
+          )
+        )
+
+        Array.from({ length: bedInfo["NormalBed"].length }).map(
+          (_, j) => (
+            bedInfo["NormalBed"][`${j}`]["IsOccupied"] != 1 ? (normalFree.push(bedInfo["NormalBed"][`${j}`]["BedID"])) : (null)
+
+          )
+        )
+
+        if (RATresult == "1" && covidFree.length > 0) {
+          return covidFree[0];
+        }
+        else if (RATresult == "0" && normalFree.length > 0) {
+          return normalFree[0];
+        }
+
+        else {
+          return 'no'
+        }
+      }
+    }
+  };
 
 
 
@@ -125,9 +156,10 @@ function DoctorAdmit({ navigation }) {
       setDistrict("");
       setMedicalHistory("");
       setContactnumber("");
-      setRATresult(" ");
-      setBedId("");
+      setRATresult(" ");   
       setBday2("");
+
+        setMedicalHistory("");
 
 
 
@@ -150,9 +182,7 @@ function DoctorAdmit({ navigation }) {
             response = await res.json()
 
             setBedInfo(response.results)
-
-
-
+      
 
             if (res.status !== 200 && res.status !== 201 && res.status !== 202) {
               throw new Error(message);
@@ -215,7 +245,9 @@ function DoctorAdmit({ navigation }) {
           bedId: bedId,
           allocationId: allocationId,
           admitDateTime: admitDateTime,
-          bday: bday1
+          bday: bday1,
+          Type_vaccine: Type_vaccine,
+          Num_vaccine: Num_vaccine,
         }),
       });
 
@@ -229,15 +261,12 @@ function DoctorAdmit({ navigation }) {
 
         setName("");
         setBday1("");
-        setAddress("");
         setDistrict("");
-        setContactnumber("");
-        setBloodtype(" ");
-        setDistrict("");
-        setRATresult(" ");
-        setBedId("");
+        setContactnumber(""); 
+          setRATresult(" ");       
         setBday2("");
-        setGender("");
+        setMedicalHistory("");
+      
 
 
         if (response) {
@@ -257,6 +286,7 @@ function DoctorAdmit({ navigation }) {
   };
 
   const handleSubmitPress = () => {
+    setBedId(getBedId(bedInfo))
 
 
     if (!name) {
@@ -276,13 +306,13 @@ function DoctorAdmit({ navigation }) {
       return;
     }
 
-    if (!bedId || bedId == 'disabled') {
-      alert("Please  select BedID !");
-      return;
-    }
     if (!RATresult || RATresult == 'disabled') {
       alert("Please select RATresult !");
       return;
+    }
+    if(bedId==""){
+      alert("Press Again !");
+        return;
     }
     admit();
   };
@@ -433,7 +463,7 @@ function DoctorAdmit({ navigation }) {
 
         <View style={{ flexDirection: 'row', marginTop: 15 }}>
           <Text style={styles.textFooter}>RAT results</Text>
-          <Text style={{ color: "#007c7a", fontSize: 16, paddingLeft: 100 }}>Bed Id</Text>
+
         </View>
         <View style={{ flexDirection: 'row' }}>
           <View style={[{ flex: .5, }, styles.BloodDrop]}>
@@ -449,7 +479,7 @@ function DoctorAdmit({ navigation }) {
             </Picker>
           </View>
 
-          <View style={[{ flex: .5, }, styles.BloodDrop]}>
+          {/* <View style={[{ flex: .5, }, styles.BloodDrop]}>
             <Picker
               style={styles.action}
               onValueChange={setBedId}
@@ -499,7 +529,7 @@ function DoctorAdmit({ navigation }) {
 
 
             </Picker>
-          </View>
+          </View> */}
 
         </View>
 

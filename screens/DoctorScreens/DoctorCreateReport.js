@@ -92,10 +92,43 @@ function DoctorCreateReport({ navigation }) {
     };
 
 
-    var radio_props_gender = [
-        { label: 'Male', value: "Male" },
-        { label: 'Female', value: "Female" }
-    ];
+    const getBedId = bedInfo => {
+
+   
+        let covidFree = [];
+        let normalFree = [];
+        if (typeof bedInfo !== 'undefined') {
+          if (bedInfo != null) {
+            Array.from({ length: bedInfo["CovidBed"].length }).map(
+              (_, i) => (
+    
+                bedInfo["CovidBed"][`${i}`]["IsOccupied"] != 1 ? (covidFree.push(bedInfo["CovidBed"][`${i}`]["BedID"])) : (null)
+    
+              )
+            )
+    
+            Array.from({ length: bedInfo["NormalBed"].length }).map(
+              (_, j) => (
+                bedInfo["NormalBed"][`${j}`]["IsOccupied"] != 1 ? (normalFree.push(bedInfo["NormalBed"][`${j}`]["BedID"])) : (null)
+    
+              )
+            )
+    
+            if (RATresult == "1" && covidFree.length > 0) {
+              return covidFree[0];
+            }
+            else if (RATresult == "0" && normalFree.length > 0) {
+              return normalFree[0];
+            }
+    
+            else {
+              return 'no'
+            }
+          }
+        }
+      };
+    
+    
 
     const AppButton = ({ onPress, title }) => (
         <TouchableOpacity onPress={onPress} style={styles.button}>
@@ -198,7 +231,7 @@ function DoctorCreateReport({ navigation }) {
 
     const handleSubmitPress = () => {
 
-
+        setBedId(getBedId(bedInfo))
         if (!bday2) {
             alert("Date of Birthday can't be empty !");
             return;
@@ -216,6 +249,10 @@ function DoctorCreateReport({ navigation }) {
             alert("Please select RATresult !");
             return;
         }
+        if(bedId==""){
+            alert("Press Again !");
+              return;
+          }
         create();
     };
 
@@ -306,7 +343,7 @@ function DoctorCreateReport({ navigation }) {
 
                 <View style={{ flexDirection: 'row', marginTop: 15 }}>
                     <Text style={styles.textFooter}>RAT results</Text>
-                    <Text style={{ color: "#007c7a", fontSize: 16, paddingLeft: 100 }}>Bed Id</Text>
+                  
                 </View>
                 <View style={{ flexDirection: 'row' }}>
                     <View style={[{ flex: .5, }, styles.BloodDrop]}>
@@ -322,19 +359,7 @@ function DoctorCreateReport({ navigation }) {
                         </Picker>
                     </View>
 
-                    <View style={[{ flex: .5, }, styles.BloodDrop]}>
-                        <Picker
-                            style={styles.action}
-                            onValueChange={setBedId}
-                            selectedValue={bedId}
-
-                        >
-                            <Picker.Item label="Select" value="disabled" color="#aaa" />
-                            <Picker.Item label="46" value="46" />
-                            <Picker.Item label="47" value="47" />
-                            <Picker.Item label="21" value="21" />
-                        </Picker>
-                    </View>
+                   
 
                 </View>
 
