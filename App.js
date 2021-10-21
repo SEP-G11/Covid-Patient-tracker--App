@@ -13,11 +13,13 @@ import DoctorDischarge from "./screens/DoctorScreens/DoctorDischarge";
 import DoctorTransfer from "./screens/DoctorScreens/DoctorTransfer";
 import DoctorSearchBeds from "./screens/DoctorScreens/DoctorSearchBeds";
 import DoctorEnterResults from "./screens/DoctorScreens/DoctorEnterResults";
+
 import DoctorPatientList from "./screens/DoctorScreens/DoctorPatientList";
 import DoctorViewPatientInfo from "./screens/DoctorScreens/DoctorViewPatientInfo";
 import DoctorEditPatientInfo from "./screens/DoctorScreens/DoctorEditPatientInfo";
 import DoctorViewMedicalReport from "./screens/DoctorScreens/DoctorViewMedicalReport";
 import DoctorEditMedicalReport from "./screens/DoctorScreens/DoctorEditMedicalReport";
+
 
 
 import HospitalAdminDashboard from "./screens/HospitalAdminScreens/HospitalAdminDashboard";
@@ -26,9 +28,12 @@ import HospitalAdminDischarge from "./screens/HospitalAdminScreens/HospitalAdmin
 import HospitalAdminTransfer from "./screens/HospitalAdminScreens/HospitalAdminTransfer";
 import HospitalAdminSearchBeds from "./screens/HospitalAdminScreens/HospitalAdminSearchBeds";
 import HospitalAdminEnterResults from "./screens/HospitalAdminScreens/HospitalAdminEnterResults";
+
+
 import HospitalAdminPatientList from "./screens/HospitalAdminScreens/HospitalAdminPatientList";
 import HospitalAdminViewPatientInfo from "./screens/HospitalAdminScreens/HospitalAdminViewPatientInfo";
 import HospitalAdminEditPatientInfo from "./screens/HospitalAdminScreens/HospitalAdminEditPatientInfo";
+
 
 
 import { DrawerItemList } from '@react-navigation/drawer';
@@ -40,8 +45,6 @@ import { HADrawerContent } from './components/HADrawerContent';
 const Drawer = createDrawerNavigator();
 
 const Stack = createNativeStackNavigator();
-
-
 
 
 const App = () => {
@@ -142,11 +145,15 @@ const App = () => {
             <Drawer.Screen name="DoctorTransfer" component={DoctorTransfer} />
             <Drawer.Screen name="DoctorSearchBeds" component={DoctorSearchBeds} />
             <Drawer.Screen name="DoctorEnterResults" component={DoctorEnterResults} />
+
+
+
             <Drawer.Screen name="DoctorPatientList" component={DoctorPatientList} />
             <Drawer.Screen name="DoctorViewPatientInfo" component={DoctorViewPatientInfo} />
             <Drawer.Screen name="DoctorEditPatientInfo" component={DoctorEditPatientInfo} />
             <Drawer.Screen name="DoctorViewMedicalReport" component={DoctorViewMedicalReport} />
             <Drawer.Screen name="DoctorEditMedicalReport" component={DoctorEditMedicalReport} />
+
 
           </Drawer.Navigator>) :
 
@@ -159,9 +166,11 @@ const App = () => {
               <Drawer.Screen name="HospitalAdminTransfer" component={HospitalAdminTransfer} />
               <Drawer.Screen name="HospitalAdminSearchBeds" component={HospitalAdminSearchBeds} />
               <Drawer.Screen name="HospitalAdminEnterResults" component={HospitalAdminEnterResults} />
+
               <Drawer.Screen name="HospitalAdminPatientList" component={HospitalAdminPatientList} />
             <Drawer.Screen name="HospitalAdminViewPatientInfo" component={HospitalAdminViewPatientInfo} />
             <Drawer.Screen name="HospitalAdminEditPatientInfo" component={HospitalAdminEditPatientInfo} />
+
 
             </Drawer.Navigator>)
 

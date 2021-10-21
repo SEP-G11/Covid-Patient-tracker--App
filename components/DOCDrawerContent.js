@@ -55,6 +55,7 @@ export function DOCDrawerContent(props) {
               onPress={() => { props.navigation.navigate('DoctorPatientList') }}
             />
 
+
             <DrawerItem
               icon={({ color, focused }) => (
                 <FontAwesome name="user-plus" size={18} color={focused ? '#007c7a' : 'grey'} />

@@ -29,8 +29,10 @@ import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'reac
 function DoctorTransfer({ navigation }) {
 
 
-  const [id, setId] = useState(""); 
-  const [origin_bed_id, setOrigin] = useState("");
+
+  
+  const [id, setId] = useState("");  
+
   const [dest_bed_id, setDes] = useState("");
 
 
@@ -75,8 +77,9 @@ var today = new Date();
     const unsubscribe = navigation.addListener('focus', () => {
 
      
-      setId("");  
-      setOrigin("");       
+
+      setId("");        
+
       setDes("");
      
      
@@ -89,6 +92,7 @@ var today = new Date();
 
   const transfer = async () => {
     const token = await AsyncStorage.getItem('token');
+
     const URL = `${BASE_URL}/patient/transfer`;
 
 
@@ -103,8 +107,10 @@ var today = new Date();
         body: JSON.stringify({
        
        
-             patient_id:id,
-             origin_bed_id :origin_bed_id,
+
+             patient_id:id,            
+
+
              dest_bed_id:dest_bed_id,
              transfer_date:DateTime
 
@@ -152,16 +158,19 @@ var today = new Date();
       alert("Id can't be empty !");
       return;
     }
-    if (!origin_bed_id || origin_bed_id == 'disabled') {
-        alert("Please  select Origin BedID !");
-        return;
-      }
-      if (!dest_bed_id || dest_bed_id == 'disabled') {
+
+         if (!dest_bed_id || dest_bed_id == 'disabled') {
+
+    
         alert("Please select Destination BedID !");
         return;
       }
     
-    transfer();
+
+      transfer();
+
+  
+
   };
 
   return (
@@ -193,46 +202,20 @@ var today = new Date();
 
        
 
-
-
-
-
-        <View style={{ flexDirection: 'row', marginTop: 15 }}>
-          <Text style={styles.textFooter}>Origin Bed Id</Text>
-          <Text style={{ color: "#007c7a", fontSize: 16, paddingLeft: 100 }}>Destination Bed Id</Text>
+        <Text style={styles.textFooter1}>Destination Bed Id</Text>
+        <View style={styles.action}>
+          <TextInput
+            placeholder="Enter Destination Bed Id"
+            value={dest_bed_id}
+            placeholderTextColor="#666666"
+            style={styles.textInput}
+            autoCapitalize="none"
+            keyboardType={'numeric'}
+            onChangeText={(dest_bed_id) => setDes(dest_bed_id)}
+          />
         </View>
-        <View style={{ flexDirection: 'row' }}>
-        <View style={[{ flex: .5, }, styles.BloodDrop]}>
-            <Picker
-              style={styles.action}
-              onValueChange={setOrigin}
-              selectedValue={origin_bed_id}
 
-            >
-              <Picker.Item label="Select" value="disabled" color="#aaa" />
-              <Picker.Item label="46" value="46" />
-              <Picker.Item label="47" value="47" />
-              <Picker.Item label="21" value="21" />
-            </Picker>
-          </View>
 
-          <View style={[{ flex: .5, }, styles.BloodDrop]}>
-            <Picker
-              style={styles.action}
-              onValueChange={setDes}
-              selectedValue={dest_bed_id}
-
-            >
-              <Picker.Item label="Select" value="disabled" color="#aaa" />
-              <Picker.Item label="46" value="46" />
-              <Picker.Item label="47" value="47" />
-              <Picker.Item label="21" value="21" />
-              <Picker.Item label="37" value="37" />
-              <Picker.Item label="31" value="31" />
-            </Picker>
-          </View>
-
-        </View>
 
 
 
@@ -301,6 +284,13 @@ const styles = StyleSheet.create({
     color: "#007c7a",
     fontSize: 16,
   },
+
+  textFooter1: {
+    color: "#007c7a",
+    fontSize: 16,
+    paddingTop:15,
+  },
+
   box: {
     width: "50%",
     height: "50%",

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import {BASE_URL} from "../../dev.config";
+
+import { BASE_URL } from "../../dev.config";
+
 import {
   StyleSheet,
   Text,
@@ -32,16 +34,23 @@ function DoctorAdmit({ navigation }) {
   const [name, setName] = useState("");
   const [bday1, setBday1] = useState("");
   const [bday2, setBday2] = useState("");
-  const gender="";
-  const address="";
+
+  const gender = "";
+  const address = "";
   const [contactnumber, setContactnumber] = useState("");
-  const bloodtype="";
-  const district="";
+  const bloodtype = "";
+  const [district, setDistrict] = useState("");
+
   const isvaccinated = "1";
   const [RATresult, setRATresult] = useState("");
   const [medicalHistory, setMedicalHistory] = useState("");
   const [bedId, setBedId] = useState("");
-  const [bedInfo, setBedInfo] = useState({});
+
+
+  const [bedInfo, setBedInfo] = useState(null);
+  const [Num_vaccine, setNumvaccinated] = useState("0");
+  const [Type_vaccine, setTypevaccinated] = useState(null);
+
 
   const getAge = bday => {
     if (Math.floor((new Date() - new Date(bday).getTime()) / 3.15576e+10)) {
@@ -98,10 +107,6 @@ function DoctorAdmit({ navigation }) {
   };
 
 
-  var radio_props_gender = [
-    { label: 'Male', value: "Male" },
-    { label: 'Female', value: "Female" }
-  ];
 
   const AppButton = ({ onPress, title }) => (
     <TouchableOpacity onPress={onPress} style={styles.button}>
@@ -111,30 +116,108 @@ function DoctorAdmit({ navigation }) {
   );
 
 
-  const loadbeds = async () => {
-    const bedInfoObject = JSON.parse(await AsyncStorage.getItem("bedInfo"));
-    // console.log(bedInfoObject)
+  const getBedId = bedInfo => {
 
-    setBedInfo({ ...bedInfo, deatils: bedInfoObject })
+   
+    let covidFree = [];
+    let normalFree = [];
+    if (typeof bedInfo !== 'undefined') {
+      if (bedInfo != null) {
+        Array.from({ length: bedInfo["CovidBed"].length }).map(
+          (_, i) => (
 
-    // console.log(bedInfo)
-    //  console.log( bedInfo["CovidBed"].length)
-  }
+            bedInfo["CovidBed"][`${i}`]["IsOccupied"] != 1 ? (covidFree.push(bedInfo["CovidBed"][`${i}`]["BedID"])) : (null)
+
+          )
+        )
+
+        Array.from({ length: bedInfo["NormalBed"].length }).map(
+          (_, j) => (
+            bedInfo["NormalBed"][`${j}`]["IsOccupied"] != 1 ? (normalFree.push(bedInfo["NormalBed"][`${j}`]["BedID"])) : (null)
+
+          )
+        )
+
+        if (RATresult == "1" && covidFree.length > 0) {
+          return covidFree[0];
+        }
+        else if (RATresult == "0" && normalFree.length > 0) {
+          return normalFree[0];
+        }
+
+        else {
+          return 'no'
+        }
+      }
+    }
+  };
+
 
 
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
 
-      loadbeds();
+
+
       setName("");
       setBday1("");
+      setDistrict("");
       setMedicalHistory("");
-      setContactnumber("");     
-      setRATresult(" ");
-      setBedId("");
+      setContactnumber("");
+      setRATresult(" ");   
       setBday2("");
-     
+
+        setMedicalHistory("");
+
+
+
+      try {
+        async function loadbeds() {
+
+          const token = await AsyncStorage.getItem('token');
+
+          const URL = `${BASE_URL}/bed/search/*`;
+          try {
+            let res = await fetch(URL, {
+              method: "GET",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+
+            });
+            response = await res.json()
+
+            setBedInfo(response.results)
+      
+
+            if (res.status !== 200 && res.status !== 201 && res.status !== 202) {
+              throw new Error(message);
+            } else {
+              if (response) {
+                try {
+                } catch (error) { }
+
+              }
+            }
+          } catch (error) {
+            // alert(" Can't  Load beds details", [
+            //   { text: "Okay" },
+            // ]);
+          }
+        }
+        loadbeds();
+
+      } catch (error) {
+        alert(" Try again (LOGOUT)!", [
+          { text: "Okay" },
+        ]);
+      }
+
+
+
 
 
     });
@@ -172,7 +255,11 @@ function DoctorAdmit({ navigation }) {
           bedId: bedId,
           allocationId: allocationId,
           admitDateTime: admitDateTime,
-          bday: bday1
+
+          bday: bday1,
+          Type_vaccine: Type_vaccine,
+          Num_vaccine: Num_vaccine,
+
         }),
       });
 
@@ -186,14 +273,13 @@ function DoctorAdmit({ navigation }) {
 
         setName("");
         setBday1("");
-        setAddress("");
-        setContactnumber("");
-        setBloodtype(" ");
+
         setDistrict("");
-        setRATresult(" ");
-        setBedId("");
+        setContactnumber(""); 
+          setRATresult(" ");       
         setBday2("");
-        setGender("");
+        setMedicalHistory("");
+      
 
 
         if (response) {
@@ -214,6 +300,9 @@ function DoctorAdmit({ navigation }) {
 
   const handleSubmitPress = () => {
 
+    setBedId(getBedId(bedInfo))
+
+
 
     if (!name) {
       alert("Name can't be empty !");
@@ -227,16 +316,23 @@ function DoctorAdmit({ navigation }) {
     if (!contactnumber) {
       alert("Contactnumber can't be empty !");
       return;
-    }
 
-    if (!bedId || bedId == 'disabled') {
-      alert("Please  select BedID !");
+    } if (!district || district == 'disabled') {
+      alert("District can't be empty !");
       return;
     }
+
+
     if (!RATresult || RATresult == 'disabled') {
       alert("Please select RATresult !");
       return;
     }
+
+    if(bedId==""){
+      alert("Press Again !");
+        return;
+    }
+
     admit();
   };
 
@@ -331,6 +427,41 @@ function DoctorAdmit({ navigation }) {
           />
         </View>
 
+        <Text style={[{ marginTop: 15, }, styles.textFooter]}>District</Text>
+        <View style={styles.districtDrop}>
+          <Picker
+            style={styles.action}
+            onValueChange={setDistrict}
+            selectedValue={district}
+
+          >
+            <Picker.Item label="Select  District" value="disabled" color="#aaa" />
+            <Picker.Item label="Ampara" value="Ampara" />
+            <Picker.Item label="Anuradhapura" value="Anuradhapura" />
+            <Picker.Item label="Batticaloa" value="Batticaloa" />
+            <Picker.Item label="Polonnaruwa" value="Polonnaruwa" />
+            <Picker.Item label="Hambantota" value="Hambantota" />
+            <Picker.Item label="Mullaitivu" value="Mullaitivu" />
+            <Picker.Item label="Puttalam" value="Puttalam" />
+            <Picker.Item label="Colombo" value="Colombo" />
+            <Picker.Item label="Galle" value="Galle" />
+            <Picker.Item label="Gampaha" value="Gampaha" />
+            <Picker.Item label="Jaffna" value="Jaffna" />
+            <Picker.Item label="Hambantota" value="Hambantota" />
+            <Picker.Item label="Matara" value="Matara" />
+            <Picker.Item label="Kalutara" value="Kalutara" />
+            <Picker.Item label="Matara" value="Matara" />
+            <Picker.Item label="Kandy" value="Kandy" />
+            <Picker.Item label="Polonnaruwa" value="Polonnaruwa" />
+            <Picker.Item label="Hambantota" value="Hambantota" />
+            <Picker.Item label="Mullaitivu" value="Mullaitivu" />
+            <Picker.Item label="Puttalam" value="Puttalam" />
+            <Picker.Item label="NuwaraEliya" value="NuwaraEliya" />
+            <Picker.Item label="Trincomalee" value="Trincomalee" />
+          </Picker>
+        </View>
+
+
 
 
 
@@ -353,7 +484,7 @@ function DoctorAdmit({ navigation }) {
 
         <View style={{ flexDirection: 'row', marginTop: 15 }}>
           <Text style={styles.textFooter}>RAT results</Text>
-          <Text style={{ color: "#007c7a", fontSize: 16, paddingLeft: 100 }}>Bed Id</Text>
+
         </View>
         <View style={{ flexDirection: 'row' }}>
           <View style={[{ flex: .5, }, styles.BloodDrop]}>
@@ -369,7 +500,11 @@ function DoctorAdmit({ navigation }) {
             </Picker>
           </View>
 
+
+          {/* <View style={[{ flex: .5, }, styles.BloodDrop]}>
+
           <View style={[{ flex: .5, }, styles.BloodDrop]}>
+
             <Picker
               style={styles.action}
               onValueChange={setBedId}
@@ -377,11 +512,52 @@ function DoctorAdmit({ navigation }) {
 
             >
               <Picker.Item label="Select" value="disabled" color="#aaa" />
-              <Picker.Item label="46" value="46" />
-              <Picker.Item label="47" value="47" />
-              <Picker.Item label="21" value="21" />
+
+
+              {bedInfo ? (
+
+                Array.from({ length: bedInfo["NormalBed"].length }).map(
+                  (_, i) => (
+
+
+                    bedInfo["NormalBed"][`${i}`]["IsOccupied"] != 1 ? (
+                      <Picker.Item key={i} label={(bedInfo["NormalBed"][`${i}`]["BedID"]).toString()} value={(bedInfo["NormalBed"][`${i}`]["BedID"]).toString()} color="#000" />
+
+                    ) : (null)
+
+
+                  )
+                )
+
+              )
+                :
+                (null)}
+
+              {bedInfo ? (
+
+                Array.from({ length: bedInfo["CovidBed"].length }).map(
+                  (_, i) => (
+
+
+                    bedInfo["CovidBed"][`${i}`]["IsOccupied"] != 1 ? (
+                      <Picker.Item key={i} label={(bedInfo["CovidBed"][`${i}`]["BedID"]).toString()} value={(bedInfo["CovidBed"][`${i}`]["BedID"]).toString()} color="#000" />
+
+                    ) : (null)
+
+
+                  )
+                )
+
+              )
+                :
+                (null)}
+
+
+
             </Picker>
-          </View>
+          </View> */}
+
+ 
 
         </View>
 
