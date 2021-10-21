@@ -29,7 +29,10 @@ import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'reac
 function HospitalAdminTransfer({ navigation }) {
 
 
+
   const [id, setId] = useState("");  
+
+
   const [dest_bed_id, setDes] = useState("");
 
 
@@ -74,7 +77,10 @@ var today = new Date();
     const unsubscribe = navigation.addListener('focus', () => {
 
      
+
       setId("");        
+
+ 
       setDes("");
      
      
@@ -102,7 +108,10 @@ var today = new Date();
         body: JSON.stringify({
        
        
+
              patient_id:id,            
+
+
              dest_bed_id:dest_bed_id,
              transfer_date:DateTime
 
@@ -150,7 +159,9 @@ var today = new Date();
       alert("Id can't be empty !");
       return;
     }
+
          if (!dest_bed_id || dest_bed_id == 'disabled') {
+
         alert("Please select Destination BedID !");
         return;
       }
@@ -186,6 +197,7 @@ var today = new Date();
         </View>
 
        
+
         <Text style={styles.textFooter1}>Destination Bed Id</Text>
         <View style={styles.action}>
           <TextInput
@@ -268,11 +280,13 @@ const styles = StyleSheet.create({
     color: "#007c7a",
     fontSize: 16,
   },
+
   textFooter1: {
     color: "#007c7a",
     fontSize: 16,
     paddingTop:15,
   },
+
   box: {
     width: "50%",
     height: "50%",

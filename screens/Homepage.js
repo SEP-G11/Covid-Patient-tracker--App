@@ -10,10 +10,10 @@ import {
 import * as Animatable from "react-native-animatable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-
 function Homepage({ navigation }) {
 
  
+
 
 
   return (
@@ -25,8 +25,6 @@ function Homepage({ navigation }) {
         <Image style={styles.logo} source={require("../assets/logo.png")} />
 
       </View>
-
-    
 
       <Animatable.View style={styles.footer} animation="fadeInUpBig">
         <Text style={styles.title}>Stay Safe  SriLanka !</Text>

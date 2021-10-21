@@ -92,6 +92,7 @@ function DoctorCreateReport({ navigation }) {
     };
 
 
+
     const getBedId = bedInfo => {
 
    
@@ -129,6 +130,7 @@ function DoctorCreateReport({ navigation }) {
       };
     
     
+
 
     const AppButton = ({ onPress, title }) => (
         <TouchableOpacity onPress={onPress} style={styles.button}>
@@ -232,6 +234,7 @@ function DoctorCreateReport({ navigation }) {
     const handleSubmitPress = () => {
 
         setBedId(getBedId(bedInfo))
+
         if (!bday2) {
             alert("Date of Birthday can't be empty !");
             return;
@@ -249,10 +252,12 @@ function DoctorCreateReport({ navigation }) {
             alert("Please select RATresult !");
             return;
         }
+
         if(bedId==""){
             alert("Press Again !");
               return;
           }
+
         create();
     };
 
@@ -343,7 +348,9 @@ function DoctorCreateReport({ navigation }) {
 
                 <View style={{ flexDirection: 'row', marginTop: 15 }}>
                     <Text style={styles.textFooter}>RAT results</Text>
+
                   
+
                 </View>
                 <View style={{ flexDirection: 'row' }}>
                     <View style={[{ flex: .5, }, styles.BloodDrop]}>
@@ -359,7 +366,6 @@ function DoctorCreateReport({ navigation }) {
                         </Picker>
                     </View>
 
-                   
 
                 </View>
 

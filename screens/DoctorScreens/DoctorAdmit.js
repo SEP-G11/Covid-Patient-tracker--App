@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
+
 import { BASE_URL } from "../../dev.config";
+
 import {
   StyleSheet,
   Text,
@@ -32,19 +34,23 @@ function DoctorAdmit({ navigation }) {
   const [name, setName] = useState("");
   const [bday1, setBday1] = useState("");
   const [bday2, setBday2] = useState("");
+
   const gender = "";
   const address = "";
   const [contactnumber, setContactnumber] = useState("");
   const bloodtype = "";
   const [district, setDistrict] = useState("");
+
   const isvaccinated = "1";
   const [RATresult, setRATresult] = useState("");
   const [medicalHistory, setMedicalHistory] = useState("");
   const [bedId, setBedId] = useState("");
 
+
   const [bedInfo, setBedInfo] = useState(null);
   const [Num_vaccine, setNumvaccinated] = useState("0");
   const [Type_vaccine, setTypevaccinated] = useState(null);
+
 
   const getAge = bday => {
     if (Math.floor((new Date() - new Date(bday).getTime()) / 3.15576e+10)) {
@@ -109,6 +115,7 @@ function DoctorAdmit({ navigation }) {
 
   );
 
+
   const getBedId = bedInfo => {
 
    
@@ -147,8 +154,10 @@ function DoctorAdmit({ navigation }) {
 
 
 
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
+
 
 
       setName("");
@@ -210,6 +219,7 @@ function DoctorAdmit({ navigation }) {
 
 
 
+
     });
   }, [navigation,]);
 
@@ -245,9 +255,11 @@ function DoctorAdmit({ navigation }) {
           bedId: bedId,
           allocationId: allocationId,
           admitDateTime: admitDateTime,
+
           bday: bday1,
           Type_vaccine: Type_vaccine,
           Num_vaccine: Num_vaccine,
+
         }),
       });
 
@@ -261,6 +273,7 @@ function DoctorAdmit({ navigation }) {
 
         setName("");
         setBday1("");
+
         setDistrict("");
         setContactnumber(""); 
           setRATresult(" ");       
@@ -286,7 +299,9 @@ function DoctorAdmit({ navigation }) {
   };
 
   const handleSubmitPress = () => {
+
     setBedId(getBedId(bedInfo))
+
 
 
     if (!name) {
@@ -301,19 +316,23 @@ function DoctorAdmit({ navigation }) {
     if (!contactnumber) {
       alert("Contactnumber can't be empty !");
       return;
+
     } if (!district || district == 'disabled') {
       alert("District can't be empty !");
       return;
     }
 
+
     if (!RATresult || RATresult == 'disabled') {
       alert("Please select RATresult !");
       return;
     }
+
     if(bedId==""){
       alert("Press Again !");
         return;
     }
+
     admit();
   };
 
@@ -407,6 +426,7 @@ function DoctorAdmit({ navigation }) {
             autoCorrect={false}
           />
         </View>
+
         <Text style={[{ marginTop: 15, }, styles.textFooter]}>District</Text>
         <View style={styles.districtDrop}>
           <Picker
@@ -440,6 +460,7 @@ function DoctorAdmit({ navigation }) {
             <Picker.Item label="Trincomalee" value="Trincomalee" />
           </Picker>
         </View>
+
 
 
 
@@ -479,7 +500,11 @@ function DoctorAdmit({ navigation }) {
             </Picker>
           </View>
 
+
           {/* <View style={[{ flex: .5, }, styles.BloodDrop]}>
+
+          <View style={[{ flex: .5, }, styles.BloodDrop]}>
+
             <Picker
               style={styles.action}
               onValueChange={setBedId}
@@ -487,6 +512,7 @@ function DoctorAdmit({ navigation }) {
 
             >
               <Picker.Item label="Select" value="disabled" color="#aaa" />
+
 
               {bedInfo ? (
 
@@ -530,6 +556,8 @@ function DoctorAdmit({ navigation }) {
 
             </Picker>
           </View> */}
+
+ 
 
         </View>
 

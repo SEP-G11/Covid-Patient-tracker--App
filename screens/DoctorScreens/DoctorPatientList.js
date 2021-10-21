@@ -10,7 +10,6 @@ import {
   Platform,
   Picker,
   Button,
-  StatusBar,
   TextInput,
 } from "react-native";
 import { Drawer } from 'react-native-paper';
@@ -21,210 +20,86 @@ import { AuthContext } from '../../components/context';
 import DatePicker from 'react-native-datepicker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 // import Picker from 'react-native-select-dropdown';
-import PhoneInput from "react-native-phone-number-input";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
+import { DataTable } from 'react-native-paper';
 
+function DoctorPatientList({ navigation }) {
 
-function DoctorTransfer({ navigation }) {
-
-
-
-  
-  const [id, setId] = useState("");  
-
-  const [dest_bed_id, setDes] = useState("");
-
-
-var today = new Date();
-  var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-  var time = today.getHours() + ":" + today.getMinutes();
-  const DateTime = date + 'T' + time;
-
-
-  const onChange = (event, value) => {
-    try {
-      if (value) {
-        const day = value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate();
-        setBday2(day);
-        setBday1(value.toISOString().slice(0, 10));
-      }
-
-    }
-    catch (e) {
-      alert("Selected BirthDay is Erroried !")
-
-    }
-
-    if (Platform.OS === 'android') {
-      setIsPickerShow(false);
-    }
-  };
-
-
- 
+  const [patients, setPatients] = useState([]);
 
   const AppButton = ({ onPress, title }) => (
-    <TouchableOpacity onPress={onPress} style={styles.button}>
-      <Text style={styles.buttonText}>{title}</Text>
-    </TouchableOpacity>
+      <TouchableOpacity onPress={onPress} style={styles.button}>
+        <Text style={styles.buttonText}>{title}</Text>
+      </TouchableOpacity>
 
   );
 
-
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-
-     
-
-      setId("");        
-
-      setDes("");
-     
-     
-
-
-    });
-  }, [navigation,]);
-
-
-
-  const transfer = async () => {
+  const listPatients = async () => {
     const token = await AsyncStorage.getItem('token');
-
-    const URL = `${BASE_URL}/patient/transfer`;
-
-
+    const URL = `${BASE_URL}/patient/getPatients`;
     try {
       const res = await fetch(URL, {
-        method: "POST",
+        method: "GET",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-       
-       
-
-             patient_id:id,            
-
-
-             dest_bed_id:dest_bed_id,
-             transfer_date:DateTime
-
-
-        }),
       });
 
       const response = await res.json();
-      const message = response["message"]
 
-      if (res.status !== 200 && res.status !== 201 && res.status !== 202) {
+      setPatients(response);
 
-        throw new Error(message);
-      } else {
-
-        setId("");  
-        setOrigin("");       
-        setDes("");
-       
-       
-     
-
-
-
-        if (response) {
-          alert((message), [
-            { text: "Okay" },
-          ]);
-
-
-        }
-      }
     } catch (error) {
-
       alert((error.message.toString()), [
         { text: "Okay" },
       ]);
     }
   };
 
-  const handleSubmitPress = () => {
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      listPatients();
+    });
+  }, [navigation,]);
 
 
-    if (!id) {
-      alert("Id can't be empty !");
-      return;
-    }
-
-         if (!dest_bed_id || dest_bed_id == 'disabled') {
-
-    
-        alert("Please select Destination BedID !");
-        return;
-      }
-    
-
-      transfer();
-
-  
-
-  };
 
   return (
-    <SafeAreaView style={styles.footer}>
-      <View style={styles.header}>
-        <Text style={styles.textHeader}>TRANSFER  PATIENT </Text>
-        <View
-          style={{
-            borderBottomColor: "#009387",
-            borderBottomWidth: 2,
-          }}
-        />
-      </View>
-
-
-      <ScrollView style={{ paddingRight: 20 ,marginTop:50}}>
-
-        <Text style={styles.textFooter}>Patient ID</Text>
-        <View style={styles.action}>
-          <TextInput
-            placeholder="Enter Id"
-            value={id}
-            placeholderTextColor="#666666"
-            style={styles.textInput}
-            autoCapitalize="none"
-            onChangeText={(id) => setId(id)}
+      <SafeAreaView style={styles.footer}>
+        <View style={styles.header}>
+          <Text style={styles.textHeader}>PATIENTS LIST</Text>
+          <View
+              style={{
+                borderBottomColor: "#009387",
+                borderBottomWidth: 2,
+              }}
           />
         </View>
 
-       
-
-        <Text style={styles.textFooter1}>Destination Bed Id</Text>
-        <View style={styles.action}>
-          <TextInput
-            placeholder="Enter Destination Bed Id"
-            value={dest_bed_id}
-            placeholderTextColor="#666666"
-            style={styles.textInput}
-            autoCapitalize="none"
-            keyboardType={'numeric'}
-            onChangeText={(dest_bed_id) => setDes(dest_bed_id)}
-          />
-        </View>
-
-
-
-
-
-
-        <AppButton onPress={handleSubmitPress} title={"Transfer"} />
-
-      </ScrollView>
-
-    </SafeAreaView >
+        <ScrollView>
+          <ScrollView  horizontal={true}>
+            <DataTable>
+              <DataTable.Header>
+                <DataTable.Title><Text style={styles.tableHeading}>Id</Text></DataTable.Title>
+                <DataTable.Title><Text style={styles.tableHeading}>Name</Text></DataTable.Title>
+                <DataTable.Title><Text style={styles.tableHeading}>Patient Information</Text></DataTable.Title>
+                <DataTable.Title><Text style={styles.tableHeading}>Medical Report</Text></DataTable.Title>
+              </DataTable.Header>
+              {patients.map((patient) => (
+                  <DataTable.Row key={patient.patient_id}>
+                    <DataTable.Cell>{patient.patient_id}</DataTable.Cell>
+                    <DataTable.Cell>{patient.name}</DataTable.Cell>
+                    <DataTable.Cell><AppButton onPress={() => navigation.navigate('DoctorViewPatientInfo',{ id: `${patient.patient_id}` })} title={'Patient Info'}/></DataTable.Cell>
+                    <DataTable.Cell><AppButton onPress={() => navigation.navigate('DoctorViewMedicalReport',{ id: `${patient.patient_id}` })} title={'Report'}/></DataTable.Cell>
+                  </DataTable.Row>
+              ))}
+            </DataTable>
+          </ScrollView>
+        </ScrollView>
+      </SafeAreaView >
   );
 }
 
@@ -236,11 +111,16 @@ const styles = StyleSheet.create({
     // backgroundColor: "#009387",
   },
   header: {
-
     justifyContent: "flex-end",
     paddingHorizontal: 20,
     paddingBottom: 20
-
+  },
+  tableHeader: {
+    textAlign: 'center',
+  },
+  tableHeading: {
+    fontSize: 15,
+    alignSelf: 'center'
   },
   districtDrop: {
     width: 300,
@@ -284,13 +164,6 @@ const styles = StyleSheet.create({
     color: "#007c7a",
     fontSize: 16,
   },
-
-  textFooter1: {
-    color: "#007c7a",
-    fontSize: 16,
-    paddingTop:15,
-  },
-
   box: {
     width: "50%",
     height: "50%",
@@ -370,23 +243,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   button: {
-    marginTop: 60,
-    marginBottom: 20,
-    marginLeft: 40,
-    marginRight: 40,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
     backgroundColor: "#009387",
-    borderRadius: 10,
     alignItems: "center",
     borderColor: "#20d1ce",
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+    borderRadius: 5,
     borderWidth: 2,
-
   },
   buttonText: {
     color: "#fff",
-    fontSize: 20,
-
+    fontSize: 15,
   },
   pickedDateContainer: {
     padding: 20,
@@ -415,4 +282,4 @@ const styles = StyleSheet.create({
 
 
 
-export default DoctorTransfer;
+export default DoctorPatientList;

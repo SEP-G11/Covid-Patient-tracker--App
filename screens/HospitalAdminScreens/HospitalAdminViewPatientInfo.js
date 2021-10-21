@@ -26,157 +26,64 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
 
-function DoctorTransfer({ navigation }) {
+function HospitalAdminViewPatientInfo({ navigation ,route }) {
+  const patientId = route.params.id 
 
+  const [patient, setPatient] = useState({});
 
-
-  
-  const [id, setId] = useState("");  
-
-  const [dest_bed_id, setDes] = useState("");
-
-
-var today = new Date();
-  var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-  var time = today.getHours() + ":" + today.getMinutes();
-  const DateTime = date + 'T' + time;
-
-
-  const onChange = (event, value) => {
-    try {
-      if (value) {
-        const day = value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate();
-        setBday2(day);
-        setBday1(value.toISOString().slice(0, 10));
-      }
-
+  const getAge = bday => {
+    if (Math.floor((new Date() - new Date(bday).getTime()) / 3.15576e+10)) {
+      return (Math.floor((new Date() - new Date(bday).getTime()) / 3.15576e+10));
     }
-    catch (e) {
-      alert("Selected BirthDay is Erroried !")
-
-    }
-
-    if (Platform.OS === 'android') {
-      setIsPickerShow(false);
+    else {
+      return Math.round(((new Date() - new Date(bday).getTime()) / 3.15576e+10 + Number.EPSILON) * 1000) / 1000;
     }
   };
 
 
- 
+    const AppButton = ({ onPress, title }) => (
+        <TouchableOpacity onPress={onPress} style={styles.button}>
+          <Text style={styles.buttonText}>{title}</Text>
+        </TouchableOpacity>
+    
+      );
 
-  const AppButton = ({ onPress, title }) => (
-    <TouchableOpacity onPress={onPress} style={styles.button}>
-      <Text style={styles.buttonText}>{title}</Text>
-    </TouchableOpacity>
-
-  );
-
-
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-
-     
-
-      setId("");        
-
-      setDes("");
-     
-     
-
-
-    });
-  }, [navigation,]);
-
-
-
-  const transfer = async () => {
-    const token = await AsyncStorage.getItem('token');
-
-    const URL = `${BASE_URL}/patient/transfer`;
-
-
-    try {
-      const res = await fetch(URL, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-       
-       
-
-             patient_id:id,            
-
-
-             dest_bed_id:dest_bed_id,
-             transfer_date:DateTime
-
-
-        }),
-      });
-
-      const response = await res.json();
-      const message = response["message"]
-
-      if (res.status !== 200 && res.status !== 201 && res.status !== 202) {
-
-        throw new Error(message);
-      } else {
-
-        setId("");  
-        setOrigin("");       
-        setDes("");
-       
-       
-     
-
-
-
-        if (response) {
-          alert((message), [
+      const getPatientDetails = async (id) => {
+        const token = await AsyncStorage.getItem('token');
+        const URL = `${BASE_URL}/patient/patientDetails/${id}`;
+        try {
+          const res = await fetch(URL, {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
+    
+          const response = await res.json();
+    
+          setPatient(response);
+    
+        } catch (error) {
+          alert((error.message.toString()), [
             { text: "Okay" },
           ]);
-
-
         }
-      }
-    } catch (error) {
+      };
+      
+      
 
-      alert((error.message.toString()), [
-        { text: "Okay" },
-      ]);
-    }
-  };
-
-  const handleSubmitPress = () => {
-
-
-    if (!id) {
-      alert("Id can't be empty !");
-      return;
-    }
-
-         if (!dest_bed_id || dest_bed_id == 'disabled') {
-
-    
-        alert("Please select Destination BedID !");
-        return;
-      }
-    
-
-      transfer();
-
-  
-
-  };
+      useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+          getPatientDetails(patientId);
+        });
+    }, [navigation,]);
 
   return (
     <SafeAreaView style={styles.footer}>
       <View style={styles.header}>
-        <Text style={styles.textHeader}>TRANSFER  PATIENT </Text>
+        <Text style={styles.textHeader}>PATIENT INFORMATION</Text>
         <View
           style={{
             borderBottomColor: "#009387",
@@ -186,41 +93,45 @@ var today = new Date();
       </View>
 
 
-      <ScrollView style={{ paddingRight: 20 ,marginTop:50}}>
+      <ScrollView style={{ paddingRight: 20 }}>
 
-        <Text style={styles.textFooter}>Patient ID</Text>
-        <View style={styles.action}>
-          <TextInput
-            placeholder="Enter Id"
-            value={id}
-            placeholderTextColor="#666666"
-            style={styles.textInput}
-            autoCapitalize="none"
-            onChangeText={(id) => setId(id)}
-          />
-        </View>
+      <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+        <Text style={{margin: 10,fontSize: 18}}>
+            Id: {patientId}
+        </Text>
+        <Text style={{margin: 10,fontSize: 18}}>
+            Name: {patient.name}
+        </Text>
+        <Text style={{margin: 10,fontSize: 18}}>
+            Age: { getAge(patient.bday)}
+        </Text>
+        <Text style={{margin: 10,fontSize: 18}}>
+            Birth Day: {patient.bday}
+        </Text>
+        <Text style={{margin: 10,fontSize: 18}}>
+            Gender: {patient.gender}
+        </Text>
+        <Text style={{margin: 10,fontSize: 18}}>
+            Blood Type: {patient.blood_type}
+        </Text>
+        <Text style={{margin: 10,fontSize: 18}}>
+            Contact No: {patient.contact_no}
+        </Text>
+        <Text style={{margin: 10,fontSize: 18}}>
+            Address: {patient.address}
+        </Text>
+        <Text style={{margin: 10,fontSize: 18}}>
+            Disctrict: {patient.district}
+        </Text>
+        <Text style={{margin: 10,fontSize: 18}}>
+            Vaccination Details: {patient.is_Vaccinated}
+        </Text>
+      </View>
 
-       
-
-        <Text style={styles.textFooter1}>Destination Bed Id</Text>
-        <View style={styles.action}>
-          <TextInput
-            placeholder="Enter Destination Bed Id"
-            value={dest_bed_id}
-            placeholderTextColor="#666666"
-            style={styles.textInput}
-            autoCapitalize="none"
-            keyboardType={'numeric'}
-            onChangeText={(dest_bed_id) => setDes(dest_bed_id)}
-          />
-        </View>
-
-
-
-
-
-
-        <AppButton onPress={handleSubmitPress} title={"Transfer"} />
+  
+        <AppButton onPress={() => navigation.navigate('HospitalAdminPatientList')} title={'Back'}/>
+        <AppButton onPress={() => navigation.navigate('HospitalAdminEditPatientInfo',{ id: `${patient.patient_id}` })} title={'Update'}/>
+    
 
       </ScrollView>
 
@@ -284,13 +195,6 @@ const styles = StyleSheet.create({
     color: "#007c7a",
     fontSize: 16,
   },
-
-  textFooter1: {
-    color: "#007c7a",
-    fontSize: 16,
-    paddingTop:15,
-  },
-
   box: {
     width: "50%",
     height: "50%",
@@ -370,10 +274,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   button: {
-    marginTop: 60,
-    marginBottom: 20,
-    marginLeft: 40,
-    marginRight: 40,
+    marginTop: 10,
+    marginBottom: 10,
     paddingVertical: 10,
     paddingHorizontal: 10,
     backgroundColor: "#009387",
@@ -415,4 +317,4 @@ const styles = StyleSheet.create({
 
 
 
-export default DoctorTransfer;
+export default HospitalAdminViewPatientInfo;

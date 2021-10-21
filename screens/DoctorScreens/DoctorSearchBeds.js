@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
+
 import { BASE_URL } from "../../dev.config";
+
 import {
   StyleSheet,
   Text,
@@ -24,6 +26,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import PhoneInput from "react-native-phone-number-input";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
+
 import { Card, Title, Paragraph } from 'react-native-paper';
 
 function DoctorSearchBeds({ navigation }) {
@@ -47,12 +50,14 @@ function DoctorSearchBeds({ navigation }) {
   };
 
 
+
   const AppButton = ({ onPress, title }) => (
     <TouchableOpacity onPress={onPress} style={styles.button}>
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
 
   );
+
 
 
   const AppButton1 = ({ onPress, title }) => (
@@ -122,8 +127,10 @@ function DoctorSearchBeds({ navigation }) {
   }, [facilityInfo]);
 
 
+
   const search = async () => {
     const token = await AsyncStorage.getItem('token');
+
     const URL = `${BASE_URL}/bed/search/${facilityId}`;
 
 
@@ -136,6 +143,7 @@ function DoctorSearchBeds({ navigation }) {
           Authorization: `Bearer ${token}`,
         },
 
+
       });
 
       const response1 = await res.json()
@@ -145,15 +153,18 @@ function DoctorSearchBeds({ navigation }) {
 
       const message = response1["message"]
 
+
       if (res.status !== 200 && res.status !== 201 && res.status !== 202) {
 
         throw new Error(message);
       } else {
+
         setBedInfo(response1.results)
         
 
 
         if (response1) {
+
           alert((message), [
             { text: "Okay" },
           ]);
@@ -163,7 +174,9 @@ function DoctorSearchBeds({ navigation }) {
       }
     } catch (error) {
 
+
       setBedInfo(null);
+
 
 
       alert((error.message.toString()), [
@@ -176,10 +189,12 @@ function DoctorSearchBeds({ navigation }) {
 
 
 
+
     if (!facilityId || facilityId == 'disabled') {
       alert("Please select Facility !");
       return;
     }
+
 
     search();
   };
@@ -195,6 +210,7 @@ function DoctorSearchBeds({ navigation }) {
           }}
         />
       </View>
+
 
 
       <ScrollView style={{ paddingRight: 20, marginTop: 50 }}>
@@ -232,7 +248,9 @@ function DoctorSearchBeds({ navigation }) {
 
 
 
+
         <AppButton onPress={handleSubmitPress} title={"Search"} />
+
 
 
 
@@ -397,6 +415,7 @@ function DoctorSearchBeds({ navigation }) {
 
 
 
+
       </ScrollView>
 
     </SafeAreaView >
@@ -538,12 +557,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   button: {
+
     marginTop: 20,
     marginBottom: 20,
     marginLeft: 20,
     marginRight: 20,
     paddingVertical: 10,
     paddingHorizontal: 14,
+
+ 
     backgroundColor: "#009387",
     borderRadius: 10,
     alignItems: "center",
@@ -551,6 +573,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
 
   },
+
   button1: {
     marginTop: 20,
     marginBottom: 20,
@@ -565,16 +588,19 @@ const styles = StyleSheet.create({
     borderWidth: 2,
 
   },
+
   buttonText: {
     color: "#fff",
     fontSize: 20,
 
   },
+
   buttonText1: {
     color: "#fff",
     fontSize: 14,
 
   },
+
 
   pickedDateContainer: {
     padding: 20,

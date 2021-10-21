@@ -6,7 +6,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Homepage from "./screens/Homepage";
 import Signin from "./screens/Signin";
 
-
 import DoctorDashboard from "./screens/DoctorScreens/DoctorDashboard";
 import DoctorAdmit from "./screens/DoctorScreens/DoctorAdmit";
 import DoctorCreateReport from "./screens/DoctorScreens/DoctorCreateReport";
@@ -15,6 +14,13 @@ import DoctorTransfer from "./screens/DoctorScreens/DoctorTransfer";
 import DoctorSearchBeds from "./screens/DoctorScreens/DoctorSearchBeds";
 import DoctorEnterResults from "./screens/DoctorScreens/DoctorEnterResults";
 
+import DoctorPatientList from "./screens/DoctorScreens/DoctorPatientList";
+import DoctorViewPatientInfo from "./screens/DoctorScreens/DoctorViewPatientInfo";
+import DoctorEditPatientInfo from "./screens/DoctorScreens/DoctorEditPatientInfo";
+import DoctorViewMedicalReport from "./screens/DoctorScreens/DoctorViewMedicalReport";
+import DoctorEditMedicalReport from "./screens/DoctorScreens/DoctorEditMedicalReport";
+
+
 
 import HospitalAdminDashboard from "./screens/HospitalAdminScreens/HospitalAdminDashboard";
 import HospitalAdminAdmit from "./screens/HospitalAdminScreens/HospitalAdminAdmit";
@@ -22,6 +28,12 @@ import HospitalAdminDischarge from "./screens/HospitalAdminScreens/HospitalAdmin
 import HospitalAdminTransfer from "./screens/HospitalAdminScreens/HospitalAdminTransfer";
 import HospitalAdminSearchBeds from "./screens/HospitalAdminScreens/HospitalAdminSearchBeds";
 import HospitalAdminEnterResults from "./screens/HospitalAdminScreens/HospitalAdminEnterResults";
+
+
+import HospitalAdminPatientList from "./screens/HospitalAdminScreens/HospitalAdminPatientList";
+import HospitalAdminViewPatientInfo from "./screens/HospitalAdminScreens/HospitalAdminViewPatientInfo";
+import HospitalAdminEditPatientInfo from "./screens/HospitalAdminScreens/HospitalAdminEditPatientInfo";
+
 
 
 import { DrawerItemList } from '@react-navigation/drawer';
@@ -135,6 +147,14 @@ const App = () => {
             <Drawer.Screen name="DoctorEnterResults" component={DoctorEnterResults} />
 
 
+
+            <Drawer.Screen name="DoctorPatientList" component={DoctorPatientList} />
+            <Drawer.Screen name="DoctorViewPatientInfo" component={DoctorViewPatientInfo} />
+            <Drawer.Screen name="DoctorEditPatientInfo" component={DoctorEditPatientInfo} />
+            <Drawer.Screen name="DoctorViewMedicalReport" component={DoctorViewMedicalReport} />
+            <Drawer.Screen name="DoctorEditMedicalReport" component={DoctorEditMedicalReport} />
+
+
           </Drawer.Navigator>) :
 
             (<Drawer.Navigator screenOptions={{ title: false, drawerIcon: false, headerStyle: { backgroundColor: '#fff', elevation: 0 }, }}
@@ -146,6 +166,11 @@ const App = () => {
               <Drawer.Screen name="HospitalAdminTransfer" component={HospitalAdminTransfer} />
               <Drawer.Screen name="HospitalAdminSearchBeds" component={HospitalAdminSearchBeds} />
               <Drawer.Screen name="HospitalAdminEnterResults" component={HospitalAdminEnterResults} />
+
+              <Drawer.Screen name="HospitalAdminPatientList" component={HospitalAdminPatientList} />
+            <Drawer.Screen name="HospitalAdminViewPatientInfo" component={HospitalAdminViewPatientInfo} />
+            <Drawer.Screen name="HospitalAdminEditPatientInfo" component={HospitalAdminEditPatientInfo} />
+
 
             </Drawer.Navigator>)
 

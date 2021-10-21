@@ -1,19 +1,24 @@
+
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../../dev.config";
+
 import {
   StyleSheet,
   Text,
   View,
   SafeAreaView,
   Image,
+
   ScrollView,
   TouchableOpacity,
 } from "react-native";
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
+
 import * as Animatable from "react-native-animatable";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { VictoryPie } from 'victory-native';
 
@@ -391,6 +396,8 @@ function HospitalAdminDashboard({ navigation }) {
   )
 
 
+
+
 }
 
 
@@ -447,6 +454,7 @@ const styles = StyleSheet.create({
   },
   textFooter: {
     color: "#007c7a",
+
     fontSize: 13,
     paddingLeft: 5,
     marginRight: 40
@@ -463,6 +471,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
 
     marginTop: 2
+
   },
   box: {
     width: "50%",
@@ -535,6 +544,7 @@ const styles = StyleSheet.create({
   },
   icons: {
     color: "#007c7a",
+
     paddingRight: 10
 
   },
@@ -555,12 +565,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   button: {
+
     marginTop: 20,
     marginBottom: 20,
     marginLeft: 20,
     marginRight: 20,
     paddingVertical: 10,
     paddingHorizontal: 14,
+,
+
     backgroundColor: "#009387",
     borderRadius: 10,
     alignItems: "center",
@@ -568,6 +581,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
 
   },
+
   button1: {
     marginTop: 20,
     marginBottom: 20,
@@ -582,11 +596,13 @@ const styles = StyleSheet.create({
     borderWidth: 2,
 
   },
+
   buttonText: {
     color: "#fff",
     fontSize: 20,
 
   },
+
   buttonText1: {
     color: "#fff",
     fontSize: 14,
@@ -603,6 +619,7 @@ const styles = StyleSheet.create({
     marginBottom: 10
 
   },
+
   pickedDateContainer: {
     padding: 20,
     backgroundColor: '#fff',

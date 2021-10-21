@@ -51,6 +51,15 @@ export function HADrawerContent(props) {
             />
 
 
+          <DrawerItem
+              icon={({ color, focused }) => (
+                <FontAwesome name="users" size={18} color={focused ? '#007c7a' : 'grey'} />
+              )}
+              label="Patients List"
+              onPress={() => { props.navigation.navigate('HospitalAdminPatientList') }}
+            />
+
+
             <DrawerItem
               icon={({ color, focused }) => (
                 <FontAwesome name="user-plus" size={18} color={focused ? '#007c7a' : 'grey'} />
