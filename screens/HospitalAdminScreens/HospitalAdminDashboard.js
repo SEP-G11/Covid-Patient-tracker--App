@@ -572,8 +572,6 @@ const styles = StyleSheet.create({
     marginRight: 20,
     paddingVertical: 10,
     paddingHorizontal: 14,
-,
-
     backgroundColor: "#009387",
     borderRadius: 10,
     alignItems: "center",
