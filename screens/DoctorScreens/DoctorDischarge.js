@@ -26,13 +26,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
 
-function DoctorDischarge({ navigation }) {
+function DoctorDischarge({ navigation,route }) {
 
+  const [id, setId] = useState(route.params.id =="" ? (""):(route.params.id));
 
-  const [id, setId] = useState(""); 
   const [status, setStatus] = useState("");
   const [medicalHistory, setMedicalHistory] = useState("");
 
+  const [change, setChange] = useState(0);
 
 
 
@@ -81,7 +82,7 @@ function DoctorDischarge({ navigation }) {
       setMedicalHistory("");       
       setStatus("");
      
-     
+      setChange(change+1);
 
 
     });
@@ -164,6 +165,7 @@ function DoctorDischarge({ navigation }) {
     <SafeAreaView style={styles.footer}>
       <View style={styles.header}>
         <Text style={styles.textHeader}>DISCHARGE   PATIENT </Text>
+     
         <View
           style={{
             borderBottomColor: "#009387",

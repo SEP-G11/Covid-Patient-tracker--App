@@ -20,6 +20,7 @@ import { AuthContext } from '../../components/context';
 import DatePicker from 'react-native-datepicker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 // import Picker from 'react-native-select-dropdown';
+import { Table, TableWrapper, Row } from 'react-native-table-component';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 import { DataTable } from 'react-native-paper';
@@ -27,6 +28,9 @@ import { DataTable } from 'react-native-paper';
 function DoctorPatientList({ navigation }) {
 
   const [patients, setPatients] = useState([]);
+  var tableHead= ['PATIENT ID', 'NAME', 'INFO','M.REPORT','DISCHARGE','TRANSFER','RESULT'];
+  var widthArr = [200, 100, 100, 100,100,100,100];
+
 
   const AppButton = ({ onPress, title }) => (
       <TouchableOpacity onPress={onPress} style={styles.button}>
@@ -34,7 +38,21 @@ function DoctorPatientList({ navigation }) {
       </TouchableOpacity>
 
   );
-
+  
+  const tableData = [];
+  for (let i = 0; i < patients.length; i += 1) {
+    const rowData = [];
+    
+      rowData.push(patients[i].patient_id);
+      rowData.push(patients[i].name);
+      rowData.push(<AppButton onPress={() => navigation.navigate('DoctorViewPatientInfo', { id: `${patients[i].patient_id}` })} title={'Info'} />);
+      rowData.push(<AppButton onPress={() => navigation.navigate('DoctorViewMedicalReport',{ id: `${patients[i].patient_id}` })} title={'Report'}/>);
+      rowData.push(<AppButton onPress={() => navigation.navigate('DoctorDischarge',{ id: `${patients[i].patient_id}` })} title={'Discharge'}/>);
+      rowData.push(<AppButton onPress={() => navigation.navigate('DoctorTransfer',{ id: `${patients[i].patient_id}` })} title={'Transfer'}/>);
+      rowData.push(<AppButton onPress={() => navigation.navigate('DoctorEnterResults',{ id: `${patients[i].patient_id}` })} title={'Result'}/>);
+      
+    tableData.push(rowData);
+  }
   const listPatients = async () => {
     const token = await AsyncStorage.getItem('token');
     const URL = `${BASE_URL}/patient/getPatients`;
@@ -79,7 +97,37 @@ function DoctorPatientList({ navigation }) {
           />
         </View>
 
-        <ScrollView>
+
+
+        {patients ? (
+  <View style={styles.container}>
+  <ScrollView horizontal={true}  >
+    <View>
+      <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+        <Row data={tableHead} widthArr={widthArr} style={styles.header1} textStyle={styles.text1}/>
+      </Table>
+      <ScrollView style={styles.dataWrapper1}>
+        <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+          {
+            tableData.map((rowData, index) => (
+              <Row
+                key={index}
+                data={rowData}
+                widthArr={widthArr}
+                style={[styles.row1, index%2 && {backgroundColor: '#dcdcdc'}]}
+                textStyle={styles.text2}
+              />
+            ))
+          }
+        </Table>
+      </ScrollView>
+    </View>
+  </ScrollView>
+</View>
+) 
+:(null)
+}
+        {/* <ScrollView>
           <ScrollView  horizontal={true}>
             <DataTable>
               <DataTable.Header>
@@ -98,7 +146,7 @@ function DoctorPatientList({ navigation }) {
               ))}
             </DataTable>
           </ScrollView>
-        </ScrollView>
+        </ScrollView> */}
       </SafeAreaView >
   );
 }
@@ -106,10 +154,13 @@ function DoctorPatientList({ navigation }) {
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // backgroundColor: "#009387",
-  },
+  container: { flex: 1, backgroundColor: '#fff' },
+  header1: { height: 50, backgroundColor: '#000' },
+  text1: { textAlign: 'center', fontWeight: '100' ,color:'#fff'},
+  text2: { textAlign: 'center', fontWeight: '100' ,color:'#000'},
+  dataWrapper1: { marginTop: -1 },
+  row1: { height: 40, backgroundColor: '#fff' },
+
   header: {
     justifyContent: "flex-end",
     paddingHorizontal: 20,
@@ -248,7 +299,8 @@ const styles = StyleSheet.create({
     borderColor: "#20d1ce",
     paddingVertical: 5,
     paddingHorizontal: 5,
-    borderRadius: 5,
+    borderRadius: 1,
+    margin:5,
     borderWidth: 2,
   },
   buttonText: {

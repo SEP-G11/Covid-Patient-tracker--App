@@ -78,7 +78,7 @@ export function DOCDrawerContent(props) {
                 <FontAwesome name="minus-circle" size={18} color={focused ? '#007c7a' : 'grey'} />
               )}
               label="Dicscharge Patient"
-              onPress={() => { props.navigation.navigate('DoctorDischarge') }}
+              onPress={() => { props.navigation.navigate('DoctorDischarge', { id: "" }) }}
             />
             <DrawerItem
               icon={({ color, focused }) => (

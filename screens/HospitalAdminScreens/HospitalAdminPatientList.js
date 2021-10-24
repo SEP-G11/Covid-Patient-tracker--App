@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {BASE_URL} from "../../dev.config";
+import { BASE_URL } from "../../dev.config";
 import {
   StyleSheet,
   Text,
@@ -14,12 +14,7 @@ import {
   TextInput,
 } from "react-native";
 import { Drawer } from 'react-native-paper';
-import * as Animatable from "react-native-animatable";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Feather from "react-native-vector-icons/Feather";
-import { AuthContext } from '../../components/context';
-import DatePicker from 'react-native-datepicker';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { Table, TableWrapper, Row } from 'react-native-table-component';
 // import Picker from 'react-native-select-dropdown';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
@@ -28,6 +23,10 @@ import { DataTable } from 'react-native-paper';
 function HospitalAdminPatientList({ navigation }) {
 
   const [patients, setPatients] = useState([]);
+ var tableHead= ['PATIENT ID', 'NAME', 'INFO'];
+  var widthArr = [200, 100, 100, ];
+
+
 
   const AppButton = ({ onPress, title }) => (
     <TouchableOpacity onPress={onPress} style={styles.button}>
@@ -64,8 +63,20 @@ function HospitalAdminPatientList({ navigation }) {
     const unsubscribe = navigation.addListener('focus', () => {
       listPatients();
     });
-}, [navigation,]);
+  }, [navigation,]);
 
+ 
+    
+    const tableData = [];
+    for (let i = 0; i < patients.length; i += 1) {
+      const rowData = [];
+      
+        rowData.push(patients[i].patient_id);
+        rowData.push(patients[i].name);
+        rowData.push(<AppButton onPress={() => navigation.navigate('HospitalAdminViewPatientInfo', { id: `${patients[i].patient_id}` })} title={'Info'} />);
+        
+      tableData.push(rowData);
+    }
 
   return (
     <SafeAreaView style={styles.footer}>
@@ -78,25 +89,39 @@ function HospitalAdminPatientList({ navigation }) {
           }}
         />
       </View>
+{patients ? (
+  <View style={styles.container}>
+  <ScrollView horizontal={true}  >
+    <View>
+      <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+        <Row data={tableHead} widthArr={widthArr} style={styles.header1} textStyle={styles.text1}/>
+      </Table>
+      <ScrollView style={styles.dataWrapper1}>
+        <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+          {
+            tableData.map((rowData, index) => (
+              <Row
+                key={index}
+                data={rowData}
+                widthArr={widthArr}
+                style={[styles.row1, index%2 && {backgroundColor: '#dcdcdc'}]}
+                textStyle={styles.text2}
+              />
+            ))
+          }
+        </Table>
+      </ScrollView>
+    </View>
+  </ScrollView>
+</View>
+) 
+:(null)
+}
+    
 
-      <ScrollView>
-        <ScrollView  horizontal={true}>
-      <DataTable>
-      <DataTable.Header>
-        <DataTable.Title style={styles.tableHeader}><Text style={styles.tableHeading}>Patient Id</Text></DataTable.Title>
-        <DataTable.Title><Text style={styles.tableHeading}>Patient Name</Text></DataTable.Title>
-        <DataTable.Title><Text style={styles.tableHeading}>Patiet Information</Text></DataTable.Title>
-      </DataTable.Header>
-      {patients.map((patient) => (
-        <DataTable.Row key={patient.patient_id}>
-          <DataTable.Cell>{patient.patient_id}</DataTable.Cell>
-          <DataTable.Cell>{patient.name}</DataTable.Cell>
-          <DataTable.Cell><AppButton onPress={() => navigation.navigate('HospitalAdminViewPatientInfo',{ id: `${patient.patient_id}` })} title={'Patient Info'}/></DataTable.Cell>
-        </DataTable.Row>
-       ))}
-      </DataTable>
-      </ScrollView>
-      </ScrollView>
+
+
+    
     </SafeAreaView >
   );
 }
@@ -104,10 +129,13 @@ function HospitalAdminPatientList({ navigation }) {
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // backgroundColor: "#009387",
-  },
+  container: { flex: 1, backgroundColor: '#fff' },
+  header1: { height: 50, backgroundColor: '#000' },
+  text1: { textAlign: 'center', fontWeight: '100' ,color:'#fff'},
+  text2: { textAlign: 'center', fontWeight: '100' ,color:'#000'},
+  dataWrapper1: { marginTop: -1 },
+  row1: { height: 40, backgroundColor: '#fff' },
+
   header: {
     justifyContent: "flex-end",
     paddingHorizontal: 20,
@@ -246,8 +274,9 @@ const styles = StyleSheet.create({
     borderColor: "#20d1ce",
     paddingVertical: 5,
     paddingHorizontal: 5,
-    borderRadius: 5,
+    borderRadius: 1,
     borderWidth: 2,
+    margin:5
   },
   buttonText: {
     color: "#fff",
