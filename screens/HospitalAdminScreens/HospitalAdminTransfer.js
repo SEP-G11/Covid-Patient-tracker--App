@@ -26,12 +26,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
 
-function HospitalAdminTransfer({ navigation }) {
+function HospitalAdminTransfer({ navigation ,route }) {
 
 
-
-  const [id, setId] = useState("");  
-
+  
+  const [id, setId] = useState(route.params.id =="" ? (""):(route.params.id));
 
   const [dest_bed_id, setDes] = useState("");
 
@@ -78,7 +77,7 @@ var today = new Date();
 
      
 
-      setId("");        
+    
 
  
       setDes("");

@@ -23,8 +23,8 @@ import { DataTable } from 'react-native-paper';
 function HospitalAdminPatientList({ navigation }) {
 
   const [patients, setPatients] = useState([]);
- var tableHead= ['PATIENT ID', 'NAME', 'INFO'];
-  var widthArr = [200, 100, 100, ];
+  var tableHead= ['PATIENT ID', 'NAME', 'INFO','DISCHARGE','TRANSFER','RESULT'];
+  var widthArr = [200, 100, 100, 100,100,100];
 
 
 
@@ -74,7 +74,9 @@ function HospitalAdminPatientList({ navigation }) {
         rowData.push(patients[i].patient_id);
         rowData.push(patients[i].name);
         rowData.push(<AppButton onPress={() => navigation.navigate('HospitalAdminViewPatientInfo', { id: `${patients[i].patient_id}` })} title={'Info'} />);
-        
+        rowData.push(<AppButton onPress={() => navigation.navigate('HospitalAdminDischarge',{ id: `${patients[i].patient_id}` })} title={'Discharge'}/>);
+        rowData.push(<AppButton onPress={() => navigation.navigate('HospitalAdminTransfer',{ id: `${patients[i].patient_id}` })} title={'Transfer'}/>);
+        rowData.push(<AppButton onPress={() => navigation.navigate('HospitalAdminEnterResults',{ id: `${patients[i].patient_id}` })} title={'Result'}/>);
       tableData.push(rowData);
     }
 

@@ -61,8 +61,6 @@ const Signin = ({ navigation }) =>{
       });
       const response = await res.json();
 
-      console.log(response.results);
-
       if (res.status != 200) {
         throw new Error();
       } else {

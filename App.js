@@ -146,8 +146,6 @@ const App = () => {
             <Drawer.Screen name="DoctorSearchBeds" component={DoctorSearchBeds} />
             <Drawer.Screen name="DoctorEnterResults" component={DoctorEnterResults} />
 
-
-
             <Drawer.Screen name="DoctorPatientList" component={DoctorPatientList} />
             <Drawer.Screen name="DoctorViewPatientInfo" component={DoctorViewPatientInfo} />
             <Drawer.Screen name="DoctorEditPatientInfo" component={DoctorEditPatientInfo} />

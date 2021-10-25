@@ -74,14 +74,14 @@ export function HADrawerContent(props) {
                 <FontAwesome name="minus-circle" size={18} color={focused ? '#007c7a' : 'grey'} />
               )}
               label="Dicscharge Patient"
-              onPress={() => { props.navigation.navigate('HospitalAdminDischarge') }}
+              onPress={() => { props.navigation.navigate('HospitalAdminDischarge' ,{ id: "" })  }}
             />
             <DrawerItem
               icon={({ color, focused }) => (
                 <FontAwesome name="exchange" size={15} color={focused ? '#007c7a' : 'grey'} />
               )}
               label="Transfer Patient"
-              onPress={() => { props.navigation.navigate('HospitalAdminTransfer') }}
+              onPress={() => { props.navigation.navigate('HospitalAdminTransfer' , { id: "" }) }}
             />
 
 
@@ -98,7 +98,7 @@ export function HADrawerContent(props) {
                 <FontAwesome name="sign-in" size={20} color={focused ? '#007c7a' : 'grey'} />
               )}
               label="Enter Test Results"
-              onPress={() => { props.navigation.navigate('HospitalAdminEnterResults') }}
+              onPress={() => { props.navigation.navigate('HospitalAdminEnterResults', { id: "" }) }}
             />
 
           </Drawer.Section>

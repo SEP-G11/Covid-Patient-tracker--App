@@ -85,7 +85,7 @@ export function DOCDrawerContent(props) {
                 <FontAwesome name="exchange" size={18} color={focused ? '#007c7a' : 'grey'} />
               )}
               label="Transfer Patient"
-              onPress={() => { props.navigation.navigate('DoctorTransfer') }}
+              onPress={() => { props.navigation.navigate('DoctorTransfer', { id: "" }) }}
             />
 
 
@@ -102,7 +102,7 @@ export function DOCDrawerContent(props) {
                 <FontAwesome name="sign-in" size={20} color={focused ? '#007c7a' : 'grey'} />
               )}
               label="Enter Test Results"
-              onPress={() => { props.navigation.navigate('DoctorEnterResults') }}
+              onPress={() => { props.navigation.navigate('DoctorEnterResults' , { id: "" }) }}
             />
 
 

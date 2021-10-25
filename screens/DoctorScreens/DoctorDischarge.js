@@ -78,7 +78,7 @@ function DoctorDischarge({ navigation,route }) {
     const unsubscribe = navigation.addListener('focus', () => {
 
      
-      setId("");  
+       
       setMedicalHistory("");       
       setStatus("");
      

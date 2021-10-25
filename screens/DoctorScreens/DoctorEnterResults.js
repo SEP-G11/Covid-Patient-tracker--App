@@ -26,10 +26,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
 
-function DoctorEnterResults({ navigation }) {
+function DoctorEnterResults({ navigation ,route}) {
 
 
-    const [id, setId] = useState("");
+  
+    const [id, setId] = useState(route.params.id =="" ? (""):(route.params.id));
     const [RATresult, setRATresult] = useState("");
     const [testType, setTestType] = useState("");
 
@@ -58,7 +59,7 @@ function DoctorEnterResults({ navigation }) {
         const unsubscribe = navigation.addListener('focus', () => {
 
 
-            setId("");
+        
             setRATresult("");
             setTestType("");
 
