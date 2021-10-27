@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {BASE_URL} from "../../dev.config";
+import { BASE_URL } from "../../dev.config";
 import {
     StyleSheet,
     Text,
@@ -26,7 +26,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 import { DataTable } from 'react-native-paper';
 
-function DoctorViewMedicalReport({ navigation ,route }) {
+function DoctorViewMedicalReport({ navigation, route }) {
     const patientId = route.params.id
 
     const [report, setReport] = useState({});
@@ -40,17 +40,17 @@ function DoctorViewMedicalReport({ navigation ,route }) {
     );
 
 
- const convert = (result) => {
-        if (result=='true'){
+    const convert = (result) => {
+        if (result == 'true') {
             return "Positive"
-        }else{
+        } else {
             return "Negative"
         }
     }
     const getdate = (date) => {
         date = new Date(date)
         let year = date.getFullYear();
-        let month = date.getMonth()+1;
+        let month = date.getMonth() + 1;
         let dt = date.getDate();
         let hr = date.getHours();
         let min = date.getMinutes(0);
@@ -60,18 +60,18 @@ function DoctorViewMedicalReport({ navigation ,route }) {
         if (month < 10) {
             month = '0' + month;
         }
-        if ( hr<12 ) {
-            if ( min <10 ) {
-                min = '0' + min 
-            } 
-            min = min + "AM"     
+        if (hr < 12) {
+            if (min < 10) {
+                min = '0' + min
+            }
+            min = min + "AM"
         } else {
-            if ( min <10 ) {
-                min = '0' + min 
-            } 
-            min = min + "PM" 
+            if (min < 10) {
+                min = '0' + min
+            }
+            min = min + "PM"
         }
-        return (year+'-' + month + '-'+dt+ " "+hr+"."+min)
+        return (year + '-' + month + '-' + dt + " " + hr + "." + min)
     }
 
 
@@ -89,7 +89,7 @@ function DoctorViewMedicalReport({ navigation ,route }) {
             });
 
             const response = await res.json();
-
+        
             setReport(response);
 
         } catch (error) {
@@ -150,68 +150,68 @@ function DoctorViewMedicalReport({ navigation ,route }) {
 
             <ScrollView style={{ paddingRight: 20 }}>
 
-                <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
-                    <Text style={{margin: 10,fontSize: 18}}>
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                    <Text style={{ margin: 10, fontSize: 18 }}>
                         Report Id: {report.report_id}
                     </Text>
-                    <Text style={{margin: 10,fontSize: 18}}>
+                    <Text style={{ margin: 10, fontSize: 18 }}>
                         Patient Id: {report.patient_id}
                     </Text>
-                    <Text style={{margin: 10,fontSize: 18}}>
+                    <Text style={{ margin: 10, fontSize: 18 }}>
                         Bed No: {report.bed_no}
                     </Text>
-                    <Text style={{margin: 10,fontSize: 18}}>
+                    <Text style={{ margin: 10, fontSize: 18 }}>
                         Ward No: {report.ward}
                     </Text>
-                    <Text style={{margin: 10,fontSize: 18}}>
+                    <Text style={{ margin: 10, fontSize: 18 }}>
                         Symptoms: {report.symptoms}
                     </Text>
-                    <Text style={{margin: 10,fontSize: 18}}>
+                    <Text style={{ margin: 10, fontSize: 18 }}>
                         Status: {report.status}
                     </Text>
-                    <Text style={{margin: 10,fontSize: 18}}>
+                    <Text style={{ margin: 10, fontSize: 18 }}>
                         Medical History: {report.description}
                     </Text>
-                    <Text style={{margin: 10,fontSize: 18}}>
+                    <Text style={{ margin: 10, fontSize: 18 }}>
                         Admitted At: {getdate(report.admitted_at)}
                     </Text>
-                    <Text style={{margin: 10,fontSize: 18}}>
+                    <Text style={{ margin: 10, fontSize: 18 }}>
                         Discharged At: {getdate(report.discharged_at)}
                     </Text>
                 </View>
 
 
-            <View style={styles.header}>
-                <Text style={styles.textHeader}>TEST RESULTS</Text>
-                <View
-                    style={{
-                        borderBottomColor: "#009387",
-                        borderBottomWidth: 2,
-                    }}
-                />
-            </View>
-                <ScrollView  horizontal={true}>
-      <DataTable>
-      <DataTable.Header>
-        <DataTable.Title style={styles.tableHeader}><Text style={styles.tableHeading}>Test Id</Text></DataTable.Title>
-        <DataTable.Title><Text style={styles.tableHeading}>Date</Text></DataTable.Title>
-        <DataTable.Title>Test</DataTable.Title>
-        <DataTable.Title>Result</DataTable.Title>
-      </DataTable.Header>
-      {tests.map((test) => (
-        <DataTable.Row key={test.test_id}>
-          <DataTable.Cell>{test.test_id}</DataTable.Cell>
-          <DataTable.Cell>{getdate(test.date)}</DataTable.Cell>
-          <DataTable.Cell>{test.test_type}</DataTable.Cell>
-          <DataTable.Cell>{convert(test.result.toString())}</DataTable.Cell>
-          </DataTable.Row>
-       ))}
-      </DataTable>
-      </ScrollView>
+                <View style={styles.header}>
+                    <Text style={styles.textHeader}>TEST RESULTS</Text>
+                    <View
+                        style={{
+                            borderBottomColor: "#009387",
+                            borderBottomWidth: 2,
+                        }}
+                    />
+                </View>
+                <ScrollView horizontal={true}>
+                    <DataTable>
+                        <DataTable.Header>
+                            <DataTable.Title style={styles.tableHeader}><Text style={styles.tableHeading}>Test Id</Text></DataTable.Title>
+                            <DataTable.Title><Text style={styles.tableHeading}>Date</Text></DataTable.Title>
+                            <DataTable.Title>Test</DataTable.Title>
+                            <DataTable.Title>Result</DataTable.Title>
+                        </DataTable.Header>
+                        {tests.map((test) => (
+                            <DataTable.Row key={test.test_id}>
+                                <DataTable.Cell>{test.test_id}</DataTable.Cell>
+                                <DataTable.Cell>{getdate(test.date)}</DataTable.Cell>
+                                <DataTable.Cell>{test.test_type}</DataTable.Cell>
+                                <DataTable.Cell>{convert(test.result.toString())}</DataTable.Cell>
+                            </DataTable.Row>
+                        ))}
+                    </DataTable>
+                </ScrollView>
 
 
-                <AppButton onPress={() => navigation.navigate('DoctorPatientList')} title={'Back'}/>
-                <AppButton onPress={() => navigation.navigate('DoctorEditMedicalReport',{ id: `${report.patient_id}` })} title={'Update'}/>
+                <AppButton onPress={() => navigation.navigate('DoctorPatientList')} title={'Back'} />
+                <AppButton onPress={() => navigation.navigate('DoctorEditMedicalReport', { id: `${report.patient_id}` })} title={'Update'} />
 
 
             </ScrollView>
