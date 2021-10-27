@@ -27,16 +27,18 @@ import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'reac
 
 
 function HospitalAdminEditPatientInfo({ navigation ,route }) {
-  const patientId = route.params.id 
+  const patientId = route.params.id
 
   const [name, setName] = useState('')
-  const [bday, setBday] = useState("");
-  const [gender, setGender] = useState('')
+  const [bday, setBday] = useState('');
+  const [gender, setGender] = useState('');
   const [blood_type, setBloodType] = useState('')
   const [contact_no, setContactNo] = useState('')
   const [address, setAddress] = useState('')
   const [district, setDistrict] = useState('')
-  const [is_Vaccinated, setIs_Vaccinated] = useState('')
+  const [is_Vaccinated, setIsvaccinated] = useState('');
+  const [Num_vaccine, setNumvaccinated] = useState(null);
+  const [Type_vaccine, setTypevaccinated] = useState(null);
 
   const [isPickerShow, setIsPickerShow] = useState(false);
 
@@ -62,81 +64,97 @@ function HospitalAdminEditPatientInfo({ navigation ,route }) {
     }
   };
 
+  var radio_props_gender = [
+    { label: 'Male', value: "Male" },
+    { label: 'Female', value: "Female" }
+  ];
+
+
+  var radio_props_vaccine = [
+    { label: 'No', value: "0" },
+    { label: 'Yes', value: "1" },
+
+  ]
+
   const AppButton = ({ onPress, title }) => (
-    <TouchableOpacity onPress={onPress} style={styles.button}>
-      <Text style={styles.buttonText}>{title}</Text>
-    </TouchableOpacity>
+      <TouchableOpacity onPress={onPress} style={styles.button}>
+        <Text style={styles.buttonText}>{title}</Text>
+      </TouchableOpacity>
 
   );
 
   const updatePatient = async (patient) => {
-        const token = await AsyncStorage.getItem('token');
-        const URL = `${BASE_URL}/patient/updatePatient/${patient.patient_id}`;
-        try {
-          const res = await fetch(URL, {
-            method: "PUT",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-              body: JSON.stringify(patient),
-          });
-    
-          const response = await res.json();
-    
-          setName(response.name);
-          setBday(response.bday);
-          setGender(response.gender);
-          setBloodType(response.blood_type);
-          setContactNo(response.contact_no);
-          setAddress(response.address);
-          setDistrict(response.district)
-          setIs_Vaccinated(response.is_Vaccinated);
+    const token = await AsyncStorage.getItem('token');
+    const URL = `${BASE_URL}/patient/updatePatient/${patient.patient_id}`;
+    try {
+      const res = await fetch(URL, {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(patient),
+      });
 
-          if (response){
-            navigation.navigate('HospitalAdminViewPatientInfo',{ id: `${patient.patient_id}` })
-          }
-    
-        } catch (error) {
-          alert((error.message.toString()), [
-            { text: "Okay" },
-          ]);
-        }
-      };
-      
+      const response = await res.json();
 
-      const getPatientDetails = async (id) => {
-        const token = await AsyncStorage.getItem('token');
-        const URL = `${BASE_URL}/patient/patientDetails/${id}`;
-        try {
-          const res = await fetch(URL, {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          });
-    
-          const response = await res.json();
-    
-          setName(response.name);
-          setBday(response.bday);
-          setGender(response.gender);
-          setBloodType(response.blood_type);
-          setContactNo(response.contact_no);
-          setAddress(response.address);
-          setDistrict(response.district)
-          setIs_Vaccinated(response.is_Vaccinated);
-    
-        } catch (error) {
-          alert((error.message.toString()), [
-            { text: "Okay" },
-          ]);
-        }
-      };
-      
+      setName(response.name);
+      setBday(response.bday);
+      setGender(response.gender);
+      setBloodType(response.blood_type);
+      setContactNo(response.contact_no);
+      setAddress(response.address);
+      setDistrict(response.district);
+      setIsvaccinated(response.is_Vaccinated);
+      setNumvaccinated(response.Num_vaccine);
+      setTypevaccinated(response.Type_vaccine);
+
+      if (response){
+        navigation.navigate('DoctorViewPatientInfo',{ id: `${patient.patient_id}` })
+      }
+
+    } catch (error) {
+      alert((error.message.toString()), [
+        { text: "Okay" },
+      ]);
+    }
+  };
+
+
+  const getPatientDetails = async (id) => {
+    const token = await AsyncStorage.getItem('token');
+    const URL = `${BASE_URL}/patient/patientDetails/${id}`;
+    try {
+      const res = await fetch(URL, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const response = await res.json();
+
+      setName(response.name);
+      setBday(response.bday);
+      setGender(response.gender);
+      setBloodType(response.blood_type);
+      setContactNo(response.contact_no);
+      setAddress(response.address);
+      setDistrict(response.district);
+      setIsvaccinated(response.is_Vaccinated);
+      setNumvaccinated(response.Num_vaccine);
+      setTypevaccinated(response.Type_vaccine);
+
+    } catch (error) {
+      alert((error.message.toString()), [
+        { text: "Okay" },
+      ]);
+    }
+  };
+
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -144,223 +162,266 @@ function HospitalAdminEditPatientInfo({ navigation ,route }) {
     });
   }, [navigation,]);
 
-const handleSubmitPress = () => {
-    updatePatient({ patient_id:patientId, name, bday,gender,blood_type,contact_no,address,district,is_Vaccinated});
+  const handleSubmitPress = () => {
+    updatePatient({ patient_id:patientId, name, bday,gender,blood_type,contact_no,address,district,is_Vaccinated,Type_vaccine,Num_vaccine});
   };
 
   return (
-    <SafeAreaView style={styles.footer}>
-      <View style={styles.header}>
-        <Text style={styles.textHeader}>EDIT PATIENT INFORMATION</Text>
-        <View
-          style={{
-            borderBottomColor: "#009387",
-            borderBottomWidth: 2,
-          }}
-        />
-      </View>
-
-      <ScrollView style={{ paddingRight: 20 }}>
-
-      <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
-        <Text style={{margin: 10,fontSize: 18}}>
-            Patient Id: {patientId}
-        </Text>
-        </View>
-
-
-        <Text style={styles.textFooter}>Patient Name</Text>
-        <View style={styles.action}>
-          <TextInput
-            placeholder="Enter name"
-            value={name}
-            placeholderTextColor="#666666"
-            style={styles.textInput}
-            autoCapitalize="none"
-            onChangeText={(name) => setName(name)}
+      <SafeAreaView style={styles.footer}>
+        <View style={styles.header}>
+          <Text style={styles.textHeader}>EDIT PATIENT INFORMATION</Text>
+          <View
+              style={{
+                borderBottomColor: "#009387",
+                borderBottomWidth: 2,
+              }}
           />
         </View>
 
-        {isPickerShow && (
-          <DateTimePicker
-            value={new Date()}
-            mode={'date'}
-            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-            is24Hour={true}
-            // format="YYYY-MM-DD"
-            maximumDate={new Date()}
-            onChange={onChange}
-            style={styles.datePicker}
-          />
-        )}
+        <ScrollView style={{ paddingRight: 20 }}>
 
-        <View style={{ flexDirection: 'row', marginTop: 15 }}>
-          <Text style={styles.textFooter}>Date of Birth</Text>
-          {/* <Text style={{ color: "#007c7a", fontSize: 16, paddingLeft: 100 }}>Gender</Text> */}
-        </View>
-
-        <View style={styles.action1} onPress={showPicker}>
-          <FontAwesome name="calendar" size={15} onPress={showPicker} {...styles.icons} />
-          <Text style={styles.pickedDate}>{bday}</Text>
-          <TextInput
-            placeholder={bday ? "" : "Select Date"}
-            placeholderTextColor="#666666"
-            style={styles.textInput}
-            autoCapitalize="none"
-            editable={false}
-          />
-        </View>
-
-        <View style={{ flexDirection: 'row', marginTop: 15 }}>
-          <Text style={styles.textFooter}>Blood Type</Text>
-          <Text style={{ color: "#007c7a", fontSize: 16, paddingLeft: 100 }}>Gender</Text>
-        </View>
-        <View style={{ flexDirection: 'row' }}>
-          <View style={[{ flex: .5, }, styles.BloodDrop]}>
-            <Picker
-              style={styles.action}
-              onValueChange={setBloodType}
-              selectedValue={blood_type}
-
-            >
-              <Picker.Item label="Select" value="disabled" color="#aaa" />
-              <Picker.Item label="O+" value="O+" />
-              <Picker.Item label="O-" value="O-" />
-              <Picker.Item label="A+" value="A+" />
-              <Picker.Item label="A-" value="A-" />
-              <Picker.Item label="B+" value="B+" />
-              <Picker.Item label="B-" value="B-" />
-              <Picker.Item label="AB+" value="AB+" />
-              <Picker.Item label="AB-" value="AB-" />
-            </Picker>
+          <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+            <Text style={{margin: 10,fontSize: 18}}>
+              Patient Id: {patientId}
+            </Text>
           </View>
 
-          <View style={[{ flex: .5, }, styles.BloodDrop]}>
-            <Picker
-              style={styles.action}
-              onValueChange={setGender}
-              selectedValue={gender}
 
-            >
-              <Picker.Item label="Select" value="disabled" color="#aaa" />
-              <Picker.Item label="Female" value="Female" />
-              <Picker.Item label="Male" value="Male" />
-            </Picker>
+          <Text style={styles.textFooter}>Patient Name</Text>
+          <View style={styles.action}>
+            <TextInput
+                placeholder="Enter name"
+                value={name}
+                placeholderTextColor="#666666"
+                style={styles.textInput}
+                autoCapitalize="none"
+                onChangeText={(name) => setName(name)}
+            />
           </View>
 
-        </View>
+          {isPickerShow && (
+              <DateTimePicker
+                  value={new Date()}
+                  mode={'date'}
+                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                  is24Hour={true}
+                  // format="YYYY-MM-DD"
+                  maximumDate={new Date()}
+                  onChange={onChange}
+                  style={styles.datePicker}
+              />
+          )}
 
+          <View style={{ flexDirection: 'row', marginTop: 15 }}>
+            <Text style={styles.textFooter}>Date of Birth</Text>
+            {/* <Text style={{ color: "#007c7a", fontSize: 16, paddingLeft: 100 }}>Gender</Text> */}
+          </View>
 
+          <View style={styles.action1} onPress={showPicker}>
+            <FontAwesome name="calendar" size={15} onPress={showPicker} {...styles.icons} />
+            <Text style={styles.pickedDate}>{bday}</Text>
+            <TextInput
+                placeholder={bday ? "" : "Select Date"}
+                placeholderTextColor="#666666"
+                style={styles.textInput}
+                autoCapitalize="none"
+                editable={false}
+            />
+          </View>
 
-
-        <Text style={[{ marginTop: 15 }, styles.textFooter]}>Contact Number</Text>
-        {/* <TextInput keyboardType={'phone-pad'} /> */}
-
-        <View style={styles.action3}>
-          {/* <FontAwesome name="phone" size={15} onPress={showPicker} {...styles.icons} /> */}
-          <PhoneInput
-            defaultCode="LK"
-            containerStyle={{
-              width: 133,
-              height: 30,
-              marginTop: 1,
-              // marginLeft: 20,
-              // marginRight: 10,
-              alignSelf: 'center'
-            }}
-          />
-          <TextInput
-            placeholder="Enter Contact Number "
-            value={contact_no}
-            keyboardType={'numeric'}
-            placeholderTextColor="#666666"
-            style={styles.textInput1}
-            // autoCapitalize="none"
-            onChangeText={(contact_no) => setContactNo(contact_no)}
-            autoCorrect={false}
-          />
-        </View>
-
-
-
-
-        <Text style={[styles.textFooter, { marginTop: 15 }]}>Address</Text>
-        <View style={styles.action}>
-          <TextInput
-            placeholder="Enter  Address"
-            placeholderTextColor="#666666"
-            value={address}
-            multiline={true}
-            numberOfLines={3}
-            style={styles.textInput}
-            autoCapitalize="none"
-            onChangeText={(address) => setAddress(address)}
-          />
-
-        </View>
-
-        <View style={{ flexDirection: 'row', marginTop: 15 }}>
-          <Text style={styles.textFooter}>District</Text>
-          <Text style={{ color: "#007c7a", fontSize: 16, paddingLeft: 100 }}>Vaccination Details</Text>
-        </View>
-        <View style={{ flexDirection: 'row' }}>
-          <View style={[{ flex: .5, }, styles.BloodDrop]}>
+          <Text style={[{ marginTop: 15, }, styles.textFooter]}>District</Text>
+          <View style={styles.districtDrop}>
             <Picker
-              style={styles.action}
-              onValueChange={setDistrict}
-              selectedValue={district}
+                style={styles.action}
+                onValueChange={setDistrict}
+                selectedValue={district}
 
             >
-              <Picker.Item label="Select" value="disabled" color="#aaa" />
+              <Picker.Item label="Select  District" value="disabled" color="#aaa" />
+
               <Picker.Item label="Ampara" value="Ampara" />
               <Picker.Item label="Anuradhapura" value="Anuradhapura" />
-              <Picker.Item label="Badulla" value="Badulla" />
               <Picker.Item label="Batticaloa" value="Batticaloa" />
+              <Picker.Item label="Polonnaruwa" value="Polonnaruwa" />
+              <Picker.Item label="Hambantota" value="Hambantota" />
+              <Picker.Item label="Mullaitivu" value="Mullaitivu" />
+              <Picker.Item label="Puttalam" value="Puttalam" />
               <Picker.Item label="Colombo" value="Colombo" />
               <Picker.Item label="Galle" value="Galle" />
               <Picker.Item label="Gampaha" value="Gampaha" />
-              <Picker.Item label="Hambantota" value="Hambantota" />
               <Picker.Item label="Jaffna" value="Jaffna" />
-              <Picker.Item label="Kalutara" value="Kalutara" />
-              <Picker.Item label="Kandy" value="Kandy" />
-              <Picker.Item label="Kegalle" value="Kegalle" />
-              <Picker.Item label="Kilinochchi" value="Kilinochchi" />
-              <Picker.Item label="Kurunegala" value="Kurunegala" />
-              <Picker.Item label="Mannar" value="Mannar" />
-              <Picker.Item label="Matale" value="Matale" />
+              <Picker.Item label="Hambantota" value="Hambantota" />
               <Picker.Item label="Matara" value="Matara" />
-              <Picker.Item label="Moneragala" value="Moneragala" />
-              <Picker.Item label="Mullaitivu" value="Mullaitivu" />
-              <Picker.Item label="Nuwara Eliya" value="Nuwara Eliya" />
+              <Picker.Item label="Kalutara" value="Kalutara" />
+              <Picker.Item label="Matara" value="Matara" />
+              <Picker.Item label="Kandy" value="Kandy" />
               <Picker.Item label="Polonnaruwa" value="Polonnaruwa" />
+              <Picker.Item label="Hambantota" value="Hambantota" />
+              <Picker.Item label="Mullaitivu" value="Mullaitivu" />
               <Picker.Item label="Puttalam" value="Puttalam" />
-              <Picker.Item label="Ratnapura" value="Ratnapura" />
+              <Picker.Item label="NuwaraEliya" value="NuwaraEliya" />
               <Picker.Item label="Trincomalee" value="Trincomalee" />
-              <Picker.Item label="Vavuniya" value="Vavuniya" />
-            </Picker>
-          </View>
-          
-          <View style={[{ flex: .5, }, styles.BloodDrop]}>
-            <Picker
-              style={styles.action}
-              onValueChange={setIs_Vaccinated}
-              selectedValue={is_Vaccinated}
 
-            >
-              <Picker.Item label="Select" value="disabled" color="#aaa" />
-              <Picker.Item label="Vaccinated" value="Vaccinated" />
-              <Picker.Item label="Not Vaccinated" value="Not Vaccinated" />
             </Picker>
           </View>
 
-        </View>
+
+          <Text style={[{ marginTop: 15 }, styles.textFooter]}>Contact Number</Text>
+          {/* <TextInput keyboardType={'phone-pad'} /> */}
+
+          <View style={styles.action3}>
+            {/* <FontAwesome name="phone" size={15} onPress={showPicker} {...styles.icons} /> */}
+            <PhoneInput
+                defaultCode="LK"
+                containerStyle={{
+                  width: 133,
+                  height: 30,
+                  marginTop: 1,
+                  // marginLeft: 20,
+                  // marginRight: 10,
+                  alignSelf: 'center'
+                }}
+            />
+            <TextInput
+                placeholder="Enter Contact Number "
+                value={contact_no}
+                keyboardType={'numeric'}
+                placeholderTextColor="#666666"
+                style={styles.textInput1}
+                // autoCapitalize="none"
+                onChangeText={(contact_no) => setContactNo(contact_no)}
+                autoCorrect={false}
+            />
+          </View>
 
 
-        <AppButton onPress={handleSubmitPress} title={'Save Changes'}/>
 
-      </ScrollView>
 
-    </SafeAreaView >
+          <Text style={[styles.textFooter, { marginTop: 15 }]}>Address</Text>
+          <View style={styles.action}>
+            <TextInput
+                placeholder="Enter  Address"
+                placeholderTextColor="#666666"
+                value={address}
+                multiline={true}
+                numberOfLines={4}
+                style={styles.textInput}
+                autoCapitalize="none"
+                onChangeText={(address) => setAddress(address)}
+            />
+
+          </View>
+
+          <View style={{ flexDirection: 'row', marginTop: 15 }}>
+            <Text style={styles.textFooter}>Blood Type</Text>
+
+            <Text style={{ color: "#007c7a", fontSize: 16, paddingLeft: 100 }}>Gender</Text>
+
+          </View>
+          <View style={{ flexDirection: 'row' }}>
+            <View style={[{ flex: 0.5, }, styles.BloodDrop]}>
+              <Picker
+                  style={styles.action}
+                  onValueChange={setBloodType}
+                  selectedValue={blood_type}
+
+              >
+                <Picker.Item label="Select " value="disabled" color="#aaa" />
+                <Picker.Item label="A+" value="A+" />
+
+                <Picker.Item label="O+" value="O+" />
+                <Picker.Item label="B+" value="B+" />
+                <Picker.Item label="AB+" value="AB+" />
+                <Picker.Item label="A-" value="A-" />
+                <Picker.Item label="O-" value="O-" />
+                <Picker.Item label="B-" value="B-" />
+                <Picker.Item label="AB-" value="AB-" />
+
+              </Picker>
+            </View>
+
+
+            <View style={[{ marginLeft: 5 }, styles.action1]}>
+
+              <RadioForm
+                  radio_props={radio_props_gender}
+                  buttonSize={10}
+                  buttonOuterSize={18}
+                  onPress={(value) => setGender(value)}
+                  formHorizontal={true}
+              />
+
+            </View>
+
+
+          </View>
+
+          <Text style={[{ marginTop: 15 }, styles.textFooter]}>Is Vaccinated</Text>
+          <View style={{ flexDirection: 'row' }}>
+            <View style={[{ marginLeft: 5, flex: .5, }, styles.action1]}>
+
+              <RadioForm
+                  radio_props={radio_props_vaccine}
+                  buttonSize={10}
+                  buttonOuterSize={18}
+                  onPress={(value) => setIsvaccinated(value)}
+                  formHorizontal={true}
+              />
+
+            </View>
+          </View>
+
+          {"1" == is_Vaccinated ? (
+                  <>
+                    <View style={{ flexDirection: 'row', marginTop: 15 }}>
+                      <Text style={styles.textFooter}>Vaccine Type</Text>
+                      <Text style={{ color: "#007c7a", fontSize: 16, paddingLeft: 100 }}>No.Vaccine</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row' }}>
+                      <View style={[{ flex: 0.5, }, styles.BloodDrop]}>
+                        <Picker
+                            style={styles.action}
+                            onValueChange={setTypevaccinated}
+                            selectedValue={Type_vaccine}
+
+                        >
+                          <Picker.Item label="Select " value="disabled" color="#aaa" />
+                          <Picker.Item label="Sputnik V" value="Sputnik V" />
+                          <Picker.Item label="Sinopharm" value="Sinopharm" />
+                          <Picker.Item label="Sinovac" value="Sinovac" />
+                          <Picker.Item label="Pfizer" value="Pfizer" />
+                          <Picker.Item label="AstraZeneca" value="AstraZeneca" />
+                          <Picker.Item label="Moderna" value="Moderna" />
+                        </Picker>
+                      </View>
+
+
+                      <View style={[{ flex: .5, }, styles.BloodDrop]}>
+                        <Picker
+                            style={styles.action}
+                            onValueChange={setNumvaccinated}
+                            selectedValue={Num_vaccine}
+
+                        >
+                          <Picker.Item label="Select" value="disabled" color="#aaa" />
+                          <Picker.Item label="1" value="1" />
+                          <Picker.Item label="2" value="2" />
+                          <Picker.Item label="3" value="3" />
+                        </Picker>
+                      </View>
+
+
+                    </View>
+                  </>
+              ) :
+              (null)
+          }
+
+          <AppButton onPress={handleSubmitPress} title={'Save Changes'}/>
+
+        </ScrollView>
+
+      </SafeAreaView >
   );
 }
 

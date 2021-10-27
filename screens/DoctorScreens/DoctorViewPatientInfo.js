@@ -97,7 +97,7 @@ function DoctorViewPatientInfo({ navigation ,route }) {
 
       <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
         <Text style={{margin: 10,fontSize: 18}}>
-            Id: {patientId}
+            Id: {patient.patient_id}
         </Text>
         <Text style={{margin: 10,fontSize: 18}}>
             Name: {patient.name}
@@ -124,12 +124,12 @@ function DoctorViewPatientInfo({ navigation ,route }) {
             Disctrict: {patient.district}
         </Text>
         <Text style={{margin: 10,fontSize: 18}}>
-            Vaccination Details: {patient.is_Vaccinated}
+            Vaccination Details: {patient.is_Vaccinated}{patient.Type_vaccine}{patient.Num_vaccine}
         </Text>
       </View>
 
   
-        <AppButton onPress={() => navigation.navigate('DoctorPatientList')} title={'Back'}/>
+        <AppButton onPress={() => navigation.navigate('DoctorViewPatientList')} title={'Back'}/>
         <AppButton onPress={() => navigation.navigate('DoctorEditPatientInfo',{ id: `${patient.patient_id}` })} title={'Update'}/>
     
 

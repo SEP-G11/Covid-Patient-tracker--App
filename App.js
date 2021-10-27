@@ -13,7 +13,7 @@ import DoctorDischarge from "./screens/DoctorScreens/DoctorDischarge";
 import DoctorTransfer from "./screens/DoctorScreens/DoctorTransfer";
 import DoctorSearchBeds from "./screens/DoctorScreens/DoctorSearchBeds";
 import DoctorEnterResults from "./screens/DoctorScreens/DoctorEnterResults";
-import DoctorPatientList from "./screens/DoctorScreens/DoctorPatientList";
+import DoctorViewPatientList from "./screens/DoctorScreens/DoctorViewPatientList";
 import DoctorViewPatientInfo from "./screens/DoctorScreens/DoctorViewPatientInfo";
 import DoctorEditPatientInfo from "./screens/DoctorScreens/DoctorEditPatientInfo";
 import DoctorViewMedicalReport from "./screens/DoctorScreens/DoctorViewMedicalReport";
@@ -142,7 +142,7 @@ const App = () => {
             <Drawer.Screen name="DoctorTransfer" component={DoctorTransfer} />
             <Drawer.Screen name="DoctorSearchBeds" component={DoctorSearchBeds} />
             <Drawer.Screen name="DoctorEnterResults" component={DoctorEnterResults} />
-            <Drawer.Screen name="DoctorPatientList" component={DoctorPatientList} />
+            <Drawer.Screen name="DoctorViewPatientList" component={DoctorViewPatientList} />
             <Drawer.Screen name="DoctorViewPatientInfo" component={DoctorViewPatientInfo} />
             <Drawer.Screen name="DoctorEditPatientInfo" component={DoctorEditPatientInfo} />
             <Drawer.Screen name="DoctorViewMedicalReport" component={DoctorViewMedicalReport} />

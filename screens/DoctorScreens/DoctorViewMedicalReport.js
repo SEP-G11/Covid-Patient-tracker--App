@@ -24,13 +24,16 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import PhoneInput from "react-native-phone-number-input";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
-import { DataTable } from 'react-native-paper';
+import { Table, TableWrapper, Row } from 'react-native-table-component';
 
 function DoctorViewMedicalReport({ navigation ,route }) {
     const patientId = route.params.id
 
     const [report, setReport] = useState({});
     const [tests, setTests] = useState([]);
+
+    var tableHead= ['TEST ID', 'DATE', 'TEST','RESULT'];
+    var widthArr = [100, 100, 50, 70];
 
     const AppButton = ({ onPress, title }) => (
         <TouchableOpacity onPress={onPress} style={styles.button}>
@@ -74,6 +77,17 @@ function DoctorViewMedicalReport({ navigation ,route }) {
         return (year+'-' + month + '-'+dt+ " "+hr+"."+min)
     }
 
+    const tableData = [];
+    for (let i = 0; i < tests.length; i += 1) {
+        const rowData = [];
+
+        rowData.push(tests[i].test_id);
+        rowData.push(getdate(tests[i].date));
+        rowData.push(tests[i].test_type);
+        rowData.push(convert(tests.result));
+
+        tableData.push(rowData);
+    }
 
     const getPatientReportDetails = async (id) => {
         const token = await AsyncStorage.getItem('token');
@@ -146,9 +160,10 @@ function DoctorViewMedicalReport({ navigation ,route }) {
                     }}
                 />
             </View>
-
+            <ScrollView  horizontal={true}>
 
             <ScrollView style={{ paddingRight: 20 }}>
+
 
                 <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
                     <Text style={{margin: 10,fontSize: 18}}>
@@ -190,29 +205,41 @@ function DoctorViewMedicalReport({ navigation ,route }) {
                     }}
                 />
             </View>
-                <ScrollView  horizontal={true}>
-      <DataTable>
-      <DataTable.Header>
-        <DataTable.Title style={styles.tableHeader}><Text style={styles.tableHeading}>Test Id</Text></DataTable.Title>
-        <DataTable.Title><Text style={styles.tableHeading}>Date</Text></DataTable.Title>
-        <DataTable.Title>Test</DataTable.Title>
-        <DataTable.Title>Result</DataTable.Title>
-      </DataTable.Header>
-      {tests.map((test) => (
-        <DataTable.Row key={test.test_id}>
-          <DataTable.Cell>{test.test_id}</DataTable.Cell>
-          <DataTable.Cell>{getdate(test.date)}</DataTable.Cell>
-          <DataTable.Cell>{test.test_type}</DataTable.Cell>
-          <DataTable.Cell>{convert(test.result.toString())}</DataTable.Cell>
-          </DataTable.Row>
-       ))}
-      </DataTable>
-      </ScrollView>
+                {tests ? (
+                        <View style={styles.container}>
+                            <ScrollView horizontal={true}  >
+                                <View>
+                                    <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+                                        <Row data={tableHead} widthArr={widthArr} style={styles.header1} textStyle={styles.text1}/>
+                                    </Table>
+                                    <ScrollView style={styles.dataWrapper1}>
+                                        <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+                                            {
+                                                tableData.map((rowData, index) => (
+                                                    <Row
+                                                        key={index}
+                                                        data={rowData}
+                                                        widthArr={widthArr}
+                                                        style={[styles.row1, index%2 && {backgroundColor: '#dcdcdc'}]}
+                                                        textStyle={styles.text2}
+                                                    />
+                                                ))
+                                            }
+                                        </Table>
+                                    </ScrollView>
+                                </View>
+                            </ScrollView>
+                        </View>
+                    )
+                    :(null)
+                }
 
 
-                <AppButton onPress={() => navigation.navigate('DoctorPatientList')} title={'Back'}/>
+
+
+                <AppButton onPress={() => navigation.navigate('DoctorViewPatientList')} title={'Back'}/>
                 <AppButton onPress={() => navigation.navigate('DoctorEditMedicalReport',{ id: `${report.patient_id}` })} title={'Update'}/>
-
+                </ScrollView>
 
             </ScrollView>
 
@@ -223,16 +250,24 @@ function DoctorViewMedicalReport({ navigation ,route }) {
 
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        // backgroundColor: "#009387",
-    },
-    header: {
+    container: { flex: 1, backgroundColor: '#fff' },
+    header1: { height: 50, backgroundColor: '#000' },
+    text1: { textAlign: 'center', fontWeight: '100' ,color:'#fff'},
+    text2: { textAlign: 'center', fontWeight: '100' ,color:'#000'},
+    dataWrapper1: { marginTop: -1 },
+    row1: { height: 40, backgroundColor: '#fff' },
 
+    header: {
         justifyContent: "flex-end",
         paddingHorizontal: 20,
         paddingBottom: 20
-
+    },
+    tableHeader: {
+        textAlign: 'center',
+    },
+    tableHeading: {
+        fontSize: 15,
+        alignSelf: 'center'
     },
     districtDrop: {
         width: 300,
@@ -394,6 +429,7 @@ const styles = StyleSheet.create({
 
 
 });
+
 
 
 
