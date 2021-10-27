@@ -129,8 +129,8 @@ function HospitalAdminViewPatientInfo({ navigation ,route }) {
           </View>
 
 
-          <AppButton onPress={() => navigation.navigate('DoctorViewPatientList')} title={'Back'}/>
-          <AppButton onPress={() => navigation.navigate('DoctorEditPatientInfo',{ id: `${patient.patient_id}` })} title={'Update'}/>
+          <AppButton onPress={() => navigation.navigate('HospitalAdminPatientList')} title={'Back'}/>
+          <AppButton onPress={() => navigation.navigate('HospitalAdminEditPatientInfo',{ id: `${patient.patient_id}` })} title={'Update'}/>
 
 
         </ScrollView>

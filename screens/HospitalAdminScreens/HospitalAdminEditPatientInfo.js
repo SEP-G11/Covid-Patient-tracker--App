@@ -111,7 +111,7 @@ function HospitalAdminEditPatientInfo({ navigation ,route }) {
       setTypevaccinated(response.Type_vaccine);
 
       if (response){
-        navigation.navigate('DoctorViewPatientInfo',{ id: `${patient.patient_id}` })
+        navigation.navigate('HospitalAdminViewPatientInfo',{ id: `${patient.patient_id}` })
       }
 
     } catch (error) {

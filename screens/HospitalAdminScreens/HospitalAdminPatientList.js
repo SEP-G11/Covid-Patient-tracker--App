@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {BASE_URL} from "../../dev.config";
+import { BASE_URL } from "../../dev.config";
 import {
   StyleSheet,
   Text,
@@ -10,25 +10,22 @@ import {
   Platform,
   Picker,
   Button,
+  StatusBar,
   TextInput,
 } from "react-native";
 import { Drawer } from 'react-native-paper';
-import * as Animatable from "react-native-animatable";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Feather from "react-native-vector-icons/Feather";
-import { AuthContext } from '../../components/context';
-import DatePicker from 'react-native-datepicker';
-import DateTimePicker from '@react-native-community/datetimepicker';
-// import Picker from 'react-native-select-dropdown';
 import { Table, TableWrapper, Row } from 'react-native-table-component';
+// import Picker from 'react-native-select-dropdown';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
+import { DataTable } from 'react-native-paper';
 
 function HospitalAdminPatientList({ navigation }) {
 
   const [patients, setPatients] = useState([]);
-  var tableHead= ['PATIENT ID', 'NAME', 'PATIENT INFORMATION','MEDICAL REPORT','DISCHARGE','TRANSFER','RESULT'];
-  var widthArr = [200, 100, 100, 100,100,100,100];
+  var tableHead= ['PATIENT ID', 'NAME', 'INFO','DISCHARGE','TRANSFER','RESULT'];
+  var widthArr = [200, 100, 100, 100,100,100];
+
 
 
   const AppButton = ({ onPress, title }) => (
@@ -38,20 +35,6 @@ function HospitalAdminPatientList({ navigation }) {
 
   );
 
-  const tableData = [];
-  for (let i = 0; i < patients.length; i += 1) {
-    const rowData = [];
-
-    rowData.push(patients[i].patient_id);
-    rowData.push(patients[i].name);
-    rowData.push(<AppButton onPress={() => navigation.navigate('DoctorViewPatientInfo', { id: `${patients[i].patient_id}` })} title={'Information'} />);
-    rowData.push(<AppButton onPress={() => navigation.navigate('DoctorViewMedicalReport',{ id: `${patients[i].patient_id}` })} title={'Report'}/>);
-    rowData.push(<AppButton onPress={() => navigation.navigate('DoctorDischarge',{ id: `${patients[i].patient_id}` })} title={'Discharge'}/>);
-    rowData.push(<AppButton onPress={() => navigation.navigate('DoctorTransfer',{ id: `${patients[i].patient_id}` })} title={'Transfer'}/>);
-    rowData.push(<AppButton onPress={() => navigation.navigate('DoctorEnterResults',{ id: `${patients[i].patient_id}` })} title={'Result'}/>);
-
-    tableData.push(rowData);
-  }
   const listPatients = async () => {
     const token = await AsyncStorage.getItem('token');
     const URL = `${BASE_URL}/patient/getPatients`;
@@ -84,6 +67,19 @@ function HospitalAdminPatientList({ navigation }) {
 
 
 
+  const tableData = [];
+  for (let i = 0; i < patients.length; i += 1) {
+    const rowData = [];
+
+    rowData.push(patients[i].patient_id);
+    rowData.push(patients[i].name);
+    rowData.push(<AppButton onPress={() => navigation.navigate('HospitalAdminViewPatientInfo', { id: `${patients[i].patient_id}` })} title={'Info'} />);
+    rowData.push(<AppButton onPress={() => navigation.navigate('HospitalAdminDischarge',{ id: `${patients[i].patient_id}` })} title={'Discharge'}/>);
+    rowData.push(<AppButton onPress={() => navigation.navigate('HospitalAdminTransfer',{ id: `${patients[i].patient_id}` })} title={'Transfer'}/>);
+    rowData.push(<AppButton onPress={() => navigation.navigate('HospitalAdminEnterResults',{ id: `${patients[i].patient_id}` })} title={'Result'}/>);
+    tableData.push(rowData);
+  }
+
   return (
       <SafeAreaView style={styles.footer}>
         <View style={styles.header}>
@@ -95,9 +91,6 @@ function HospitalAdminPatientList({ navigation }) {
               }}
           />
         </View>
-
-
-
         {patients ? (
                 <View style={styles.container}>
                   <ScrollView horizontal={true}  >
@@ -126,6 +119,11 @@ function HospitalAdminPatientList({ navigation }) {
             )
             :(null)
         }
+
+
+
+
+
       </SafeAreaView >
   );
 }
@@ -279,8 +277,8 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 5,
     borderRadius: 1,
-    margin:5,
     borderWidth: 2,
+    margin:5
   },
   buttonText: {
     color: "#fff",
