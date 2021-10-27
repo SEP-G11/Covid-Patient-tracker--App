@@ -129,7 +129,7 @@ function DoctorViewPatientInfo({ navigation ,route }) {
       </View>
 
   
-        <AppButton onPress={() => navigation.navigate('DoctorPatientList')} title={'Back'}/>
+        <AppButton onPress={() => navigation.navigate('DoctorViewPatientList')} title={'Back'}/>
         <AppButton onPress={() => navigation.navigate('DoctorEditPatientInfo',{ id: `${patient.patient_id}` })} title={'Update'}/>
     
 

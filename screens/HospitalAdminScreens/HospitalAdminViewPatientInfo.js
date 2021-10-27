@@ -27,7 +27,7 @@ import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'reac
 
 
 function HospitalAdminViewPatientInfo({ navigation ,route }) {
-  const patientId = route.params.id 
+  const patientId = route.params.id
 
   const [patient, setPatient] = useState({});
 
@@ -41,101 +41,101 @@ function HospitalAdminViewPatientInfo({ navigation ,route }) {
   };
 
 
-    const AppButton = ({ onPress, title }) => (
-        <TouchableOpacity onPress={onPress} style={styles.button}>
-          <Text style={styles.buttonText}>{title}</Text>
-        </TouchableOpacity>
-    
-      );
+  const AppButton = ({ onPress, title }) => (
+      <TouchableOpacity onPress={onPress} style={styles.button}>
+        <Text style={styles.buttonText}>{title}</Text>
+      </TouchableOpacity>
 
-      const getPatientDetails = async (id) => {
-        const token = await AsyncStorage.getItem('token');
-        const URL = `${BASE_URL}/patient/patientDetails/${id}`;
-        try {
-          const res = await fetch(URL, {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          });
-    
-          const response = await res.json();
-    
-          setPatient(response);
-    
-        } catch (error) {
-          alert((error.message.toString()), [
-            { text: "Okay" },
-          ]);
-        }
-      };
-      
-      
+  );
 
-      useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-          getPatientDetails(patientId);
-        });
-    }, [navigation,]);
+  const getPatientDetails = async (id) => {
+    const token = await AsyncStorage.getItem('token');
+    const URL = `${BASE_URL}/patient/patientDetails/${id}`;
+    try {
+      const res = await fetch(URL, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const response = await res.json();
+
+      setPatient(response);
+
+    } catch (error) {
+      alert((error.message.toString()), [
+        { text: "Okay" },
+      ]);
+    }
+  };
+
+
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getPatientDetails(patientId);
+    });
+  }, [navigation,]);
 
   return (
-    <SafeAreaView style={styles.footer}>
-      <View style={styles.header}>
-        <Text style={styles.textHeader}>PATIENT INFORMATION</Text>
-        <View
-          style={{
-            borderBottomColor: "#009387",
-            borderBottomWidth: 2,
-          }}
-        />
-      </View>
+      <SafeAreaView style={styles.footer}>
+        <View style={styles.header}>
+          <Text style={styles.textHeader}>PATIENT INFORMATION</Text>
+          <View
+              style={{
+                borderBottomColor: "#009387",
+                borderBottomWidth: 2,
+              }}
+          />
+        </View>
 
 
-      <ScrollView style={{ paddingRight: 20 }}>
+        <ScrollView style={{ paddingRight: 20 }}>
 
-      <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
-        <Text style={{margin: 10,fontSize: 18}}>
-            Id: {patientId}
-        </Text>
-        <Text style={{margin: 10,fontSize: 18}}>
-            Name: {patient.name}
-        </Text>
-        <Text style={{margin: 10,fontSize: 18}}>
-            Age: { getAge(patient.bday)}
-        </Text>
-        <Text style={{margin: 10,fontSize: 18}}>
-            Birth Day: {patient.bday}
-        </Text>
-        <Text style={{margin: 10,fontSize: 18}}>
-            Gender: {patient.gender}
-        </Text>
-        <Text style={{margin: 10,fontSize: 18}}>
-            Blood Type: {patient.blood_type}
-        </Text>
-        <Text style={{margin: 10,fontSize: 18}}>
-            Contact No: {patient.contact_no}
-        </Text>
-        <Text style={{margin: 10,fontSize: 18}}>
-            Address: {patient.address}
-        </Text>
-        <Text style={{margin: 10,fontSize: 18}}>
-            Disctrict: {patient.district}
-        </Text>
-        <Text style={{margin: 10,fontSize: 18}}>
-            Vaccination Details: {patient.is_Vaccinated}
-        </Text>
-      </View>
+          <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+            <Text style={{margin: 10,fontSize: 18}}>
+              Id: {patient.patient_id}
+            </Text>
+            <Text style={{margin: 10,fontSize: 18}}>
+              Name: {patient.name}
+            </Text>
+            <Text style={{margin: 10,fontSize: 18}}>
+              Age: { getAge(patient.bday)}
+            </Text>
+            <Text style={{margin: 10,fontSize: 18}}>
+              Birth Day: {patient.bday}
+            </Text>
+            <Text style={{margin: 10,fontSize: 18}}>
+              Gender: {patient.gender}
+            </Text>
+            <Text style={{margin: 10,fontSize: 18}}>
+              Blood Type: {patient.blood_type}
+            </Text>
+            <Text style={{margin: 10,fontSize: 18}}>
+              Contact No: {patient.contact_no}
+            </Text>
+            <Text style={{margin: 10,fontSize: 18}}>
+              Address: {patient.address}
+            </Text>
+            <Text style={{margin: 10,fontSize: 18}}>
+              Disctrict: {patient.district}
+            </Text>
+            <Text style={{margin: 10,fontSize: 18}}>
+              Vaccination Details: {patient.is_Vaccinated}{patient.Type_vaccine}{patient.Num_vaccine}
+            </Text>
+          </View>
 
-  
-        <AppButton onPress={() => navigation.navigate('HospitalAdminPatientList')} title={'Back'}/>
-        <AppButton onPress={() => navigation.navigate('HospitalAdminEditPatientInfo',{ id: `${patient.patient_id}` })} title={'Update'}/>
-    
 
-      </ScrollView>
+          <AppButton onPress={() => navigation.navigate('HospitalAdminPatientList')} title={'Back'}/>
+          <AppButton onPress={() => navigation.navigate('HospitalAdminEditPatientInfo',{ id: `${patient.patient_id}` })} title={'Update'}/>
 
-    </SafeAreaView >
+
+        </ScrollView>
+
+      </SafeAreaView >
   );
 }
 
