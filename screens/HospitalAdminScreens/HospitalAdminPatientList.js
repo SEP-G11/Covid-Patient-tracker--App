@@ -23,6 +23,8 @@ import { DataTable } from 'react-native-paper';
 function HospitalAdminPatientList({ navigation }) {
 
   const [patients, setPatients] = useState([]);
+  const [filteredPatients, setFilteredPatients] = useState([]);
+  const [input, setInput] = useState('')
   var tableHead= ['PATIENT ID', 'NAME', 'INFO','DISCHARGE','TRANSFER','RESULT'];
   var widthArr = [200, 100, 100, 100,100,100];
 
@@ -59,6 +61,34 @@ function HospitalAdminPatientList({ navigation }) {
     }
   };
 
+  const filterPatients = async (input) => {
+    const token = await AsyncStorage.getItem('token');
+    const URL = `${BASE_URL}/patient/filterPatients/${input}`;
+    try {
+      const res = await fetch(URL, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const response = await res.json();
+      setFilteredPatients(response);
+
+    } catch (error) {
+      alert((error.message.toString()), [
+        { text: "Okay" },
+      ]);
+    }
+  };
+
+
+  const myFunction = (input) => {
+    filterPatients(input);
+  }
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       listPatients();
@@ -80,6 +110,20 @@ function HospitalAdminPatientList({ navigation }) {
       tableData.push(rowData);
     }
 
+  const filteredtableData = [];
+  for (let i = 0; i < filteredPatients.length; i += 1) {
+    const rowData = [];
+
+    rowData.push(filteredPatients[i].patient_id);
+    rowData.push(filteredPatients[i].name);
+    rowData.push(<AppButton onPress={() => navigation.navigate('HospitalAdminViewPatientInfo', { id: `${filteredPatients[i].patient_id}` })} title={'Information'} />);
+    rowData.push(<AppButton onPress={() => navigation.navigate('HospitalAdminDischarge',{ id: `${filteredPatients[i].patient_id}` })} title={'Discharge'}/>);
+    rowData.push(<AppButton onPress={() => navigation.navigate('HospitalAdminTransfer',{ id: `${filteredPatients[i].patient_id}` })} title={'Transfer'}/>);
+    rowData.push(<AppButton onPress={() => navigation.navigate('HospitalAdminEnterResults',{ id: `${filteredPatients[i].patient_id}` })} title={'Result'}/>);
+
+    filteredtableData.push(rowData);
+  }
+
   return (
     <SafeAreaView style={styles.footer}>
       <View style={styles.header}>
@@ -91,8 +135,48 @@ function HospitalAdminPatientList({ navigation }) {
           }}
         />
       </View>
+
+      <ScrollView style={styles.dataWrapper1}>
+        <Text style={styles.textFooter}>Search</Text>
+        <View style={[{ marginBottom: 15 },styles.action]}>
+          <TextInput
+              value={input}
+              placeholder="Search for patients.."
+              placeholderTextColor="#666666"
+              style={styles.textInput}
+              autoCapitalize="none"
+              onChangeText={(input) => setInput(input)}
+          />
+          <AppButton onPress={() => myFunction(input) } title={'Search'} />
+        </View>
+
+        {filteredPatients ? (
+                <View style={styles.container}>
+                  <ScrollView horizontal={true}  >
+                    <View>
+                      <ScrollView style={styles.dataWrapper1}>
+                        <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+                          {
+                            filteredtableData.map((rowData, index) => (
+                                <Row
+                                    key={index}
+                                    data={rowData}
+                                    widthArr={widthArr}
+                                    style={[styles.row1, index%2 && {backgroundColor: '#dcdcdc'}]}
+                                    textStyle={styles.text2}
+                                />
+                            ))
+                          }
+                        </Table>
+                      </ScrollView>
+                    </View>
+                  </ScrollView>
+                </View>
+            )
+            :(null)
+        }
 {patients ? (
-  <View style={styles.container}>
+        <View style={[{ marginTop: 15 },styles.container]}>
   <ScrollView horizontal={true}  >
     <View>
       <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
@@ -119,10 +203,10 @@ function HospitalAdminPatientList({ navigation }) {
 ) 
 :(null)
 }
-    
 
 
 
+      </ScrollView>
     
     </SafeAreaView >
   );
