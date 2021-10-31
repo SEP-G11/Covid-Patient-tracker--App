@@ -15,23 +15,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from '../components/context';
 
 
-// import { AsyncStorage } from "react-native";
-// const { SignIn } = React.useContext(AuthContext);
-
-
 const Signin = ({ navigation }) =>{
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [password, setPassword] = useState("");  
   const [errortext, setErrortext] = useState("");
 
-  const AppButton = ({ onPress, title }) => (
-    <TouchableOpacity onPress={onPress} style={styles.button}>
+  const AppButton = ({ onPress, title ,...props }) => (
+    <TouchableOpacity   {...props} onPress={onPress} style={styles.button}>
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
   );
-  const { signInFunction } = React.useContext(AuthContext);
-
+  // const  {signInFunction } = React.useContext(AuthContext);
+  const signInFunction  = React.useContext(AuthContext);
   const [data, setData] = React.useState({
     secureTextEntry: true,
     isValidUser: true,
@@ -65,19 +60,8 @@ const Signin = ({ navigation }) =>{
         throw new Error();
       } else {
         if (response.results.token) {
-
-          // try {
-          //   await AsyncStorage.setItem("userInfo", JSON.stringify(response));
-          // } catch (error) { }
-          signInFunction(response.results);
-
-          // if (response.results.accType === "DOC") {
-          //   navigation.navigate("DoctorDashboard");
-          // } else {
-          //   navigation.navigate("HospitalAdminDashboard");
-          // }
-
-
+              signInFunction(response.results);
+        
         }
       }
     } catch (error) {
@@ -104,8 +88,7 @@ const Signin = ({ navigation }) =>{
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.textHeader}>SIGN IN </Text>
-      </View>
-      
+      </View>      
 
       <Animatable.View style={styles.footer} animation="fadeInUpBig">
         <Text style={styles.textFooter}>Email Address</Text>
@@ -116,6 +99,7 @@ const Signin = ({ navigation }) =>{
             placeholderTextColor="#666666"
             style={styles.textInput}
             autoCapitalize="none"
+            testID="email_test"
             onChangeText={(email) => setEmail(email)}
           />
         </View>
@@ -129,6 +113,7 @@ const Signin = ({ navigation }) =>{
             secureTextEntry={data.secureTextEntry ? true : false}
             style={styles.textInput}
             autoCapitalize="none"
+            testID="password_test"
             onChangeText={(password) => setPassword(password)}
           />
 
@@ -147,7 +132,7 @@ const Signin = ({ navigation }) =>{
           </Text>
         </TouchableOpacity>
 
-        <AppButton onPress={handleSubmitPress} title={"Sign In"} />
+        <AppButton testID="signin" onPress={handleSubmitPress} title={"Sign In"} />
       </Animatable.View>
 
 

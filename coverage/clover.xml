@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1635598909865" clover="3.2.0">
+  <project timestamp="1635598909865" name="All files">
+    <metrics statements="41" coveredstatements="35" conditionals="12" coveredconditionals="6" methods="10" coveredmethods="9" elements="63" coveredelements="50" complexity="0" loc="41" ncloc="41" packages="4" files="5" classes="5"/>
+    <package name="Covid-Patient-tracker--App">
+      <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="dev.config.js" path="C:\Users\user\Desktop\Final SEP\Covid-Patient-tracker--App\dev.config.js">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="Covid-Patient-tracker--App.assets">
+      <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="logo.png" path="C:\Users\user\Desktop\Final SEP\Covid-Patient-tracker--App\assets\logo.png">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="Covid-Patient-tracker--App.components">
+      <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="context.js" path="C:\Users\user\Desktop\Final SEP\Covid-Patient-tracker--App\components\context.js">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="3" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="Covid-Patient-tracker--App.screens">
+      <metrics statements="38" coveredstatements="32" conditionals="12" coveredconditionals="6" methods="10" coveredmethods="9"/>
+      <file name="Homepage.js" path="C:\Users\user\Desktop\Final SEP\Covid-Patient-tracker--App\screens\Homepage.js">
+        <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="36" count="1" type="stmt"/>
+        <line num="47" count="1" type="stmt"/>
+        <line num="48" count="1" type="stmt"/>
+        <line num="60" count="1" type="stmt"/>
+      </file>
+      <file name="Signin.js" path="C:\Users\user\Desktop\Final SEP\Covid-Patient-tracker--App\screens\Signin.js">
+        <metrics statements="33" coveredstatements="27" conditionals="12" coveredconditionals="6" methods="7" coveredmethods="6"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="19" count="5" type="stmt"/>
+        <line num="20" count="5" type="stmt"/>
+        <line num="21" count="5" type="stmt"/>
+        <line num="23" count="5" type="stmt"/>
+        <line num="24" count="3" type="stmt"/>
+        <line num="29" count="5" type="stmt"/>
+        <line num="30" count="5" type="stmt"/>
+        <line num="35" count="5" type="stmt"/>
+        <line num="36" count="0" type="stmt"/>
+        <line num="42" count="5" type="stmt"/>
+        <line num="43" count="1" type="stmt"/>
+        <line num="45" count="1" type="stmt"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="57" count="0" type="stmt"/>
+        <line num="59" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="60" count="0" type="stmt"/>
+        <line num="62" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="63" count="0" type="stmt"/>
+        <line num="68" count="1" type="stmt"/>
+        <line num="74" count="5" type="stmt"/>
+        <line num="75" count="3" type="stmt"/>
+        <line num="76" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="77" count="1" type="stmt"/>
+        <line num="78" count="1" type="stmt"/>
+        <line num="80" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="81" count="1" type="stmt"/>
+        <line num="82" count="1" type="stmt"/>
+        <line num="84" count="1" type="stmt"/>
+        <line num="87" count="5" type="stmt"/>
+        <line num="103" count="2" type="stmt"/>
+        <line num="117" count="1" type="stmt"/>
+        <line num="146" count="1" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>

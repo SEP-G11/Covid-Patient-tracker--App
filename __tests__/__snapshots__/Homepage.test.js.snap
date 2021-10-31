@@ -1,0 +1,132 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot home page  1`] = `
+<RCTSafeAreaView
+  emulateUnlessSupported={true}
+  style={
+    Object {
+      "backgroundColor": "#fff",
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "flex": 2,
+        "justifyContent": "center",
+      }
+    }
+  >
+    <Image
+      source={1}
+      style={
+        Object {
+          "height": 150,
+          "marginBottom": 120,
+          "marginTop": 150,
+          "width": 300,
+        }
+      }
+    />
+  </View>
+  <View
+    forwardedRef={[Function]}
+    style={
+      Object {
+        "backgroundColor": "#009387",
+        "borderTopLeftRadius": 30,
+        "borderTopRightRadius": 30,
+        "flex": 1,
+        "opacity": 0,
+        "paddingHorizontal": 40,
+        "paddingVertical": 70,
+        "transform": Array [
+          Object {
+            "translateY": 500,
+          },
+        ],
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "color": "#fff",
+          "fontSize": 35,
+          "fontWeight": "bold",
+          "paddingBottom": 65,
+        }
+      }
+    >
+      Stay Safe  SriLanka !
+    </Text>
+    <View
+      forwardedRef={[Function]}
+      style={
+        Object {
+          "transform": Array [
+            Object {
+              "scale": 1,
+            },
+          ],
+        }
+      }
+    >
+      <View
+        accessible={true}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "alignItems": "center",
+            "alignSelf": "flex-end",
+            "backgroundColor": "#fff",
+            "borderColor": "#20d1ce",
+            "borderRadius": 10,
+            "borderWidth": 3,
+            "elevation": 12,
+            "opacity": 1,
+            "paddingHorizontal": 20,
+            "paddingVertical": 5,
+            "shadowColor": "#fff",
+            "shadowOpacity": 80,
+            "shadowRadius": 2,
+          }
+        }
+        testID="getStart"
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "padding": 5,
+            }
+          }
+        >
+          <Text
+            style={
+              Object {
+                "color": "#009387",
+                "fontSize": 20,
+                "fontWeight": "bold",
+              }
+            }
+          >
+            Get Started
+          </Text>
+          <View />
+        </View>
+      </View>
+    </View>
+  </View>
+</RCTSafeAreaView>
+`;

@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   ScrollView,
   Platform,
-  Picker,
   Button,
   StatusBar,
   TextInput,
@@ -20,7 +19,7 @@ import * as Animatable from "react-native-animatable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
 import { AuthContext } from '../../components/context';
-import DatePicker from 'react-native-datepicker';
+import {Picker} from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 // import Picker from 'react-native-select-dropdown';
 import PhoneInput from "react-native-phone-number-input";
@@ -445,7 +444,7 @@ function HospitalAdminAdmit({ navigation }) {
         <Text style={[{ marginTop: 15, }, styles.textFooter]}>District</Text>
         <View style={styles.districtDrop}>
           <Picker
-            style={styles.action}
+            style={styles.daction}
             onValueChange={setDistrict}
             selectedValue={district}
 
@@ -536,7 +535,7 @@ function HospitalAdminAdmit({ navigation }) {
         <View style={{ flexDirection: 'row' }}>
           <View style={[{ flex: 0.5, }, styles.BloodDrop]}>
             <Picker
-              style={styles.action}
+              style={styles.daction}
               onValueChange={setBloodtype}
               selectedValue={bloodtype}
 
@@ -558,7 +557,7 @@ function HospitalAdminAdmit({ navigation }) {
 
           <View style={[{ flex: .5, }, styles.BloodDrop]}>
             <Picker
-              style={styles.action}
+              style={styles.daction}
 
               onValueChange={setRATresult}
               selectedValue={RATresult}
@@ -600,7 +599,7 @@ function HospitalAdminAdmit({ navigation }) {
             <View style={{ flexDirection: 'row' }}>
               <View style={[{ flex: 0.5, }, styles.BloodDrop]}>
                 <Picker
-                  style={styles.action}
+                  style={styles.daction}
                   onValueChange={setTypevaccinated}
                   selectedValue={Type_vaccine}
 
@@ -618,7 +617,7 @@ function HospitalAdminAdmit({ navigation }) {
 
               <View style={[{ flex: .5, }, styles.BloodDrop]}>
                 <Picker
-                  style={styles.action}
+                  style={styles.daction}
                   onValueChange={setNumvaccinated}
                   selectedValue={Num_vaccine}
 
@@ -718,6 +717,16 @@ const styles = StyleSheet.create({
     padding: 5,
     alignItems: "center",
   },
+  daction: {
+    flexDirection: "row",
+    margin: 10,
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: "#007c7a",
+    padding: 5,
+    alignItems: "center",
+  },
+  
   action1: {
     flex: 0.5,
     flexDirection: "row",

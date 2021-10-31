@@ -9,8 +9,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
-  Platform,
-  Picker,
+  Platform,  
   Button,
   StatusBar,
   TextInput,
@@ -20,7 +19,7 @@ import * as Animatable from "react-native-animatable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
 import { AuthContext } from '../../components/context';
-import DatePicker from 'react-native-datepicker';
+import {Picker} from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 // import Picker from 'react-native-select-dropdown';
 import PhoneInput from "react-native-phone-number-input";
@@ -30,6 +29,7 @@ import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'reac
 
 function DoctorAdmit({ navigation }) {
 
+  
 
   const [name, setName] = useState("");
   const [bday1, setBday1] = useState("");
@@ -108,11 +108,10 @@ function DoctorAdmit({ navigation }) {
 
 
 
-  const AppButton = ({ onPress, title }) => (
-    <TouchableOpacity onPress={onPress} style={styles.button}>
+  const AppButton = ({ onPress, title ,...props }) => (
+    <TouchableOpacity   {...props} onPress={onPress} style={styles.button}>
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
-
   );
 
 
@@ -157,9 +156,6 @@ function DoctorAdmit({ navigation }) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-
-
-
       setName("");
       setBday1("");
       setDistrict("");
@@ -167,11 +163,7 @@ function DoctorAdmit({ navigation }) {
       setContactnumber("");
       setRATresult(" ");   
       setBday2("");
-
-        setMedicalHistory("");
-
-
-
+      setMedicalHistory("");
       try {
         async function loadbeds() {
 
@@ -359,6 +351,7 @@ function DoctorAdmit({ navigation }) {
             placeholderTextColor="#666666"
             style={styles.textInput}
             autoCapitalize="none"
+            testID="name_test"
             onChangeText={(name) => setName(name)}
           />
         </View>
@@ -372,6 +365,7 @@ function DoctorAdmit({ navigation }) {
             // format="YYYY-MM-DD"
             maximumDate={new Date()}
             onChange={onChange}
+            testID="bday_test"
             style={styles.datePicker}
           />
         )}
@@ -430,7 +424,8 @@ function DoctorAdmit({ navigation }) {
         <Text style={[{ marginTop: 15, }, styles.textFooter]}>District</Text>
         <View style={styles.districtDrop}>
           <Picker
-            style={styles.action}
+          style={[{ marginTop: 15 }, styles.daction]}
+         
             onValueChange={setDistrict}
             selectedValue={district}
 
@@ -489,7 +484,7 @@ function DoctorAdmit({ navigation }) {
         <View style={{ flexDirection: 'row' }}>
           <View style={[{ flex: .5, }, styles.BloodDrop]}>
             <Picker
-              style={styles.action}
+              style={styles.daction}
               onValueChange={setRATresult}
               selectedValue={RATresult}
 
@@ -564,7 +559,7 @@ function DoctorAdmit({ navigation }) {
 
 
 
-        <AppButton onPress={handleSubmitPress} title={"Admit"} />
+        <AppButton testID  = "admit" onPress={handleSubmitPress} title={"Admit"} />
 
       </ScrollView>
 
@@ -634,9 +629,17 @@ const styles = StyleSheet.create({
     padding: "5"
   },
   action: {
-
     flexDirection: "row",
     marginTop: 5,
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: "#007c7a",
+    padding: 5,
+    alignItems: "center",
+  },
+  daction: {
+    flexDirection: "row",
+    margin: 10,
     borderWidth: 1,
     borderRadius: 20,
     borderColor: "#007c7a",
