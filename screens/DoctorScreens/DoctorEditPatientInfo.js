@@ -163,7 +163,34 @@ function DoctorEditPatientInfo({ navigation ,route }) {
   }, [navigation,]);
 
 const handleSubmitPress = () => {
-    updatePatient({ patient_id:patientId, name, bday,gender,blood_type,contact_no,address,district,is_Vaccinated,Type_vaccine,Num_vaccine});
+  if (!name) {
+    alert("Name can't be empty !");
+    return;
+  }
+  if (!bday) {
+    alert("Date of Birthday can't be empty !");
+    return;
+  }
+
+  if (!contact_no) {
+    alert("Contactnumber can't be empty !");
+    return;
+
+  } if (!district || district == 'disabled') {
+    alert("District can't be empty !");
+    return;
+  }
+
+  if (!address) {
+    alert("Address can't be empty !");
+    return;
+  }
+
+  if (!blood_type || blood_type == 'disabled') {
+    alert("Blood Type can't be empty !");
+    return;
+  }
+  updatePatient({ patient_id:patientId, name, bday,gender,blood_type,contact_no,address,district,is_Vaccinated,Type_vaccine,Num_vaccine});
   };
 
   return (

@@ -124,7 +124,7 @@ function DoctorViewPatientInfo({ navigation ,route }) {
             Disctrict: {patient.district}
         </Text>
         <Text style={{margin: 10,fontSize: 18}}>
-            Vaccination Details: {patient.is_Vaccinated}
+            Vaccination Details: {patient.is_Vaccinated}{patient.Type_vaccine}{patient.Num_vaccine}
         </Text>
       </View>
 
