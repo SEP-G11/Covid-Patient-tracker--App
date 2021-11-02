@@ -6,12 +6,11 @@ import {
   View,
   SafeAreaView,
   TouchableOpacity,
-  TextInput, ActivityIndicator
+  TextInput, 
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from '../components/context';
 
 
@@ -25,8 +24,8 @@ const Signin = ({ navigation }) =>{
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
   );
-  // const  {signInFunction } = React.useContext(AuthContext);
-  const signInFunction  = React.useContext(AuthContext);
+  const  {signInFunction } = React.useContext(AuthContext);
+  // const signInFunction  = React.useContext(AuthContext);
   const [data, setData] = React.useState({
     secureTextEntry: true,
     isValidUser: true,
@@ -134,7 +133,6 @@ const Signin = ({ navigation }) =>{
 
         <AppButton testID="signin" onPress={handleSubmitPress} title={"Sign In"} />
       </Animatable.View>
-
 
     </SafeAreaView>
   );

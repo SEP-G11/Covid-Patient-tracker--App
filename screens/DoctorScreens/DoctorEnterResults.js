@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {BASE_URL} from "../../dev.config";
+import { BASE_URL } from "../../dev.config";
 import {
     StyleSheet,
     Text,
@@ -7,35 +7,19 @@ import {
     SafeAreaView,
     TouchableOpacity,
     ScrollView,
-    Platform,
-    Picker,
-    Button,
-    StatusBar,
     TextInput,
 } from "react-native";
-import { Drawer } from 'react-native-paper';
-import * as Animatable from "react-native-animatable";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Feather from "react-native-vector-icons/Feather";
-import { AuthContext } from '../../components/context';
-import DatePicker from 'react-native-datepicker';
-import DateTimePicker from '@react-native-community/datetimepicker';
-// import Picker from 'react-native-select-dropdown';
-import PhoneInput from "react-native-phone-number-input";
+
+import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
 
-function DoctorEnterResults({ navigation ,route}) {
 
+function DoctorEnterResults({ navigation, route }) {
 
-  
-    const [id, setId] = useState(route.params.id =="" ? (""):(route.params.id));
+    const [id, setId] = useState(route.params.id == "" ? ("") : (route.params.id));
     const [RATresult, setRATresult] = useState("");
     const [testType, setTestType] = useState("");
-
-
-
 
     var today = new Date();
     var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
@@ -44,37 +28,24 @@ function DoctorEnterResults({ navigation ,route}) {
 
     const testId = id + Date.parse(new Date()) + "T";
 
-
-
-    const AppButton = ({ onPress, title }) => (
-        <TouchableOpacity onPress={onPress} style={styles.button}>
+    const AppButton = ({ onPress, title, ...props }) => (
+        <TouchableOpacity   {...props} onPress={onPress} style={styles.button}>
             <Text style={styles.buttonText}>{title}</Text>
         </TouchableOpacity>
-
     );
-
-
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-
-
-        
             setRATresult("");
             setTestType("");
-
-
-
 
         });
     }, [navigation,]);
 
-
-
     const enter = async () => {
         const token = await AsyncStorage.getItem('token');
         const URL = `${BASE_URL}/test/enter`;
-       
+
 
         try {
             const res = await fetch(URL, {
@@ -91,8 +62,6 @@ function DoctorEnterResults({ navigation ,route}) {
                     date: DateTime,
                     testType: testType,
                     RATresult: RATresult
-
-
                 }),
             });
 
@@ -103,21 +72,14 @@ function DoctorEnterResults({ navigation ,route}) {
 
                 throw new Error(message);
             } else {
-
-
-             
-            setId("");
-            setRATresult("");
-            setTestType("");
-
-
-
+                setId("");
+                setRATresult("");
+                setTestType("");
 
                 if (response) {
                     alert((message), [
                         { text: "Okay" },
                     ]);
-
 
                 }
             }
@@ -136,19 +98,16 @@ function DoctorEnterResults({ navigation ,route}) {
             alert("Id can't be empty !");
             return;
         }
-        
-        
-      if (!RATresult || RATresult == 'disabled') {
-        alert("Please select Test Result !");
-        return;
-      }
-    
-      if (!testType || testType == 'disabled') {
-        alert("Please select Test Type !");
-        return;
-      }
-    
 
+        if (!RATresult || RATresult == 'disabled') {
+            alert("Please select Test Result !");
+            return;
+        }
+
+        if (!testType || testType == 'disabled') {
+            alert("Please select Test Type !");
+            return;
+        }
 
         enter();
     };
@@ -166,7 +125,6 @@ function DoctorEnterResults({ navigation ,route}) {
                 />
             </View>
 
-
             <ScrollView style={{ paddingRight: 20, marginTop: 50 }}>
 
                 <Text style={styles.textFooter}>Patient ID</Text>
@@ -177,14 +135,10 @@ function DoctorEnterResults({ navigation ,route}) {
                         placeholderTextColor="#666666"
                         style={styles.textInput}
                         autoCapitalize="none"
+                        testID="id_test"
                         onChangeText={(id) => setId(id)}
                     />
                 </View>
-
-
-
-
-
 
 
                 <View style={{ flexDirection: 'row', marginTop: 15 }}>
@@ -192,10 +146,11 @@ function DoctorEnterResults({ navigation ,route}) {
                     <Text style={{ color: "#007c7a", fontSize: 16, paddingLeft: 100 }}>Test Result</Text>
                 </View>
                 <View style={{ flexDirection: 'row' }}>
-                <View style={[{ flex: .5, }, styles.BloodDrop]}>
+                    <View style={[{ flex: .5, }, styles.BloodDrop]}>
                         <Picker
-                            style={styles.action}
+                            style={styles.action1}
                             onValueChange={setTestType}
+                            testID="type_test"
                             selectedValue={testType}
 
                         >
@@ -207,7 +162,8 @@ function DoctorEnterResults({ navigation ,route}) {
 
                     <View style={[{ flex: .5, }, styles.BloodDrop]}>
                         <Picker
-                            style={styles.action}
+                            style={styles.action1}
+                            testID="result_test"
                             onValueChange={setRATresult}
                             selectedValue={RATresult}
 
@@ -221,9 +177,7 @@ function DoctorEnterResults({ navigation ,route}) {
                 </View>
 
 
-
-
-                <AppButton onPress={handleSubmitPress} title={"Enter"} />
+                <AppButton testID="enter" onPress={handleSubmitPress} title={"Enter"} />
 
             </ScrollView>
 
@@ -236,7 +190,6 @@ function DoctorEnterResults({ navigation ,route}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // backgroundColor: "#009387",
     },
     header: {
 
@@ -258,6 +211,7 @@ const styles = StyleSheet.create({
     BloodDrop: {
         width: 300,
         marginTop: 10,
+        paddingBottom: 10,
         marginLeft: 5,
         marginRight: 5,
         borderColor: "#007c7a",
@@ -405,10 +359,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
     },
 
-
 });
-
-
 
 
 export default DoctorEnterResults;

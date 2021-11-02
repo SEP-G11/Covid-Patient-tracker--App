@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {BASE_URL} from "../../dev.config";
+import { BASE_URL } from "../../dev.config";
 import {
   StyleSheet,
   Text,
@@ -7,61 +7,24 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
-  Platform,
-  Picker,
-  Button,
-  StatusBar,
   TextInput,
 } from "react-native";
-import { Drawer } from 'react-native-paper';
-import * as Animatable from "react-native-animatable";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Feather from "react-native-vector-icons/Feather";
-import { AuthContext } from '../../components/context';
-import DatePicker from 'react-native-datepicker';
-import DateTimePicker from '@react-native-community/datetimepicker';
-// import Picker from 'react-native-select-dropdown';
-import PhoneInput from "react-native-phone-number-input";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
 
-function HospitalAdminTransfer({ navigation ,route }) {
 
+function HospitalAdminTransfer({ navigation, route }) {
 
-  
-  const [id, setId] = useState(route.params.id =="" ? (""):(route.params.id));
-
+  const [id, setId] = useState(route.params.id == "" ? ("") : (route.params.id));
   const [dest_bed_id, setDes] = useState("");
-
-
-var today = new Date();
+  var today = new Date();
   var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
   var time = today.getHours() + ":" + today.getMinutes();
   const DateTime = date + 'T' + time;
 
 
-  const onChange = (event, value) => {
-    try {
-      if (value) {
-        const day = value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate();
-        setBday2(day);
-        setBday1(value.toISOString().slice(0, 10));
-      }
 
-    }
-    catch (e) {
-      alert("Selected BirthDay is Erroried !")
-
-    }
-
-    if (Platform.OS === 'android') {
-      setIsPickerShow(false);
-    }
-  };
-
-
- 
 
   const AppButton = ({ onPress, title }) => (
     <TouchableOpacity onPress={onPress} style={styles.button}>
@@ -70,19 +33,10 @@ var today = new Date();
 
   );
 
-
-
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
 
-     
-
-    
-
- 
       setDes("");
-     
-     
 
 
     });
@@ -105,15 +59,10 @@ var today = new Date();
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-       
-       
 
-             patient_id:id,            
-
-
-             dest_bed_id:dest_bed_id,
-             transfer_date:DateTime
-
+          patient_id: id,
+          dest_bed_id: dest_bed_id,
+          transfer_date: DateTime
 
         }),
       });
@@ -126,13 +75,9 @@ var today = new Date();
         throw new Error(message);
       } else {
 
-        setId("");  
-        setOrigin("");       
+        setId("");
+        setOrigin("");
         setDes("");
-       
-       
-     
-
 
 
         if (response) {
@@ -159,13 +104,13 @@ var today = new Date();
       return;
     }
 
-         if (!dest_bed_id || dest_bed_id == 'disabled') {
+    if (!dest_bed_id || dest_bed_id == 'disabled') {
 
-        alert("Please select Destination BedID !");
-        return;
-      }
-    
-      transfer();
+      alert("Please select Destination BedID !");
+      return;
+    }
+
+    transfer();
   };
 
   return (
@@ -181,7 +126,7 @@ var today = new Date();
       </View>
 
 
-      <ScrollView style={{ paddingRight: 20 ,marginTop:50}}>
+      <ScrollView style={{ paddingRight: 20, marginTop: 50 }}>
 
         <Text style={styles.textFooter}>Patient ID</Text>
         <View style={styles.action}>
@@ -191,11 +136,12 @@ var today = new Date();
             placeholderTextColor="#666666"
             style={styles.textInput}
             autoCapitalize="none"
+            testID="id_test"
             onChangeText={(id) => setId(id)}
           />
         </View>
 
-       
+
 
         <Text style={styles.textFooter1}>Destination Bed Id</Text>
         <View style={styles.action}>
@@ -206,16 +152,13 @@ var today = new Date();
             style={styles.textInput}
             autoCapitalize="none"
             keyboardType={'numeric'}
+            testID="dest_test"
             onChangeText={(dest_bed_id) => setDes(dest_bed_id)}
           />
         </View>
 
 
-
-
-
-
-        <AppButton onPress={handleSubmitPress} title={"Transfer"} />
+        <AppButton testID="transfer" onPress={handleSubmitPress} title={"Transfer"} />
 
       </ScrollView>
 
@@ -228,7 +171,6 @@ var today = new Date();
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#009387",
   },
   header: {
 
@@ -283,7 +225,7 @@ const styles = StyleSheet.create({
   textFooter1: {
     color: "#007c7a",
     fontSize: 16,
-    paddingTop:15,
+    paddingTop: 15,
   },
 
   box: {

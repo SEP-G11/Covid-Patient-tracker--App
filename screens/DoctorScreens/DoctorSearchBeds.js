@@ -8,25 +8,10 @@ import {
   View,
   SafeAreaView,
   TouchableOpacity,
-  ScrollView,
-  Platform,
-  Picker,
-  Button,
-  StatusBar,
-  TextInput,
+  ScrollView,  
 } from "react-native";
-import { Drawer } from 'react-native-paper';
-import * as Animatable from "react-native-animatable";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Feather from "react-native-vector-icons/Feather";
-import { AuthContext } from '../../components/context';
-import DatePicker from 'react-native-datepicker';
-import DateTimePicker from '@react-native-community/datetimepicker';
-// import Picker from 'react-native-select-dropdown';
-import PhoneInput from "react-native-phone-number-input";
+import {Picker} from '@react-native-picker/picker';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
-
 import { Card, Title, Paragraph } from 'react-native-paper';
 
 function DoctorSearchBeds({ navigation }) {
@@ -34,8 +19,7 @@ function DoctorSearchBeds({ navigation }) {
 
   const [facilityId, setFacility] = useState("");
   const [bedInfo, setBedInfo] = useState(null);
-  const [facilityInfo, setFacilityInfo] = useState(null);
-  // const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
+  const [facilityInfo, setFacilityInfo] = useState(null); 
   const [show1, setShow1] = useState(false);
   const [show2, setShow2] = useState(false);
 
@@ -49,15 +33,11 @@ function DoctorSearchBeds({ navigation }) {
     setShow2(!show2);
   };
 
-
-
-  const AppButton = ({ onPress, title }) => (
-    <TouchableOpacity onPress={onPress} style={styles.button}>
-      <Text style={styles.buttonText}>{title}</Text>
+  const AppButton = ({ onPress, title, ...props }) => (
+    <TouchableOpacity   {...props} onPress={onPress} style={styles.button}>
+        <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
-
-  );
-
+);
 
 
   const AppButton1 = ({ onPress, title }) => (
@@ -108,9 +88,7 @@ function DoctorSearchBeds({ navigation }) {
               }
             }
           } catch (error) {
-            // alert(" Can't  Load beds details", [
-            //   { text: "Okay" },
-            // ]);
+          
           }
         }
         loadFacilitys();
@@ -143,25 +121,17 @@ function DoctorSearchBeds({ navigation }) {
           Authorization: `Bearer ${token}`,
         },
 
-
       });
 
       const response1 = await res.json()
-
-
-
-
       const message = response1["message"]
-
 
       if (res.status !== 200 && res.status !== 201 && res.status !== 202) {
 
         throw new Error(message);
       } else {
 
-        setBedInfo(response1.results)
-        
-
+        setBedInfo(response1.results)      
 
         if (response1) {
 
@@ -169,16 +139,11 @@ function DoctorSearchBeds({ navigation }) {
             { text: "Okay" },
           ]);
 
-
         }
       }
     } catch (error) {
 
-
       setBedInfo(null);
-
-
-
       alert((error.message.toString()), [
         { text: "Okay" },
       ]);
@@ -187,14 +152,10 @@ function DoctorSearchBeds({ navigation }) {
 
   const handleSubmitPress = () => {
 
-
-
-
     if (!facilityId || facilityId == 'disabled') {
       alert("Please select Facility !");
       return;
     }
-
 
     search();
   };
@@ -211,21 +172,19 @@ function DoctorSearchBeds({ navigation }) {
         />
       </View>
 
-
-
       <ScrollView style={{ paddingRight: 20, marginTop: 50 }}>
 
         <Text style={styles.textFooter}>Facility Name</Text>
         <View style={[{ flex: .5, }, styles.BloodDrop]}>
           <Picker
-            style={styles.action}
+            style={styles.action1}
             onValueChange={setFacility}
+            testID="facility_test"
             selectedValue={facilityId}
 
           >
             <Picker.Item label="Select" value="disabled" color="#aaa" />
             {facilityInfo ? (
-
 
               Array.from({ length: facilityInfo.length }).map(
                 (_, j) => (
@@ -238,31 +197,14 @@ function DoctorSearchBeds({ navigation }) {
               :
               (null)}
 
-
-
-
           </Picker>
-
         </View>
 
-
-
-
-
-        <AppButton onPress={handleSubmitPress} title={"Search"} />
-
-
-
-
-
-
+        <AppButton testID='search'  onPress={handleSubmitPress} title={"Search"} />
 
         {bedInfo ? (
 
-
           <SafeAreaView style={styles.footer}>
-
-
 
             <View
               style={{
@@ -274,20 +216,10 @@ function DoctorSearchBeds({ navigation }) {
               }}
             />
 
-
-
-
-
-
-
-            <View style={{ flexDirection: 'row', marginTop: 2 }}>
-
-              {/* <Text style={styles.textFooter1}>WELCOME</Text> */}
+            <View style={{ flexDirection: 'row', marginTop: 2 }}>          
               <View style={{ flex: .5 }}>
-
-
                 <Card style={{ borderColor: "#007c7a", borderWidth: 3, borderRadius: 5, textAlign: "center" }}>
-                  {/* <Card.Title title="Covid Ward" subtitle="Card Subtitle"  /> */}
+                 
                   <Card.Content>
                     <Title style={{ textAlign: "center", marginTop: 0 }}>Covid Ward </Title>
 
@@ -327,23 +259,16 @@ function DoctorSearchBeds({ navigation }) {
                       :
                       (null)}
 
-
-
                   </Card.Content>
 
-
-                  {/* <Card.Cover source={{ uri: 'https://picsum.photos/700' }} /> */}
-                  <Card.Actions>
-                    {/* <Button>Cancel</Button>
-<Button>Ok</Button> */}
+                  <Card.Actions>                 
                   </Card.Actions>
                 </Card>
               </View>
 
 
               <View style={{ flex: .5, marginLeft: 15 }}>
-                <Card style={{ borderColor: "#007c7a", borderWidth: 3, borderRadius: 5, textAlign: "center" }}>
-                  {/* <Card.Title title="Covid Ward" subtitle="Card Subtitle"  /> */}
+                <Card style={{ borderColor: "#007c7a", borderWidth: 3, borderRadius: 5, textAlign: "center" }}>                 
                   <Card.Content>
                     <Title style={{ textAlign: "center", marginTop: 0 }}>Normal Ward </Title>
 
@@ -383,41 +308,18 @@ function DoctorSearchBeds({ navigation }) {
                       :
                       (null)}
 
-
-
-                  </Card.Content>
-
-
-                  {/* <Card.Cover source={{ uri: 'https://picsum.photos/700' }} /> */}
-                  <Card.Actions>
-                    {/* <Button>Cancel</Button>
-<Button>Ok</Button> */}
+                  </Card.Content>                
+                  <Card.Actions>                   
                   </Card.Actions>
                 </Card>
               </View>
 
             </View>
-
-
-
           </SafeAreaView >
-
         ) : (null)
 
-
-
-
-
-
         }
-
-
-
-
-
-
       </ScrollView>
-
     </SafeAreaView >
   );
 }
@@ -426,8 +328,7 @@ function DoctorSearchBeds({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    // backgroundColor: "#009387",
+    flex: 1,  
   },
   header: {
 
@@ -449,6 +350,7 @@ const styles = StyleSheet.create({
   BloodDrop: {
     width: 300,
     marginTop: 10,
+    paddingBottom:10,
     marginLeft: 5,
     marginRight: 5,
     borderColor: "#007c7a",
