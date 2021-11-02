@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {BASE_URL} from "../../dev.config";
 import {
     StyleSheet,
@@ -6,24 +6,12 @@ import {
     View,
     SafeAreaView,
     TouchableOpacity,
-    ScrollView,
-    Platform,
-    Picker,
-    Button,
-    StatusBar,
+    ScrollView,   
     TextInput,
 } from "react-native";
-import { Drawer } from 'react-native-paper';
-import * as Animatable from "react-native-animatable";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Feather from "react-native-vector-icons/Feather";
-import { AuthContext } from '../../components/context';
-import DatePicker from 'react-native-datepicker';
-import DateTimePicker from '@react-native-community/datetimepicker';
-// import Picker from 'react-native-select-dropdown';
-import PhoneInput from "react-native-phone-number-input";
+
+import {Picker} from '@react-native-picker/picker';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
 
 function HospitalAdminEnterResults({ navigation,route}) {
@@ -32,18 +20,12 @@ function HospitalAdminEnterResults({ navigation,route}) {
     const [id, setId] = useState(route.params.id =="" ? (""):(route.params.id));
     const [RATresult, setRATresult] = useState("");
     const [testType, setTestType] = useState("");
-
-
-
-
     var today = new Date();
     var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
     var time = today.getHours() + ":" + today.getMinutes();
     const DateTime = date + 'T' + time;
 
     const testId = id + Date.parse(new Date()) + "T";
-
-
 
     const AppButton = ({ onPress, title }) => (
         <TouchableOpacity onPress={onPress} style={styles.button}>
@@ -52,21 +34,12 @@ function HospitalAdminEnterResults({ navigation,route}) {
 
     );
 
-
-
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-
-           
+        const unsubscribe = navigation.addListener('focus', () => {           
             setRATresult("");
             setTestType("");
-
-
-
-
         });
     }, [navigation,]);
-
 
 
     const enter = async () => {
@@ -100,17 +73,10 @@ function HospitalAdminEnterResults({ navigation,route}) {
             if (res.status !== 200 && res.status !== 201 && res.status !== 202) {
 
                 throw new Error(message);
-            } else {
-
-
-             
+            } else {             
             setId("");
             setRATresult("");
             setTestType("");
-
-
-
-
                 if (response) {
                     alert((message), [
                         { text: "Okay" },
@@ -128,7 +94,6 @@ function HospitalAdminEnterResults({ navigation,route}) {
     };
 
     const handleSubmitPress = () => {
-
 
         if (!id) {
             alert("Id can't be empty !");
@@ -173,14 +138,10 @@ function HospitalAdminEnterResults({ navigation,route}) {
                         placeholderTextColor="#666666"
                         style={styles.textInput}
                         autoCapitalize="none"
+                        testID="id_test"
                         onChangeText={(id) => setId(id)}
                     />
                 </View>
-
-
-
-
-
 
 
                 <View style={{ flexDirection: 'row', marginTop: 15 }}>
@@ -190,9 +151,10 @@ function HospitalAdminEnterResults({ navigation,route}) {
                 <View style={{ flexDirection: 'row' }}>
                 <View style={[{ flex: .5, }, styles.BloodDrop]}>
                         <Picker
-                            style={styles.action}
+                            style={styles.action1}
                             onValueChange={setTestType}
                             selectedValue={testType}
+                            testID="type_test"
 
                         >
                             <Picker.Item label="Select" value="disabled" color="#aaa" />
@@ -203,9 +165,10 @@ function HospitalAdminEnterResults({ navigation,route}) {
 
                     <View style={[{ flex: .5, }, styles.BloodDrop]}>
                         <Picker
-                            style={styles.action}
+                            style={styles.action1}
                             onValueChange={setRATresult}
                             selectedValue={RATresult}
+                            testID="result_test"
 
                         >
                             <Picker.Item label="Select" value="disabled" color="#aaa" />
@@ -217,9 +180,7 @@ function HospitalAdminEnterResults({ navigation,route}) {
                 </View>
 
 
-
-
-                <AppButton onPress={handleSubmitPress} title={"Enter"} />
+                <AppButton testID='enter' onPress={handleSubmitPress} title={"Enter"} />
 
             </ScrollView>
 
@@ -232,7 +193,7 @@ function HospitalAdminEnterResults({ navigation,route}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // backgroundColor: "#009387",
+      
     },
     header: {
 
@@ -255,6 +216,7 @@ const styles = StyleSheet.create({
         width: 300,
         marginTop: 10,
         marginLeft: 5,
+        paddingBottom:10,
         marginRight: 5,
         borderColor: "#007c7a",
         borderWidth: 1,

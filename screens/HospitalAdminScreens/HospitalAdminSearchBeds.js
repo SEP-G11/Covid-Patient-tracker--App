@@ -8,34 +8,18 @@ import {
   View,
   SafeAreaView,
   TouchableOpacity,
-  ScrollView,
-  Platform,
-  Picker,
-  Button,
-  StatusBar,
-  TextInput,
+  ScrollView, 
 } from "react-native";
-import { Drawer } from 'react-native-paper';
-import * as Animatable from "react-native-animatable";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Feather from "react-native-vector-icons/Feather";
-import { AuthContext } from '../../components/context';
-import DatePicker from 'react-native-datepicker';
-import DateTimePicker from '@react-native-community/datetimepicker';
-// import Picker from 'react-native-select-dropdown';
-import PhoneInput from "react-native-phone-number-input";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
+import {Picker} from '@react-native-picker/picker';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Card, Title, Paragraph } from 'react-native-paper';
 
 function HospitalAdminSearchBeds({ navigation }) {
 
-
   const [facilityId, setFacility] = useState("");
   const [bedInfo, setBedInfo] = useState(null);
-  const [facilityInfo, setFacilityInfo] = useState(null);
-  // const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
+  const [facilityInfo, setFacilityInfo] = useState(null);  
   const [show1, setShow1] = useState(false);
   const [show2, setShow2] = useState(false);
 
@@ -43,25 +27,16 @@ function HospitalAdminSearchBeds({ navigation }) {
   function handleSubmit1() {
     setShow1(!show1);
   };
-
-
   function handleSubmit2() {
     setShow2(!show2);
   };
 
 
-
-
-
-
-  const AppButton = ({ onPress, title }) => (
-    <TouchableOpacity onPress={onPress} style={styles.button}>
+  const AppButton = ({ onPress, title ,...props }) => (
+    <TouchableOpacity   {...props} onPress={onPress} style={styles.button}>
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
-
   );
-
-
 
   const AppButton1 = ({ onPress, title }) => (
     <TouchableOpacity onPress={onPress} style={styles.button1}>
@@ -111,9 +86,7 @@ function HospitalAdminSearchBeds({ navigation }) {
               }
             }
           } catch (error) {
-            // alert(" Can't  Load beds details", [
-            //   { text: "Okay" },
-            // ]);
+          
           }
         }
         loadFacilitys();
@@ -128,7 +101,6 @@ function HospitalAdminSearchBeds({ navigation }) {
     });
 
   }, [facilityInfo]);
-
 
 
   const search = async () => {
@@ -149,13 +121,7 @@ function HospitalAdminSearchBeds({ navigation }) {
       });
 
       const response1 = await res.json()
-
-
-
-
-      const message = response1["message"]
-
-       
+      const message = response1["message"]      
 
 
       if (res.status !== 200 && res.status !== 201 && res.status !== 202) {
@@ -163,8 +129,7 @@ function HospitalAdminSearchBeds({ navigation }) {
         throw new Error(message);
       } else {
 
-        setBedInfo(response1.results)
-        
+        setBedInfo(response1.results)      
 
 
         if (response1) {
@@ -190,16 +155,10 @@ function HospitalAdminSearchBeds({ navigation }) {
 
   const handleSubmitPress = () => {
 
-
-
-
     if (!facilityId || facilityId == 'disabled') {
       alert("Please select Facility !");
       return;
-    }
-
-
-   
+    }   
 
     search();
   };
@@ -216,15 +175,14 @@ function HospitalAdminSearchBeds({ navigation }) {
         />
       </View>
 
-
-
       <ScrollView style={{ paddingRight: 20, marginTop: 50 }}>
 
         <Text style={styles.textFooter}>Facility Name</Text>
         <View style={[{ flex: .5, }, styles.BloodDrop]}>
           <Picker
-            style={styles.action}
+            style={styles.action1}
             onValueChange={setFacility}
+            testID='facility_test'
             selectedValue={facilityId}
 
           >
@@ -244,29 +202,17 @@ function HospitalAdminSearchBeds({ navigation }) {
               (null)}
 
 
-
-
           </Picker>
 
         </View>
 
-
-
-
-
-        <AppButton onPress={handleSubmitPress} title={"Search"} />
-
+        <AppButton testID="search" onPress={handleSubmitPress} title={"Search"} />
 
         {bedInfo ? (
 
-
           <SafeAreaView style={styles.footer}>
-
-
-
             <View
               style={{
-
                 marginLeft: 2,
                 marginBottom: 10,
                 borderBottomColor: "#009387",
@@ -274,20 +220,12 @@ function HospitalAdminSearchBeds({ navigation }) {
               }}
             />
 
-
-
-
-
-
-
             <View style={{ flexDirection: 'row', marginTop: 2 }}>
 
-              {/* <Text style={styles.textFooter1}>WELCOME</Text> */}
+             
               <View style={{ flex: .5 }}>
-
-
                 <Card style={{ borderColor: "#007c7a", borderWidth: 3, borderRadius: 5, textAlign: "center" }}>
-                  {/* <Card.Title title="Covid Ward" subtitle="Card Subtitle"  /> */}
+                  
                   <Card.Content>
                     <Title style={{ textAlign: "center", marginTop: 0 }}>Covid Ward </Title>
 
@@ -327,15 +265,9 @@ function HospitalAdminSearchBeds({ navigation }) {
                       :
                       (null)}
 
-
-
                   </Card.Content>
-
-
-                  {/* <Card.Cover source={{ uri: 'https://picsum.photos/700' }} /> */}
-                  <Card.Actions>
-                    {/* <Button>Cancel</Button>
-<Button>Ok</Button> */}
+                                   <Card.Actions>
+                   
                   </Card.Actions>
                 </Card>
               </View>
@@ -343,7 +275,7 @@ function HospitalAdminSearchBeds({ navigation }) {
 
               <View style={{ flex: .5, marginLeft: 15 }}>
                 <Card style={{ borderColor: "#007c7a", borderWidth: 3, borderRadius: 5, textAlign: "center" }}>
-                  {/* <Card.Title title="Covid Ward" subtitle="Card Subtitle"  /> */}
+                 
                   <Card.Content>
                     <Title style={{ textAlign: "center", marginTop: 0 }}>Normal Ward </Title>
 
@@ -366,7 +298,6 @@ function HospitalAdminSearchBeds({ navigation }) {
 
                     {show2 ? (
 
-
                       Array.from({ length: bedInfo.NormalBed.length }).map(
                         (_, i) => (
 
@@ -375,7 +306,6 @@ function HospitalAdminSearchBeds({ navigation }) {
                           ) :
                             (<Paragraph key={i} style={{ color: "green", textAlign: "center" }}>{bedInfo["NormalBed"][`${i}`]["BedID"]} {bedInfo["NormalBed"][`${i}`]["IsOccupied"] == 1 ? ("Occupied") : ("Free")}</Paragraph>)
 
-
                         )
                       )
 
@@ -383,15 +313,9 @@ function HospitalAdminSearchBeds({ navigation }) {
                       :
                       (null)}
 
-
-
-                  </Card.Content>
-
-
-                  {/* <Card.Cover source={{ uri: 'https://picsum.photos/700' }} /> */}
+                  </Card.Content>                  
                   <Card.Actions>
-                    {/* <Button>Cancel</Button>
-<Button>Ok</Button> */}
+                   
                   </Card.Actions>
                 </Card>
               </View>
@@ -405,13 +329,7 @@ function HospitalAdminSearchBeds({ navigation }) {
         ) : (null)
 
 
-
-
-
-
         }
-
-
 
 
       </ScrollView>
@@ -424,8 +342,7 @@ function HospitalAdminSearchBeds({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    // backgroundColor: "#009387",
+    flex: 1,    
   },
   header: {
 
@@ -447,6 +364,8 @@ const styles = StyleSheet.create({
   BloodDrop: {
     width: 300,
     marginTop: 10,
+    paddingBottom:10,
+    marginBottom:10,
     marginLeft: 5,
     marginRight: 5,
     borderColor: "#007c7a",
@@ -459,6 +378,17 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
     alignItems: "center",
     justifyContent: "center"
+  },
+  action1: {
+    flex: 0.5,
+    flexDirection: "row",
+    marginTop: 10,
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: "#007c7a",
+    padding: 5,
+    paddingLeft: 10,
+    alignItems: "center",
   },
   footer: {
     flex: 3,

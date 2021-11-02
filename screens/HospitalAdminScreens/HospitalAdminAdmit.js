@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-
 import { BASE_URL } from "../../dev.config";
-
 import {
   StyleSheet,
   Text,
@@ -10,26 +8,17 @@ import {
   TouchableOpacity,
   ScrollView,
   Platform,
-  Picker,
-  Button,
-  StatusBar,
   TextInput,
 } from "react-native";
-import { Drawer } from 'react-native-paper';
-import * as Animatable from "react-native-animatable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Feather from "react-native-vector-icons/Feather";
-import { AuthContext } from '../../components/context';
-import DatePicker from 'react-native-datepicker';
+import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-// import Picker from 'react-native-select-dropdown';
 import PhoneInput from "react-native-phone-number-input";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
+import RadioForm from 'react-native-simple-radio-button';
 
 
 function HospitalAdminAdmit({ navigation }) {
-
 
   const [name, setName] = useState("");
   const [bday1, setBday1] = useState("");
@@ -39,18 +28,16 @@ function HospitalAdminAdmit({ navigation }) {
   const [contactnumber, setContactnumber] = useState("");
   const [bloodtype, setBloodtype] = useState("");
   const [district, setDistrict] = useState("");
-
   const [isvaccinated, setIsvaccinated] = useState("0");
   const [RATresult, setRATresult] = useState("");
   const medicalHistory = "";
-
   const [Num_vaccine, setNumvaccinated] = useState("0");
   const [Type_vaccine, setTypevaccinated] = useState(null);
   const [bedId, setBedId] = useState("");
 
+  //Automatically assgin bed ID for the patient
   const getBedId = bedInfo => {
 
-   
     let covidFree = [];
     let normalFree = [];
     if (typeof bedInfo !== 'undefined') {
@@ -86,11 +73,9 @@ function HospitalAdminAdmit({ navigation }) {
 
 
 
-
   const [bedInfo, setBedInfo] = useState(null);
 
-
-
+  //calculate the age of patient
   const getAge = bday => {
     if (Math.floor((new Date() - new Date(bday).getTime()) / 3.15576e+10)) {
       return (Math.floor((new Date() - new Date(bday).getTime()) / 3.15576e+10));
@@ -107,25 +92,16 @@ function HospitalAdminAdmit({ navigation }) {
 
   const admitDateTime = date + 'T' + time
 
-  
-
+  //Create IDs for the patients
   const id = contactnumber.toString() + Date.parse(bday1);
   const allocationId = id + Date.parse(new Date()) + "A";
   const reportId = id + Date.parse(new Date()) + "R";
   const testId = id + Date.parse(new Date()) + "T";
   const phonenumber = "+94" + contactnumber.toString();
 
-
-
-  const age = getAge(bday1)
-
-  // const bedId = getBedId(bedInfo);
-
-  // const bday =bday1.toISOString().slice(0, 10),
+  const age = getAge(bday1);
 
   const [isPickerShow, setIsPickerShow] = useState(false);
-
-
 
   const showPicker = () => {
     setIsPickerShow(true);
@@ -163,13 +139,12 @@ function HospitalAdminAdmit({ navigation }) {
 
   ]
 
-  const AppButton = ({ onPress, title }) => (
-    <TouchableOpacity onPress={onPress} style={styles.button}>
-
+  const AppButton = ({ onPress, title, ...props }) => (
+    <TouchableOpacity   {...props} onPress={onPress} style={styles.button}>
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
-
   );
+
 
 
   useEffect(() => {
@@ -183,7 +158,6 @@ function HospitalAdminAdmit({ navigation }) {
       setBloodtype(" ");
       setDistrict("");
       setRATresult(" ");
-
       setBday2("");
       setGender("Male");
       setTypevaccinated(null);
@@ -208,8 +182,7 @@ function HospitalAdminAdmit({ navigation }) {
             });
             response = await res.json()
 
-            setBedInfo(response.results)
-         
+            setBedInfo(response.results);
 
 
             if (res.status !== 200 && res.status !== 201 && res.status !== 202) {
@@ -222,9 +195,7 @@ function HospitalAdminAdmit({ navigation }) {
               }
             }
           } catch (error) {
-            // alert(" Can't  Load beds details", [
-            //   { text: "Okay" },
-            // ]);
+
           }
         }
         loadbeds();
@@ -237,7 +208,6 @@ function HospitalAdminAdmit({ navigation }) {
 
 
     });
-
 
 
   }, [bedInfo,]);
@@ -274,12 +244,11 @@ function HospitalAdminAdmit({ navigation }) {
           bedId: bedId,
           allocationId: allocationId,
           admitDateTime: admitDateTime,
-
           bday: bday1,
           Type_vaccine: Type_vaccine,
           Num_vaccine: Num_vaccine,
 
-        
+
         }),
       });
 
@@ -298,14 +267,11 @@ function HospitalAdminAdmit({ navigation }) {
         setBloodtype(" ");
         setDistrict("");
         setRATresult(" ");
-
         setBday2("");
         setGender("Male");
         setTypevaccinated(null);
         setNumvaccinated("0");
         setIsvaccinated("0");
-
-
 
 
         if (response) {
@@ -354,15 +320,15 @@ function HospitalAdminAdmit({ navigation }) {
       return;
     }
 
-  
+
     if (!RATresult || RATresult == 'disabled') {
       alert("Please select RATresult !");
       return;
     }
 
-    if(bedId==""){
+    if (bedId == "") {
       alert("Press Again !");
-        return;
+      return;
     }
 
     admit();
@@ -391,6 +357,7 @@ function HospitalAdminAdmit({ navigation }) {
             placeholderTextColor="#666666"
             style={styles.textInput}
             autoCapitalize="none"
+            testID="name_test"
             onChangeText={(name) => setName(name)}
           />
         </View>
@@ -401,7 +368,6 @@ function HospitalAdminAdmit({ navigation }) {
             mode={'date'}
             display={Platform.OS === 'ios' ? 'spinner' : 'default'}
             is24Hour={true}
-            // format="YYYY-MM-DD"
             maximumDate={new Date()}
             onChange={onChange}
             style={styles.datePicker}
@@ -445,7 +411,7 @@ function HospitalAdminAdmit({ navigation }) {
         <Text style={[{ marginTop: 15, }, styles.textFooter]}>District</Text>
         <View style={styles.districtDrop}>
           <Picker
-            style={styles.action}
+            style={styles.daction}
             onValueChange={setDistrict}
             selectedValue={district}
 
@@ -480,18 +446,16 @@ function HospitalAdminAdmit({ navigation }) {
 
 
         <Text style={[{ marginTop: 15 }, styles.textFooter]}>Contact Number</Text>
-        {/* <TextInput keyboardType={'phone-pad'} /> */}
+
 
         <View style={styles.action3}>
-          {/* <FontAwesome name="phone" size={15} onPress={showPicker} {...styles.icons} /> */}
+
           <PhoneInput
             defaultCode="LK"
             containerStyle={{
               width: 133,
               height: 30,
               marginTop: 1,
-              // marginLeft: 20,
-              // marginRight: 10,
               alignSelf: 'center'
             }}
           />
@@ -501,13 +465,10 @@ function HospitalAdminAdmit({ navigation }) {
             keyboardType={'numeric'}
             placeholderTextColor="#666666"
             style={styles.textInput1}
-            // autoCapitalize="none"
             onChangeText={(contactnumber) => setContactnumber(contactnumber)}
             autoCorrect={false}
           />
         </View>
-
-
 
 
         <Text style={[styles.textFooter, { marginTop: 15 }]}>Address</Text>
@@ -536,7 +497,7 @@ function HospitalAdminAdmit({ navigation }) {
         <View style={{ flexDirection: 'row' }}>
           <View style={[{ flex: 0.5, }, styles.BloodDrop]}>
             <Picker
-              style={styles.action}
+              style={styles.daction}
               onValueChange={setBloodtype}
               selectedValue={bloodtype}
 
@@ -558,7 +519,7 @@ function HospitalAdminAdmit({ navigation }) {
 
           <View style={[{ flex: .5, }, styles.BloodDrop]}>
             <Picker
-              style={styles.action}
+              style={styles.daction}
 
               onValueChange={setRATresult}
               selectedValue={RATresult}
@@ -600,7 +561,7 @@ function HospitalAdminAdmit({ navigation }) {
             <View style={{ flexDirection: 'row' }}>
               <View style={[{ flex: 0.5, }, styles.BloodDrop]}>
                 <Picker
-                  style={styles.action}
+                  style={styles.daction}
                   onValueChange={setTypevaccinated}
                   selectedValue={Type_vaccine}
 
@@ -618,7 +579,7 @@ function HospitalAdminAdmit({ navigation }) {
 
               <View style={[{ flex: .5, }, styles.BloodDrop]}>
                 <Picker
-                  style={styles.action}
+                  style={styles.daction}
                   onValueChange={setNumvaccinated}
                   selectedValue={Num_vaccine}
 
@@ -637,9 +598,9 @@ function HospitalAdminAdmit({ navigation }) {
           (null)
         }
 
-           
 
-        <AppButton onPress={handleSubmitPress} title={"Admit"} />
+
+        <AppButton testID="admit" onPress={handleSubmitPress} title={"Admit"} />
 
       </ScrollView>
 
@@ -652,7 +613,6 @@ function HospitalAdminAdmit({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#009387",
   },
   header: {
 
@@ -718,6 +678,16 @@ const styles = StyleSheet.create({
     padding: 5,
     alignItems: "center",
   },
+  daction: {
+    flexDirection: "row",
+    margin: 10,
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: "#007c7a",
+    padding: 5,
+    alignItems: "center",
+  },
+
   action1: {
     flex: 0.5,
     flexDirection: "row",

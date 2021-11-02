@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {BASE_URL} from "../../dev.config";
+import { BASE_URL } from "../../dev.config";
 import {
     StyleSheet,
     Text,
@@ -9,34 +9,27 @@ import {
     ScrollView,
     Platform,
     Picker,
-    Button,
-    StatusBar,
     TextInput,
 } from "react-native";
-import { Drawer } from 'react-native-paper';
-import * as Animatable from "react-native-animatable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Feather from "react-native-vector-icons/Feather";
-import { AuthContext } from '../../components/context';
-import DatePicker from 'react-native-datepicker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-// import Picker from 'react-native-select-dropdown';
 import PhoneInput from "react-native-phone-number-input";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
+
 
 
 function DoctorCreateReport({ navigation }) {
 
-   
+
     const [bday1, setBday1] = useState("");
-    const [bday2, setBday2] = useState("");   
-    const [contactnumber, setContactnumber] = useState("");   
+    const [bday2, setBday2] = useState("");
+    const [contactnumber, setContactnumber] = useState("");
     const [RATresult, setRATresult] = useState("");
-    const medicalHistory="";
+    const medicalHistory = "";
     const [bedId, setBedId] = useState("");
     const [bedInfo, setBedInfo] = useState({});
 
+    //calculate the age of patient
     const getAge = bday => {
         if (Math.floor((new Date() - new Date(bday).getTime()) / 3.15576e+10)) {
             return (Math.floor((new Date() - new Date(bday).getTime()) / 3.15576e+10));
@@ -52,7 +45,7 @@ function DoctorCreateReport({ navigation }) {
     var time = today.getHours() + ":" + today.getMinutes();
     const DateTime = date + 'T' + time;
 
-
+    //Create IDs for the patients
     const id = contactnumber.toString() + Date.parse(bday1);
     const allocationId = id + Date.parse(new Date()) + "A";
     const reportId = id + Date.parse(new Date()) + "R";
@@ -62,10 +55,8 @@ function DoctorCreateReport({ navigation }) {
 
 
     const age = getAge(bday1)
-    // const bday =bday1.toISOString().slice(0, 10),
 
     const [isPickerShow, setIsPickerShow] = useState(false);
-
 
 
     const showPicker = () => {
@@ -92,44 +83,44 @@ function DoctorCreateReport({ navigation }) {
     };
 
 
-
+    //Automatically assgin bed ID for the patient
     const getBedId = bedInfo => {
 
-   
+
         let covidFree = [];
         let normalFree = [];
         if (typeof bedInfo !== 'undefined') {
-          if (bedInfo != null) {
-            Array.from({ length: bedInfo["CovidBed"].length }).map(
-              (_, i) => (
-    
-                bedInfo["CovidBed"][`${i}`]["IsOccupied"] != 1 ? (covidFree.push(bedInfo["CovidBed"][`${i}`]["BedID"])) : (null)
-    
-              )
-            )
-    
-            Array.from({ length: bedInfo["NormalBed"].length }).map(
-              (_, j) => (
-                bedInfo["NormalBed"][`${j}`]["IsOccupied"] != 1 ? (normalFree.push(bedInfo["NormalBed"][`${j}`]["BedID"])) : (null)
-    
-              )
-            )
-    
-            if (RATresult == "1" && covidFree.length > 0) {
-              return covidFree[0];
+            if (bedInfo != null) {
+                Array.from({ length: bedInfo["CovidBed"].length }).map(
+                    (_, i) => (
+
+                        bedInfo["CovidBed"][`${i}`]["IsOccupied"] != 1 ? (covidFree.push(bedInfo["CovidBed"][`${i}`]["BedID"])) : (null)
+
+                    )
+                )
+
+                Array.from({ length: bedInfo["NormalBed"].length }).map(
+                    (_, j) => (
+                        bedInfo["NormalBed"][`${j}`]["IsOccupied"] != 1 ? (normalFree.push(bedInfo["NormalBed"][`${j}`]["BedID"])) : (null)
+
+                    )
+                )
+
+                if (RATresult == "1" && covidFree.length > 0) {
+                    return covidFree[0];
+                }
+                else if (RATresult == "0" && normalFree.length > 0) {
+                    return normalFree[0];
+                }
+
+                else {
+                    return 'no'
+                }
             }
-            else if (RATresult == "0" && normalFree.length > 0) {
-              return normalFree[0];
-            }
-    
-            else {
-              return 'no'
-            }
-          }
         }
-      };
-    
-    
+    };
+
+
 
 
     const AppButton = ({ onPress, title }) => (
@@ -142,22 +133,17 @@ function DoctorCreateReport({ navigation }) {
 
     const loadbeds = async () => {
         const bedInfoObject = JSON.parse(await AsyncStorage.getItem("bedInfo"));
-        // console.log(bedInfoObject)
 
         setBedInfo({ ...bedInfo, deatils: bedInfoObject })
 
-        // console.log(bedInfo)
-        //  console.log( bedInfo["CovidBed"].length)
     }
-
 
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
 
-            loadbeds();           
-            setBday1("");         
-           
+            loadbeds();
+            setBday1("");
             setContactnumber("");
             setRATresult(" ");
             setBedId("");
@@ -174,7 +160,7 @@ function DoctorCreateReport({ navigation }) {
         const token = await AsyncStorage.getItem('token');
         const URL = `${BASE_URL}/report/createReport`;
 
-      
+
 
         try {
             const res = await fetch(URL, {
@@ -207,12 +193,12 @@ function DoctorCreateReport({ navigation }) {
 
                 throw new Error(message);
             } else {
-                setBday1("");                
+                setBday1("");
                 setContactnumber("");
                 setRATresult(" ");
                 setBedId("");
                 setBday2("");
-    
+
 
 
                 if (response) {
@@ -253,10 +239,10 @@ function DoctorCreateReport({ navigation }) {
             return;
         }
 
-        if(bedId==""){
+        if (bedId == "") {
             alert("Press Again !");
-              return;
-          }
+            return;
+        }
 
         create();
     };
@@ -276,7 +262,7 @@ function DoctorCreateReport({ navigation }) {
 
             <ScrollView style={{ paddingRight: 20 }}>
 
-             
+
 
                 {isPickerShow && (
                     <DateTimePicker
@@ -284,7 +270,7 @@ function DoctorCreateReport({ navigation }) {
                         mode={'date'}
                         display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                         is24Hour={true}
-                        // format="YYYY-MM-DD"
+
                         maximumDate={new Date()}
                         onChange={onChange}
                         style={styles.datePicker}
@@ -293,7 +279,7 @@ function DoctorCreateReport({ navigation }) {
 
                 <View style={{ flexDirection: 'row', marginTop: 15 }}>
                     <Text style={styles.textFooter}>Date of Birth</Text>
-                    {/* <Text style={{ color: "#007c7a", fontSize: 16, paddingLeft: 100 }}>Gender</Text> */}
+
                 </View>
 
 
@@ -307,7 +293,6 @@ function DoctorCreateReport({ navigation }) {
                         autoCapitalize="none"
                         editable={false}
 
-
                     />
 
                 </View>
@@ -315,18 +300,14 @@ function DoctorCreateReport({ navigation }) {
 
 
                 <Text style={[{ marginTop: 15 }, styles.textFooter]}>Contact Number</Text>
-                {/* <TextInput keyboardType={'phone-pad'} /> */}
 
                 <View style={styles.action3}>
-                    {/* <FontAwesome name="phone" size={15} onPress={showPicker} {...styles.icons} /> */}
                     <PhoneInput
                         defaultCode="LK"
                         containerStyle={{
                             width: 133,
                             height: 30,
                             marginTop: 1,
-                            // marginLeft: 20,
-                            // marginRight: 10,
                             alignSelf: 'center'
                         }}
                     />
@@ -336,20 +317,15 @@ function DoctorCreateReport({ navigation }) {
                         keyboardType={'numeric'}
                         placeholderTextColor="#666666"
                         style={styles.textInput1}
-                        // autoCapitalize="none"
                         onChangeText={(contactnumber) => setContactnumber(contactnumber)}
                         autoCorrect={false}
                     />
                 </View>
 
-
-
-
-
                 <View style={{ flexDirection: 'row', marginTop: 15 }}>
                     <Text style={styles.textFooter}>RAT results</Text>
 
-                  
+
 
                 </View>
                 <View style={{ flexDirection: 'row' }}>
@@ -370,8 +346,6 @@ function DoctorCreateReport({ navigation }) {
                 </View>
 
 
-
-
                 <AppButton onPress={handleSubmitPress} title={"Create"} />
 
             </ScrollView>
@@ -385,7 +359,6 @@ function DoctorCreateReport({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // backgroundColor: "#009387",
     },
     header: {
 

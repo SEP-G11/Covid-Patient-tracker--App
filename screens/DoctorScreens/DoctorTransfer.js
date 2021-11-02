@@ -6,30 +6,14 @@ import {
   View,
   SafeAreaView,
   TouchableOpacity,
-  ScrollView,
-  Platform,
-  Picker,
-  Button,
-  StatusBar,
+  ScrollView, 
   TextInput,
 } from "react-native";
-import { Drawer } from 'react-native-paper';
-import * as Animatable from "react-native-animatable";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Feather from "react-native-vector-icons/Feather";
-import { AuthContext } from '../../components/context';
-import DatePicker from 'react-native-datepicker';
-import DateTimePicker from '@react-native-community/datetimepicker';
-// import Picker from 'react-native-select-dropdown';
-import PhoneInput from "react-native-phone-number-input";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function DoctorTransfer({ navigation ,route}) {
 
-
-  
   const [id, setId] = useState(route.params.id =="" ? (""):(route.params.id));
   const [dest_bed_id, setDes] = useState("");
 
@@ -40,47 +24,16 @@ var today = new Date();
   const DateTime = date + 'T' + time;
 
 
-  const onChange = (event, value) => {
-    try {
-      if (value) {
-        const day = value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate();
-        setBday2(day);
-        setBday1(value.toISOString().slice(0, 10));
-      }
-
-    }
-    catch (e) {
-      alert("Selected BirthDay is Erroried !")
-
-    }
-
-    if (Platform.OS === 'android') {
-      setIsPickerShow(false);
-    }
-  };
-
-
- 
-
-  const AppButton = ({ onPress, title }) => (
-    <TouchableOpacity onPress={onPress} style={styles.button}>
-      <Text style={styles.buttonText}>{title}</Text>
+   const AppButton = ({ onPress, title, ...props }) => (
+    <TouchableOpacity   {...props} onPress={onPress} style={styles.button}>
+        <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
-
-  );
-
+);
 
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-
-     
-         
-
-      setDes("");
-     
-     
-
+      setDes("");   
 
     });
   }, [navigation,]);
@@ -103,14 +56,9 @@ var today = new Date();
         },
         body: JSON.stringify({
        
-       
-
-             patient_id:id,            
-
-
+             patient_id:id,          
              dest_bed_id:dest_bed_id,
              transfer_date:DateTime
-
 
         }),
       });
@@ -126,12 +74,7 @@ var today = new Date();
         setId("");  
         setOrigin("");       
         setDes("");
-       
-       
-     
-
-
-
+  
         if (response) {
           alert((message), [
             { text: "Okay" },
@@ -162,11 +105,7 @@ var today = new Date();
         alert("Please select Destination BedID !");
         return;
       }
-    
-
-      transfer();
-
-  
+          transfer(); 
 
   };
 
@@ -193,11 +132,10 @@ var today = new Date();
             placeholderTextColor="#666666"
             style={styles.textInput}
             autoCapitalize="none"
+            testID='id_test'
             onChangeText={(id) => setId(id)}
           />
-        </View>
-
-       
+        </View>       
 
         <Text style={styles.textFooter1}>Destination Bed Id</Text>
         <View style={styles.action}>
@@ -208,16 +146,12 @@ var today = new Date();
             style={styles.textInput}
             autoCapitalize="none"
             keyboardType={'numeric'}
+            testID='dest_test'
             onChangeText={(dest_bed_id) => setDes(dest_bed_id)}
           />
         </View>
 
-
-
-
-
-
-        <AppButton onPress={handleSubmitPress} title={"Transfer"} />
+        <AppButton testID="transfer" onPress={handleSubmitPress} title={"Transfer"} />
 
       </ScrollView>
 
@@ -226,11 +160,9 @@ var today = new Date();
 }
 
 
-
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    // backgroundColor: "#009387",
+    flex: 1,  
   },
   header: {
 
@@ -287,7 +219,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingTop:15,
   },
-
   box: {
     width: "50%",
     height: "50%",

@@ -15,7 +15,6 @@ function Homepage({ navigation }) {
  
 
 
-
   return (
     <SafeAreaView style={styles.container}>
 
@@ -33,7 +32,7 @@ function Homepage({ navigation }) {
           animation='pulse'
           iterationCount='infinite'
         >
-          <AppButton
+          <AppButton testID='getStart'
             onPress={() => navigation.navigate("Signin")}
             title={"Get Started"}
           />
@@ -45,8 +44,8 @@ function Homepage({ navigation }) {
   );
 }
 
-const AppButton = ({ onPress, title }) => (
-  <TouchableOpacity onPress={onPress} style={styles.button}>
+const AppButton = ({ onPress, title ,...props}) => (
+  <TouchableOpacity {...props} onPress={onPress} style={styles.button}>
     <View style={styles.action}>
       <Text style={styles.buttonText}>{title}</Text>
       <View>

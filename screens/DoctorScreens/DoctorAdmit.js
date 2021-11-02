@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 
 import { BASE_URL } from "../../dev.config";
 
@@ -10,48 +10,35 @@ import {
   TouchableOpacity,
   ScrollView,
   Platform,
-  Picker,
-  Button,
-  StatusBar,
   TextInput,
 } from "react-native";
-import { Drawer } from 'react-native-paper';
-import * as Animatable from "react-native-animatable";
+
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Feather from "react-native-vector-icons/Feather";
-import { AuthContext } from '../../components/context';
-import DatePicker from 'react-native-datepicker';
+import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-// import Picker from 'react-native-select-dropdown';
 import PhoneInput from "react-native-phone-number-input";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
 
 function DoctorAdmit({ navigation }) {
 
-
   const [name, setName] = useState("");
   const [bday1, setBday1] = useState("");
   const [bday2, setBday2] = useState("");
-
   const gender = "";
   const address = "";
   const [contactnumber, setContactnumber] = useState("");
   const bloodtype = "";
   const [district, setDistrict] = useState("");
-
   const isvaccinated = "1";
   const [RATresult, setRATresult] = useState("");
   const [medicalHistory, setMedicalHistory] = useState("");
   const [bedId, setBedId] = useState("");
-
-
   const [bedInfo, setBedInfo] = useState(null);
-  const [Num_vaccine, setNumvaccinated] = useState("0");
-  const [Type_vaccine, setTypevaccinated] = useState(null);
+  const [Num_vaccine,] = useState("0");
+  const [Type_vaccine,] = useState(null);
 
-
+  //calculate the age of patient
   const getAge = bday => {
     if (Math.floor((new Date() - new Date(bday).getTime()) / 3.15576e+10)) {
       return (Math.floor((new Date() - new Date(bday).getTime()) / 3.15576e+10));
@@ -67,21 +54,15 @@ function DoctorAdmit({ navigation }) {
   var time = today.getHours() + ":" + today.getMinutes();
   const admitDateTime = date + 'T' + time;
 
-
+  //Create IDs for the patients
   const id = contactnumber.toString() + Date.parse(bday1);
   const allocationId = id + Date.parse(new Date()) + "A";
   const reportId = id + Date.parse(new Date()) + "R";
   const testId = id + Date.parse(new Date()) + "T";
   const phonenumber = "+94" + contactnumber.toString();
 
-
-
   const age = getAge(bday1)
-  // const bday =bday1.toISOString().slice(0, 10),
-
   const [isPickerShow, setIsPickerShow] = useState(false);
-
-
 
   const showPicker = () => {
     setIsPickerShow(true);
@@ -107,18 +88,14 @@ function DoctorAdmit({ navigation }) {
   };
 
 
-
-  const AppButton = ({ onPress, title }) => (
-    <TouchableOpacity onPress={onPress} style={styles.button}>
+  const AppButton = ({ onPress, title, ...props }) => (
+    <TouchableOpacity   {...props} onPress={onPress} style={styles.button}>
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
-
   );
 
-
+  //Automatically assgin bed ID for the patient
   const getBedId = bedInfo => {
-
-   
     let covidFree = [];
     let normalFree = [];
     if (typeof bedInfo !== 'undefined') {
@@ -154,24 +131,16 @@ function DoctorAdmit({ navigation }) {
 
 
 
-
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-
-
-
       setName("");
       setBday1("");
       setDistrict("");
       setMedicalHistory("");
       setContactnumber("");
-      setRATresult(" ");   
+      setRATresult(" ");
       setBday2("");
-
-        setMedicalHistory("");
-
-
-
+      setMedicalHistory("");
       try {
         async function loadbeds() {
 
@@ -191,7 +160,7 @@ function DoctorAdmit({ navigation }) {
             response = await res.json()
 
             setBedInfo(response.results)
-      
+
 
             if (res.status !== 200 && res.status !== 201 && res.status !== 202) {
               throw new Error(message);
@@ -203,9 +172,6 @@ function DoctorAdmit({ navigation }) {
               }
             }
           } catch (error) {
-            // alert(" Can't  Load beds details", [
-            //   { text: "Okay" },
-            // ]);
           }
         }
         loadbeds();
@@ -215,9 +181,6 @@ function DoctorAdmit({ navigation }) {
           { text: "Okay" },
         ]);
       }
-
-
-
 
 
     });
@@ -275,11 +238,11 @@ function DoctorAdmit({ navigation }) {
         setBday1("");
 
         setDistrict("");
-        setContactnumber(""); 
-          setRATresult(" ");       
+        setContactnumber("");
+        setRATresult(" ");
         setBday2("");
         setMedicalHistory("");
-      
+
 
 
         if (response) {
@@ -328,9 +291,9 @@ function DoctorAdmit({ navigation }) {
       return;
     }
 
-    if(bedId==""){
+    if (bedId == "") {
       alert("Press Again !");
-        return;
+      return;
     }
 
     admit();
@@ -359,6 +322,7 @@ function DoctorAdmit({ navigation }) {
             placeholderTextColor="#666666"
             style={styles.textInput}
             autoCapitalize="none"
+            testID="name_test"
             onChangeText={(name) => setName(name)}
           />
         </View>
@@ -369,16 +333,15 @@ function DoctorAdmit({ navigation }) {
             mode={'date'}
             display={Platform.OS === 'ios' ? 'spinner' : 'default'}
             is24Hour={true}
-            // format="YYYY-MM-DD"
             maximumDate={new Date()}
             onChange={onChange}
+            testID='bday_test'
             style={styles.datePicker}
           />
         )}
 
         <View style={{ flexDirection: 'row', marginTop: 15 }}>
           <Text style={styles.textFooter}>Date of Birth</Text>
-          {/* <Text style={{ color: "#007c7a", fontSize: 16, paddingLeft: 100 }}>Gender</Text> */}
         </View>
 
 
@@ -390,6 +353,7 @@ function DoctorAdmit({ navigation }) {
             placeholderTextColor="#666666"
             style={styles.textInput}
             autoCapitalize="none"
+
             editable={false}
 
 
@@ -400,18 +364,15 @@ function DoctorAdmit({ navigation }) {
 
 
         <Text style={[{ marginTop: 15 }, styles.textFooter]}>Contact Number</Text>
-        {/* <TextInput keyboardType={'phone-pad'} /> */}
+
 
         <View style={styles.action3}>
-          {/* <FontAwesome name="phone" size={15} onPress={showPicker} {...styles.icons} /> */}
           <PhoneInput
             defaultCode="LK"
             containerStyle={{
               width: 133,
               height: 30,
               marginTop: 1,
-              // marginLeft: 20,
-              // marginRight: 10,
               alignSelf: 'center'
             }}
           />
@@ -424,15 +385,18 @@ function DoctorAdmit({ navigation }) {
             // autoCapitalize="none"
             onChangeText={(contactnumber) => setContactnumber(contactnumber)}
             autoCorrect={false}
+            testID="phone_test"
           />
         </View>
 
         <Text style={[{ marginTop: 15, }, styles.textFooter]}>District</Text>
         <View style={styles.districtDrop}>
           <Picker
-            style={styles.action}
+            style={[{ marginTop: 15 }, styles.daction]}
+
             onValueChange={setDistrict}
             selectedValue={district}
+            testID="district_test"
 
           >
             <Picker.Item label="Select  District" value="disabled" color="#aaa" />
@@ -489,9 +453,10 @@ function DoctorAdmit({ navigation }) {
         <View style={{ flexDirection: 'row' }}>
           <View style={[{ flex: .5, }, styles.BloodDrop]}>
             <Picker
-              style={styles.action}
+              style={styles.daction}
               onValueChange={setRATresult}
               selectedValue={RATresult}
+              testID="result_test"
 
             >
               <Picker.Item label="Select" value="disabled" color="#aaa" />
@@ -500,71 +465,12 @@ function DoctorAdmit({ navigation }) {
             </Picker>
           </View>
 
-
-          {/* <View style={[{ flex: .5, }, styles.BloodDrop]}>
-
-          <View style={[{ flex: .5, }, styles.BloodDrop]}>
-
-            <Picker
-              style={styles.action}
-              onValueChange={setBedId}
-              selectedValue={bedId}
-
-            >
-              <Picker.Item label="Select" value="disabled" color="#aaa" />
-
-
-              {bedInfo ? (
-
-                Array.from({ length: bedInfo["NormalBed"].length }).map(
-                  (_, i) => (
-
-
-                    bedInfo["NormalBed"][`${i}`]["IsOccupied"] != 1 ? (
-                      <Picker.Item key={i} label={(bedInfo["NormalBed"][`${i}`]["BedID"]).toString()} value={(bedInfo["NormalBed"][`${i}`]["BedID"]).toString()} color="#000" />
-
-                    ) : (null)
-
-
-                  )
-                )
-
-              )
-                :
-                (null)}
-
-              {bedInfo ? (
-
-                Array.from({ length: bedInfo["CovidBed"].length }).map(
-                  (_, i) => (
-
-
-                    bedInfo["CovidBed"][`${i}`]["IsOccupied"] != 1 ? (
-                      <Picker.Item key={i} label={(bedInfo["CovidBed"][`${i}`]["BedID"]).toString()} value={(bedInfo["CovidBed"][`${i}`]["BedID"]).toString()} color="#000" />
-
-                    ) : (null)
-
-
-                  )
-                )
-
-              )
-                :
-                (null)}
-
-
-
-            </Picker>
-          </View> */}
-
- 
-
         </View>
 
 
 
 
-        <AppButton onPress={handleSubmitPress} title={"Admit"} />
+        <AppButton testID="admit" onPress={handleSubmitPress} title={"Admit"} />
 
       </ScrollView>
 
@@ -577,7 +483,6 @@ function DoctorAdmit({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#009387",
   },
   header: {
 
@@ -634,9 +539,17 @@ const styles = StyleSheet.create({
     padding: "5"
   },
   action: {
-
     flexDirection: "row",
     marginTop: 5,
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: "#007c7a",
+    padding: 5,
+    alignItems: "center",
+  },
+  daction: {
+    flexDirection: "row",
+    margin: 10,
     borderWidth: 1,
     borderRadius: 20,
     borderColor: "#007c7a",

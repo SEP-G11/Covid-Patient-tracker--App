@@ -1,0 +1,315 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot Doctor Enter Results page 1`] = `
+<RCTSafeAreaView
+  emulateUnlessSupported={true}
+  style={
+    Object {
+      "backgroundColor": "#fff",
+      "flex": 3,
+      "paddingHorizontal": 20,
+      "paddingVertical": 20,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "justifyContent": "flex-end",
+        "paddingBottom": 20,
+        "paddingHorizontal": 20,
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "color": "#009387",
+          "fontSize": 30,
+          "fontWeight": "bold",
+          "textAlign": "center",
+        }
+      }
+    >
+      ENTER TEST RESULT 
+    </Text>
+    <View
+      style={
+        Object {
+          "borderBottomColor": "#009387",
+          "borderBottomWidth": 2,
+        }
+      }
+    />
+  </View>
+  <RCTScrollView
+    style={
+      Object {
+        "marginTop": 50,
+        "paddingRight": 20,
+      }
+    }
+  >
+    <View>
+      <Text
+        style={
+          Object {
+            "color": "#007c7a",
+            "fontSize": 16,
+          }
+        }
+      >
+        Patient ID
+      </Text>
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "borderColor": "#007c7a",
+            "borderRadius": 20,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "marginTop": 5,
+            "padding": 5,
+          }
+        }
+      >
+        <TextInput
+          allowFontScaling={true}
+          autoCapitalize="none"
+          onChangeText={[Function]}
+          placeholder="Enter Id"
+          placeholderTextColor="#666666"
+          rejectResponderTermination={true}
+          style={
+            Object {
+              "color": "#000",
+              "flex": 1,
+              "fontSize": 15,
+              "paddingLeft": 20,
+            }
+          }
+          testID="id_test"
+          underlineColorAndroid="transparent"
+          value=""
+        />
+      </View>
+      <View
+        style={
+          Object {
+            "flexDirection": "row",
+            "marginTop": 15,
+          }
+        }
+      >
+        <Text
+          style={
+            Object {
+              "color": "#007c7a",
+              "fontSize": 16,
+            }
+          }
+        >
+          Test Type
+        </Text>
+        <Text
+          style={
+            Object {
+              "color": "#007c7a",
+              "fontSize": 16,
+              "paddingLeft": 100,
+            }
+          }
+        >
+          Test Result
+        </Text>
+      </View>
+      <View
+        style={
+          Object {
+            "flexDirection": "row",
+          }
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "flex": 0.5,
+              },
+              Object {
+                "alignSelf": "center",
+                "borderColor": "#007c7a",
+                "borderRadius": 10,
+                "borderWidth": 1,
+                "marginLeft": 5,
+                "marginRight": 5,
+                "marginTop": 10,
+                "width": 300,
+              },
+            ]
+          }
+        >
+          <View
+            style={
+              Object {
+                "alignItems": "center",
+                "borderColor": "#007c7a",
+                "borderRadius": 20,
+                "borderWidth": 1,
+                "flexDirection": "row",
+                "marginTop": 5,
+                "padding": 5,
+              }
+            }
+          >
+            <RNCPicker
+              items={
+                Array [
+                  Object {
+                    "label": "Select",
+                    "testID": undefined,
+                    "textColor": 4289374890,
+                    "value": "disabled",
+                  },
+                  Object {
+                    "label": "PCR",
+                    "testID": undefined,
+                    "textColor": undefined,
+                    "value": "PCR",
+                  },
+                  Object {
+                    "label": "RAT",
+                    "testID": undefined,
+                    "textColor": undefined,
+                    "value": "RAT",
+                  },
+                ]
+              }
+              onChange={[Function]}
+              selectedIndex={0}
+              style={
+                Array [
+                  Object {
+                    "height": 216,
+                  },
+                  undefined,
+                ]
+              }
+              testID="type_test"
+            />
+          </View>
+        </View>
+        <View
+          style={
+            Array [
+              Object {
+                "flex": 0.5,
+              },
+              Object {
+                "alignSelf": "center",
+                "borderColor": "#007c7a",
+                "borderRadius": 10,
+                "borderWidth": 1,
+                "marginLeft": 5,
+                "marginRight": 5,
+                "marginTop": 10,
+                "width": 300,
+              },
+            ]
+          }
+        >
+          <View
+            style={
+              Object {
+                "alignItems": "center",
+                "borderColor": "#007c7a",
+                "borderRadius": 20,
+                "borderWidth": 1,
+                "flexDirection": "row",
+                "marginTop": 5,
+                "padding": 5,
+              }
+            }
+          >
+            <RNCPicker
+              items={
+                Array [
+                  Object {
+                    "label": "Select",
+                    "testID": undefined,
+                    "textColor": 4289374890,
+                    "value": "disabled",
+                  },
+                  Object {
+                    "label": "POSITIVE",
+                    "testID": undefined,
+                    "textColor": undefined,
+                    "value": "1",
+                  },
+                  Object {
+                    "label": "NAGEATIVE",
+                    "testID": undefined,
+                    "textColor": undefined,
+                    "value": "0",
+                  },
+                ]
+              }
+              onChange={[Function]}
+              selectedIndex={0}
+              style={
+                Array [
+                  Object {
+                    "height": 216,
+                  },
+                  undefined,
+                ]
+              }
+              testID="result_test"
+            />
+          </View>
+        </View>
+      </View>
+      <View
+        accessible={true}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "#009387",
+            "borderColor": "#20d1ce",
+            "borderRadius": 10,
+            "borderWidth": 2,
+            "marginBottom": 20,
+            "marginLeft": 40,
+            "marginRight": 40,
+            "marginTop": 60,
+            "opacity": 1,
+            "paddingHorizontal": 10,
+            "paddingVertical": 10,
+          }
+        }
+        testID="enter"
+      >
+        <Text
+          style={
+            Object {
+              "color": "#fff",
+              "fontSize": 20,
+            }
+          }
+        >
+          Enter
+        </Text>
+      </View>
+    </View>
+  </RCTScrollView>
+</RCTSafeAreaView>
+`;

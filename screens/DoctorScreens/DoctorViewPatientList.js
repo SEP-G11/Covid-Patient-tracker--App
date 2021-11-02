@@ -108,6 +108,7 @@ function DoctorViewPatientList({ navigation }) {
             });
 
             const response = await res.json();
+          
             setFilteredPatients(response);
 
         } catch (error) {

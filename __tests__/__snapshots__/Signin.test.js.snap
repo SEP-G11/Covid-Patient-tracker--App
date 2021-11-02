@@ -1,0 +1,230 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot signin page  1`] = `
+<RCTSafeAreaView
+  emulateUnlessSupported={true}
+  style={
+    Object {
+      "backgroundColor": "#009387",
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "flex": 1,
+        "justifyContent": "flex-end",
+        "paddingBottom": 25,
+        "paddingHorizontal": 20,
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "color": "#fff",
+          "fontSize": 30,
+          "fontWeight": "bold",
+          "textAlign": "center",
+        }
+      }
+    >
+      SIGN IN 
+    </Text>
+  </View>
+  <View
+    forwardedRef={[Function]}
+    style={
+      Object {
+        "backgroundColor": "#fff",
+        "borderTopLeftRadius": 30,
+        "borderTopRightRadius": 30,
+        "flex": 3,
+        "opacity": 0,
+        "paddingHorizontal": 20,
+        "paddingVertical": 50,
+        "transform": Array [
+          Object {
+            "translateY": 500,
+          },
+        ],
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "color": "#007c7a",
+          "fontSize": 16,
+        }
+      }
+    >
+      Email Address
+    </Text>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "borderColor": "#007c7a",
+          "borderRadius": 20,
+          "borderWidth": 1,
+          "flexDirection": "row",
+          "marginTop": 10,
+          "padding": 5,
+        }
+      }
+    >
+      <Text />
+      <TextInput
+        allowFontScaling={true}
+        autoCapitalize="none"
+        onChangeText={[Function]}
+        placeholder="Your Email"
+        placeholderTextColor="#666666"
+        rejectResponderTermination={true}
+        style={
+          Object {
+            "color": "#000",
+            "flex": 1,
+            "paddingLeft": 20,
+          }
+        }
+        testID="email_test"
+        underlineColorAndroid="transparent"
+      />
+    </View>
+    <Text
+      style={
+        Array [
+          Object {
+            "color": "#007c7a",
+            "fontSize": 16,
+          },
+          Object {
+            "marginTop": 35,
+          },
+        ]
+      }
+    >
+      Password
+    </Text>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "borderColor": "#007c7a",
+          "borderRadius": 20,
+          "borderWidth": 1,
+          "flexDirection": "row",
+          "marginTop": 10,
+          "padding": 5,
+        }
+      }
+    >
+      <Text />
+      <TextInput
+        allowFontScaling={true}
+        autoCapitalize="none"
+        onChangeText={[Function]}
+        placeholder="Your Password"
+        placeholderTextColor="#666666"
+        rejectResponderTermination={true}
+        secureTextEntry={true}
+        style={
+          Object {
+            "color": "#000",
+            "flex": 1,
+            "paddingLeft": 20,
+          }
+        }
+        testID="password_test"
+        underlineColorAndroid="transparent"
+      />
+      <View
+        accessible={true}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "opacity": 1,
+          }
+        }
+      >
+        <Text />
+      </View>
+    </View>
+    <View
+      accessible={true}
+      focusable={false}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "opacity": 1,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "color": "grey",
+            "marginTop": 30,
+          }
+        }
+      >
+        Forgot Your Password?
+      </Text>
+    </View>
+    <View
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "alignItems": "center",
+          "backgroundColor": "#009387",
+          "borderColor": "#20d1ce",
+          "borderRadius": 10,
+          "borderWidth": 2,
+          "marginLeft": 40,
+          "marginRight": 40,
+          "marginTop": 100,
+          "opacity": 1,
+          "paddingHorizontal": 10,
+          "paddingVertical": 10,
+        }
+      }
+      testID="signin"
+    >
+      <Text
+        style={
+          Object {
+            "color": "#fff",
+            "fontSize": 20,
+          }
+        }
+      >
+        Sign In
+      </Text>
+    </View>
+  </View>
+</RCTSafeAreaView>
+`;

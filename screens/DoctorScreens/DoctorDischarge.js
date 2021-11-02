@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import {BASE_URL} from "../../dev.config";
+import React, { useState, useEffect, } from "react";
+import { BASE_URL } from "../../dev.config";
 import {
   StyleSheet,
   Text,
@@ -7,93 +7,45 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
-  Platform,
-  Picker,
-  Button,
-  StatusBar,
   TextInput,
 } from "react-native";
-import { Drawer } from 'react-native-paper';
-import * as Animatable from "react-native-animatable";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Feather from "react-native-vector-icons/Feather";
-import { AuthContext } from '../../components/context';
-import DatePicker from 'react-native-datepicker';
-import DateTimePicker from '@react-native-community/datetimepicker';
-// import Picker from 'react-native-select-dropdown';
-import PhoneInput from "react-native-phone-number-input";
+import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
 
-function DoctorDischarge({ navigation,route }) {
+function DoctorDischarge({ navigation, route }) {
 
-  const [id, setId] = useState(route.params.id =="" ? (""):(route.params.id));
-
+  const [id, setId] = useState(route.params.id == "" ? ("") : (route.params.id));
   const [status, setStatus] = useState("");
   const [medicalHistory, setMedicalHistory] = useState("");
-
   const [change, setChange] = useState(0);
 
-
-
- var today = new Date();
+  var today = new Date();
   var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
   var time = today.getHours() + ":" + today.getMinutes();
   const DateTime = date + 'T' + time;
 
-
-  const onChange = (event, value) => {
-    try {
-      if (value) {
-        const day = value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate();
-        setBday2(day);
-        setBday1(value.toISOString().slice(0, 10));
-      }
-
-    }
-    catch (e) {
-      alert("Selected BirthDay is Erroried !")
-
-    }
-
-    if (Platform.OS === 'android') {
-      setIsPickerShow(false);
-    }
-  };
-
-
- 
-
-  const AppButton = ({ onPress, title }) => (
-    <TouchableOpacity onPress={onPress} style={styles.button}>
+  const AppButton = ({ onPress, title, ...props }) => (
+    <TouchableOpacity   {...props} onPress={onPress} style={styles.button}>
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
-
   );
-
-
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
 
-     
-       
-      setMedicalHistory("");       
+      setMedicalHistory("");
       setStatus("");
-     
-      setChange(change+1);
-
+      setChange(change + 1);
 
     });
   }, [navigation,]);
 
 
-
   const discharge = async () => {
     const token = await AsyncStorage.getItem('token');
     const URL = `${BASE_URL}/patient/discharge`;
-   
+
 
     try {
       const res = await fetch(URL, {
@@ -104,11 +56,11 @@ function DoctorDischarge({ navigation,route }) {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-       
-          patient_id:id,
-           discharged_at :DateTime,
-            description:medicalHistory,
-             status:status
+
+          patient_id: id,
+          discharged_at: DateTime,
+          description: medicalHistory,
+          status: status
         }),
       });
 
@@ -119,15 +71,9 @@ function DoctorDischarge({ navigation,route }) {
 
         throw new Error(message);
       } else {
-
-        
-      setId("");  
-      setMedicalHistory("");       
-      setStatus("");
-     
-     
-
-
+        setId("");
+        setMedicalHistory("");
+        setStatus("");
 
         if (response) {
           alert((message), [
@@ -156,8 +102,6 @@ function DoctorDischarge({ navigation,route }) {
       alert("Status can't be empty !");
       return;
     }
-
-    
     discharge();
   };
 
@@ -165,7 +109,7 @@ function DoctorDischarge({ navigation,route }) {
     <SafeAreaView style={styles.footer}>
       <View style={styles.header}>
         <Text style={styles.textHeader}>DISCHARGE   PATIENT </Text>
-     
+
         <View
           style={{
             borderBottomColor: "#009387",
@@ -176,7 +120,6 @@ function DoctorDischarge({ navigation,route }) {
 
 
       <ScrollView style={{ paddingRight: 20 }}>
-
         <Text style={styles.textFooter}>Patient ID</Text>
         <View style={styles.action}>
           <TextInput
@@ -185,14 +128,10 @@ function DoctorDischarge({ navigation,route }) {
             placeholderTextColor="#666666"
             style={styles.textInput}
             autoCapitalize="none"
+            testID="id_test"
             onChangeText={(id) => setId(id)}
           />
         </View>
-
-       
-
-
-
 
 
         <Text style={[styles.textFooter, { marginTop: 15 }]}>MedicalHistory</Text>
@@ -211,15 +150,15 @@ function DoctorDischarge({ navigation,route }) {
         </View>
 
 
-
         <View style={{ flexDirection: 'row', marginTop: 15 }}>
           <Text style={styles.textFooter}>Status</Text>
-    
+
         </View>
         <View style={{ flexDirection: 'row' }}>
           <View style={[{ flex: .5, }, styles.BloodDrop]}>
             <Picker
-              style={styles.action}
+              style={styles.action1}
+              testID="status_test"
               onValueChange={setStatus}
               selectedValue={status}
 
@@ -229,14 +168,10 @@ function DoctorDischarge({ navigation,route }) {
               <Picker.Item label="Recovered" value="Recovered" />
             </Picker>
           </View>
-         
 
         </View>
 
-
-
-
-        <AppButton onPress={handleSubmitPress} title={"Discharge"} />
+        <AppButton testID="discharge" onPress={handleSubmitPress} title={"Discharge"} />
 
       </ScrollView>
 
@@ -249,7 +184,6 @@ function DoctorDischarge({ navigation,route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#009387",
   },
   header: {
 
@@ -271,6 +205,7 @@ const styles = StyleSheet.create({
   BloodDrop: {
     width: 300,
     marginTop: 10,
+    paddingBottom: 10,
     marginLeft: 5,
     marginRight: 5,
     borderColor: "#007c7a",
@@ -418,9 +353,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
 
-
 });
-
 
 
 
