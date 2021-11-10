@@ -1,5 +1,5 @@
 module.exports = {
-    BASE_URL: "http://192.168.8.101:8000",
+    BASE_URL: "https://rlccovid19tracker.herokuapp.com",
   
   }
 
