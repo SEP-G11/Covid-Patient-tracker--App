@@ -36,7 +36,6 @@ function DoctorEditMedicalReport({ navigation ,route }) {
     const [symptoms, setSymptoms] = useState('')
     const [description, setDescription] = useState('')
     const [admitted_at, setAdmittedAt] = useState('')
-    const [discharged_at, setDischargedAt] = useState('')
     const [isPickerShow, setIsPickerShow] = useState(false);
 
     const showPicker = () => {
@@ -60,25 +59,6 @@ function DoctorEditMedicalReport({ navigation ,route }) {
       setIsPickerShow(false);
     }
   };
-
-  const onChangeD = (event, value) => {
-    try {
-      if (value) {
-        const day = value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate();
-        setDischargedAt(value.toISOString().slice(0, 10));
-      }
-
-    }
-    catch (e) {
-      alert("Selected Day is Erroried !")
-
-    }
-
-    if (Platform.OS === 'android') {
-      setIsPickerShow(false);
-    }
-  };
-
 
     const AppButton = ({ onPress, title }) => (
         <TouchableOpacity onPress={onPress} style={styles.button}>
@@ -107,7 +87,6 @@ function DoctorEditMedicalReport({ navigation ,route }) {
             setSymptoms(response.symptoms);
             setDescription(response.description);
             setAdmittedAt(response.admitted_at);
-            setDischargedAt(response.discharged_at);
 
             if (response){
                 navigation.navigate('DoctorViewMedicalReport',{ id: `${report.patient_id}` })
@@ -143,7 +122,6 @@ function DoctorEditMedicalReport({ navigation ,route }) {
             setSymptoms(response.symptoms);
             setDescription(response.description);
             setAdmittedAt(response.admitted_at);
-            setDischargedAt(response.discharged_at);
 
         } catch (error) {
             alert((error.message.toString()), [
@@ -160,7 +138,7 @@ function DoctorEditMedicalReport({ navigation ,route }) {
     }, [navigation,]);
 
     const handleSubmitPress = () => {
-        updatePatientReport({ report_id:reportId , patient_id:patientId, symptoms, admitted_at, discharged_at, description, status });
+        updatePatientReport({ report_id:reportId , patient_id:patientId, symptoms, admitted_at, description, status });
     };
 
     return (
@@ -272,34 +250,6 @@ function DoctorEditMedicalReport({ navigation ,route }) {
                     <Text style={styles.pickedDate}>{admitted_at}</Text>
                     <TextInput
                         placeholder={admitted_at ? "" : "Select Date"}
-                        placeholderTextColor="#666666"
-                        style={styles.textInput}
-                        autoCapitalize="none"
-                        editable={false}
-                    />
-                </View>
-
-
-                <DateTimePicker
-                    value={new Date()}
-                    mode={'date'}
-                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                    is24Hour={true}
-                    // format="YYYY-MM-DD"
-                    maximumDate={new Date()}
-                    onChange={onChangeD}
-                    style={styles.datePicker}
-                />
-                <View style={{ flexDirection: 'row', marginTop: 15 }}>
-                    <Text style={styles.textFooter}>Discharged Date</Text>
-                    {/* <Text style={{ color: "#007c7a", fontSize: 16, paddingLeft: 100 }}>Gender</Text> */}
-                </View>
-
-                <View style={styles.action1} onPress={showPicker}>
-                    <FontAwesome name="calendar" size={15} onPress={showPicker} {...styles.icons} />
-                    <Text style={styles.pickedDate}>{discharged_at}</Text>
-                    <TextInput
-                        placeholder={discharged_at ? "" : "Select Date"}
                         placeholderTextColor="#666666"
                         style={styles.textInput}
                         autoCapitalize="none"

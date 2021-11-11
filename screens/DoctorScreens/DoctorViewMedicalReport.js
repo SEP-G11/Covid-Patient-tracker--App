@@ -190,9 +190,6 @@ function DoctorViewMedicalReport({ navigation ,route }) {
                     <Text style={{margin: 10,fontSize: 18}}>
                         Admitted At: {getdate(report.admitted_at)}
                     </Text>
-                    <Text style={{margin: 10,fontSize: 18}}>
-                        Discharged At: {getdate(report.discharged_at)}
-                    </Text>
                 </View>
 
 
