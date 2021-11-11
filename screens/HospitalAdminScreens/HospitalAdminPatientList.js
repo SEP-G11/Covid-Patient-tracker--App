@@ -103,7 +103,7 @@ function HospitalAdminPatientList({ navigation }) {
       
         rowData.push(patients[i].patient_id);
         rowData.push(patients[i].name);
-        rowData.push(<AppButton onPress={() => navigation.navigate('HospitalAdminViewPatientInfo', { id: `${patients[i].patient_id}` })} title={'Info'} />);
+        rowData.push(<AppButton onPress={() => navigation.navigate('HospitalAdminViewPatientInfo', { id: `${patients[i].patient_id}` })} title={'Information'} />);
         rowData.push(<AppButton onPress={() => navigation.navigate('HospitalAdminDischarge',{ id: `${patients[i].patient_id}` })} title={'Discharge'}/>);
         rowData.push(<AppButton onPress={() => navigation.navigate('HospitalAdminTransfer',{ id: `${patients[i].patient_id}` })} title={'Transfer'}/>);
         rowData.push(<AppButton onPress={() => navigation.navigate('HospitalAdminEnterResults',{ id: `${patients[i].patient_id}` })} title={'Result'}/>);
