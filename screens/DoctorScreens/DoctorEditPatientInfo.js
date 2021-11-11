@@ -181,11 +181,6 @@ const handleSubmitPress = () => {
     return;
   }
 
-  if (!address) {
-    alert("Address can't be empty !");
-    return;
-  }
-
   if (!blood_type || blood_type == 'disabled') {
     alert("Blood Type can't be empty !");
     return;
