@@ -27,7 +27,6 @@ import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'reac
 import { Table, TableWrapper, Row } from 'react-native-table-component';
 
 function DoctorViewMedicalReport({ navigation ,route }) {
-    const patientId = route.params.id
 
     const [report, setReport] = useState({});
     const [tests, setTests] = useState([]);
@@ -139,15 +138,15 @@ function DoctorViewMedicalReport({ navigation ,route }) {
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-            getPatientReportDetails(patientId);
+            getPatientReportDetails(route.params.id);
         });
-    }, [navigation,]);
+    }, [navigation,route]);
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-            getPatientTestDetails(patientId);
+            getPatientTestDetails(route.params.id);
         });
-    }, [navigation,]);
+    }, [navigation,route]);
 
     return (
         <SafeAreaView style={styles.footer}>
