@@ -27,8 +27,7 @@ import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'reac
 
 
 function DoctorEditMedicalReport({ navigation ,route }) {
-    const patientId = route.params.id
-
+    const [patientId, setPatientId] = useState('')
     const [reportId, setReportId] = useState('')
     const [ward, setWard] = useState('')
     const [bedNo, setBedNo] = useState('')
@@ -114,7 +113,7 @@ function DoctorEditMedicalReport({ navigation ,route }) {
             });
 
             const response = await res.json();
-
+            setPatientId(response.patient_id)
             setReportId(response.report_id)
             setWard(response.ward)
             setBedNo(response.bed_no)
@@ -133,9 +132,9 @@ function DoctorEditMedicalReport({ navigation ,route }) {
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-            getPatientReportDetails(patientId);
+            getPatientReportDetails(route.params.id);
         });
-    }, [navigation,]);
+    }, [navigation,route]);
 
     const handleSubmitPress = () => {
         updatePatientReport({ report_id:reportId , patient_id:patientId, symptoms, admitted_at, description, status });
