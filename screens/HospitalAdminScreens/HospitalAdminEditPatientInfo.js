@@ -27,8 +27,7 @@ import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'reac
 
 
 function HospitalAdminEditPatientInfo({ navigation ,route }) {
-  const patientId = route.params.id
-
+  const [patientId, setPatientId] = useState('')
   const [name, setName] = useState('')
   const [bday, setBday] = useState('');
   const [gender, setGender] = useState('');
@@ -98,7 +97,7 @@ function HospitalAdminEditPatientInfo({ navigation ,route }) {
       });
 
       const response = await res.json();
-
+      
       setName(response.name);
       setBday(response.bday);
       setGender(response.gender);
@@ -136,7 +135,7 @@ function HospitalAdminEditPatientInfo({ navigation ,route }) {
       });
 
       const response = await res.json();
-
+      setPatientId(response.patient_id);
       setName(response.name);
       setBday(response.bday);
       setGender(response.gender);
@@ -158,9 +157,9 @@ function HospitalAdminEditPatientInfo({ navigation ,route }) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      getPatientDetails(patientId);
+      getPatientDetails(route.params.id);
     });
-  }, [navigation,]);
+  }, [navigation,route]);
 
   const handleSubmitPress = () => {
     if (!name) {
