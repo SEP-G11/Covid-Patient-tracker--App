@@ -27,7 +27,6 @@ import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'reac
 
 
 function DoctorViewPatientInfo({ navigation ,route }) {
-  const patientId = route.params.id 
 
   const [patient, setPatient] = useState({});
 
@@ -76,9 +75,9 @@ function DoctorViewPatientInfo({ navigation ,route }) {
 
       useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-          getPatientDetails(patientId);
+          getPatientDetails(route.params.id);
         });
-    }, [navigation,]);
+    }, [navigation,route]);
 
   return (
     <SafeAreaView style={styles.footer}>
@@ -97,7 +96,7 @@ function DoctorViewPatientInfo({ navigation ,route }) {
 
       <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
         <Text style={{margin: 10,fontSize: 18}}>
-            Id: {patientId}
+            Id: {patient.patient_id}
         </Text>
         <Text style={{margin: 10,fontSize: 18}}>
             Name: {patient.name}
